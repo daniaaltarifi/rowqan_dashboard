@@ -1,0 +1,75 @@
+
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+.rtl {
+  direction: rtl;
+  text-align: right;
+  overflow: auto;
+  
+}
+
+.lang_btn{
+  background-color: red;
+  padding: 5px 15px;
+  border-radius: 5px;
+  color: #000;
+  border: none;
+
+}
+@media screen and (max-width:1141px) {
+  
+  .rtl .-translate-x-80 {
+    --tw-translate-x: -1rem;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+  .rtl .translate-x-0 {
+  --tw-translate-x: 291px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+}
+.table-responsive {
+    overflow-x: auto;
+      -webkit-overflow-scrolling: touch; 
+  }
+    
+    .table {
+      min-width: 600px; 
+    }
+    .delete_icon{
+      color: red;
+      margin: 8px;
+    }
+    .edit_icon{
+      color: green;
+      margin-left: 2vh;
+    }
+  
+  .form_res{
+      /* width: 100%; */
+      margin-top: 13vh;
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      text-align: left;
+      /* place-items: center; */
+  }
+
+
+  
+  /* Media query to apply on large screens */
+  @media (min-width: 1140px) {
+
+    /* Apply margin-left for RTL */
+    .rtl .xl\:ml-80 {
+      margin-left: 0 !important;
+      margin-right:20rem;
+
+    }
+    /* .xl\:translate-x-0 {
+      --tw-translate-x: 0px;
+      transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  } */
+  }

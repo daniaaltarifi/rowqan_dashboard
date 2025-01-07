@@ -11,7 +11,8 @@ import AddCode from "./pages/dashboard/Codes/AddCodes.jsx";
 import UpdateCode from "./pages/dashboard/Codes/UpdateCode.jsx";
 import AddSlide from "./pages/dashboard/Slider/AddSlide.jsx";
 import UpdateSlide from "./pages/dashboard/Slider/UpdateSlide.jsx";
-import { SignIn } from "./pages/auth";
+import SignIn from './pages/auth/sign-in';
+
 
 import AddCategory from "./pages/dashboard/Category/AddCategory";
 import AddProduct from "./pages/dashboard/Products/AddProducts/AddProduct";
@@ -37,8 +38,8 @@ import AddHeader from "./pages/dashboard/Header/AddHeader.jsx";
 import UpdateHeader from "./pages/dashboard/Header/UpdateHeader.jsx";
 import LanguageSwitcher from "./LanguageSwitcher";
 import DirectionHandler from "./DirectionHandler";
-export const API_URL="https://mazr3tnabackend.kassel.icu";
-// export const API_URL="http://localhost:5050";
+// export const API_URL="https://mazr3tnabackend.kassel.icu";
+export const API_URL="http://localhost:5000";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('authtoken'));
   useEffect(() => {
@@ -52,7 +53,7 @@ function App() {
       <DirectionHandler />
     <Routes>
       <Route path="/dashboard/*" element={
-        isAuthenticated ? <Dashboard /> : <Navigate to="/auth/sign-in" replace />
+        isAuthenticated ? <Dashboard /> : <Navigate to="/sign-in" replace />
       }> 
         <Route path="adduser" element={<AddUser />} />
         <Route path="updateuser/:id" element={<UpdateUser />} />
@@ -85,7 +86,7 @@ function App() {
         <Route  path="updateprivacypolicy"  element={<UpdatePrivacyPolicy/>} />
         <Route  path="updatetermsandconditions"  element={<UpdateTermsAndConditions/>} />
       </Route>
-      <Route path="/auth/*" element={<Auth />} />
+      {/* <Route path="/auth/*" element={<Auth />} /> */}
       <Route path="/auth/sign-in" element={<SignIn setIsAuthenticated={setIsAuthenticated} />} />
       <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
 

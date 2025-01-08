@@ -40,6 +40,10 @@ import AddChalets from "@/pages/dashboard/Chalets/AddChalets";
 import UpdateChalets from "@/pages/dashboard/Chalets/UpdateChalets";
 import AddDetails from "@/pages/dashboard/Chalets/AddDetails";
 import UpdateDetails from "@/pages/dashboard/Chalets/UpdateDetails";
+import AddProperties from "@/pages/dashboard/Properties/AddProperties";
+import UpdateProerties from "@/pages/dashboard/Properties/UpdateProperties";
+import AddBriefChalets from "@/pages/dashboard/Properties/AddBriefChalets";
+import UpdateBriefChalets from "@/pages/dashboard/Properties/UpdateBriefChalets";
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
@@ -102,6 +106,10 @@ export function Dashboard() {
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
 <Route path="adddetails" element={<AddDetails />} />
 <Route path="updatedetails/:id" element={<UpdateDetails />} />
+<Route path="addchaletproperties" element={<AddProperties />} />
+<Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />
+<Route path="addbriefchalets" element={<AddBriefChalets />} />
+<Route path="updatebriefchalets/:id" element={<UpdateBriefChalets />} />
 
 
 

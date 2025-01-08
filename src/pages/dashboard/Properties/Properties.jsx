@@ -24,7 +24,7 @@ import {
 function Properties() {
     const navigate = useNavigate();
   const [Properties, setProperties] = useState([]);
-  const [PropertiesDetails, setPropertiesDetails] = useState([]);
+  const [briefChar, setbriefChar] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [PropertiesIdToDelete, setPropertiesIdToDelete] = useState(null); // Store the ID of the slide to delete
   const [itemType, setItemType] = useState(null); // Store the ID of the slide to delete
@@ -48,11 +48,11 @@ const handleShow = (id, type) => {
   const fetchProperties = async () => {
     try {
       const [PropertiesRes,DetailsRes] = await Promise.all([
-        axios.get(`${API_URL}/chalets/getAllChaletProps/${lang}`),
-        // axios.get(`${API_URL}/Propertiesdetails/getalldetails/${lang}`)
+        axios.get(`${API_URL}/propschalets/getAllPropsChalet/${lang}`),
+        axios.get(`${API_URL}/BreifDetailsChalets/getAllBreifChalet/${lang}`)
       ]) 
       setProperties(PropertiesRes.data);
-      setPropertiesDetails(DetailsRes.data);
+      setbriefChar(DetailsRes.data);
       
     } catch (error) {
       console.error(error);
@@ -68,8 +68,8 @@ const handleShow = (id, type) => {
         await axios.delete(`${API_URL}/propschalets/DeletePropChalet/${PropertiesIdToDelete}/${lang}`);
         setProperties(Properties.filter((chalet) => chalet.id !== PropertiesIdToDelete)); // Remove from list
       } else if (itemType === 'details') {
-        await axios.delete(`${API_URL}/Propertiesdetails/deleteddetaile/${PropertiesIdToDelete}/${lang}`);
-        setPropertiesDetails(PropertiesDetails.filter((detail) => detail.id !== PropertiesIdToDelete)); // Remove from list
+        await axios.delete(`${API_URL}/BreifDetailsChalets/deleteBreif/${PropertiesIdToDelete}/${lang}`);
+        setbriefChar(briefChar.filter((detail) => detail.id !== PropertiesIdToDelete)); // Remove from list
       }
     } catch (error) {
       console.error(error);
@@ -77,14 +77,6 @@ const handleShow = (id, type) => {
   };
   
 
-//   const handleDelete = async (id) => {
-//     try {
-//       await axios.delete(`${API_URL}/Properties/deletechalet/${id}/${lang}`);
-//       setProperties(Properties.filter((b) => b.id !== id));
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
 
   useEffect(() => {
     fetchProperties();
@@ -98,11 +90,11 @@ const handleShow = (id, type) => {
     <Card>
       <CardHeader variant="gradient" color="green" className="mb-8 p-6">
         <Typography variant="h6" color="white">
-       {lang ==='ar'? "جدول خصائص الشاليهات" :"  Properties Table "}
+       {lang ==='ar'? "جدول خصائص الشاليهات" :"  Properties Chalets Table "}
         </Typography>
       </CardHeader>
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-      <Link to="/dashboard/addchalet">
+      <Link to="/dashboard/addchaletproperties">
     <Button
   className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#D87C55]"
   style={{ marginLeft: '80px' }} 
@@ -140,18 +132,12 @@ const handleShow = (id, type) => {
                       <div className="flex items-center gap-4">
                         {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
                         <div>
-                            
-                        {chalet.Chalets_Props.map((property) => (
-          <div key={property.id} >
             <Typography  
              variant="small"
               color="blue-gray"
                 className="font-semibold">
-              {property.title}
+              {chalet.title}
             </Typography>
-          </div>
-        ))}
-
                         </div>
                       </div>
                     </td>
@@ -162,19 +148,19 @@ const handleShow = (id, type) => {
                             color="blue-gray"
                             className="font-semibold"
                           >
-                            {chalet.title}
+                            {chalet.Chalet?.title}
                           </Typography>
                       </Typography>
                     </td>
                     <td>
                     <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar   src={`https://res.cloudinary.com/durjqlivi/${chalet.Chalets_Props?.[0]?.image}`} alt={"Properties"} size="md" variant="rounded" />
+                      <Avatar   src={`https://res.cloudinary.com/durjqlivi/${chalet.image}`} alt={"Properties"} size="md" variant="rounded" />
                       </Typography>
                     </td>
                      <td className={className}>
                         <div className="flex items-center">
                           <Button 
-                            onClick={() => navigate(`/dashboard/updatechalet/${chalet.id}`)}
+                            onClick={() => navigate(`/dashboard/updatepropertieschalet/${chalet.id}`)}
                             className="mr-2 bg-[#D87C55] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                           >
                             <PencilIcon className="h-5 w-5 mr-1 " /> {lang ==='ar'? "تعديل" : "Edit "}
@@ -204,22 +190,22 @@ const handleShow = (id, type) => {
       <Card>
       <CardHeader variant="gradient" color="green" className="mb-8 p-6">
         <Typography variant="h6" color="white">
-       {lang ==='ar'? "جدول تفاصيل الشاليهات" :"  Properties Details Table "}
+       {lang ==='ar'? "جدول تفاصيل الشاليهات" :" Brief Characteristics Table "}
         </Typography>
       </CardHeader>
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-      <Link to="/dashboard/adddetails">
+      <Link to="/dashboard/addbriefchalets">
     <Button
   className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#D87C55]"
   style={{ marginLeft: '80px' }} 
 >
-  <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة  تفاصيل شاليه" : "Add Properties Details "}
+  <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة  تفاصيل شاليه" : "Add Breif Characteristics Chalets "}
 </Button>
 </Link>
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {[`${lang ==='ar'? "التفاصيل" :"Detail_Type"}`,`${lang ==='ar'? "الشاليه" :"chalet "}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
+              {[`${lang ==='ar'? "النوع" :"type"}`,`${lang ==='ar'? "الوصف" :"value"}`,`${lang ==='ar'? "الشاليه" :"chalet "}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
                 <th
                   key={el}
                   className="border-b border-blue-gray-50 py-3 px-5 "
@@ -235,9 +221,9 @@ const handleShow = (id, type) => {
             </tr>
           </thead>
           <tbody>
-            {PropertiesDetails.map(
+            {briefChar.map(
               (details,index) => {
-                const className = `py-3 px-5 ${index === PropertiesDetails.length - 1 ? "" : "border-b border-blue-gray-50"}`;
+                const className = `py-3 px-5 ${index === briefChar.length - 1 ? "" : "border-b border-blue-gray-50"}`;
 
 
                 return (
@@ -251,12 +237,23 @@ const handleShow = (id, type) => {
                             color="blue-gray"
                             className="font-semibold"
                           >
-                            {details.Detail_Type}
+                            {details.type}
                           </Typography>
-                          {/* <Typography className="text-xs font-normal text-blue-gray-500">
-                            {chalet.last_name}
-                          </Typography> */}
-
+                        
+                        </div>
+                      </div>
+                    </td><td className={className}>
+                      <div className="flex items-center gap-4">
+                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                        <div>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold"
+                          >
+                            {details.value}
+                          </Typography>
+                        
                         </div>
                       </div>
                     </td>
@@ -274,7 +271,7 @@ const handleShow = (id, type) => {
                      <td className={className}>
                         <div className="flex items-center">
                           <Button 
-                            onClick={() => navigate(`/dashboard/updatedetails/${details.id}`)}
+                            onClick={() => navigate(`/dashboard/updatebriefchalets/${details.id}`)}
                             className="mr-2 bg-[#D87C55] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                           >
                             <PencilIcon className="h-5 w-5 mr-1 " /> {lang ==='ar'? "تعديل" : "Edit "}

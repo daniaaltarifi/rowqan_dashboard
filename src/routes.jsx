@@ -9,7 +9,7 @@ import {
   NewspaperIcon,
 } from "@heroicons/react/24/solid"; 
 import { BiSolidCoupon } from "react-icons/bi";
-import { Products } from "@/pages/dashboard";
+import { Home, Products } from "@/pages/dashboard";
 import Feedback from "./pages/dashboard/Feedback/Feedback";
 import Wallet from "./pages/dashboard/Wallet/Wallet";
 import Category from "./pages/dashboard/Category/Category";
@@ -26,6 +26,7 @@ import ChaletsPage from "./Admin DashBoard/ChaletsPage";
 import HomeChaletOwners from "./ChaletsOwners DashBoard/HomeChaletOwners";
 import Messages from "./ChaletsOwners DashBoard/Messages";
 import ReservationePage from "./ChaletsOwners DashBoard/ReservationePage";
+import HomeSuperAdmin from "./SuperAdmin DashBoard/HomeSuperAdmin";
 
 
 const lang = Cookies.get('lang') || 'en';
@@ -44,6 +45,18 @@ export const routes = [
     
       ...(userRole === '1' ? [
         {
+          icon: <HomeIcon {...icon} />,
+          name: lang ==='ar'? "الرئيسية" :"Home",
+          path: "/home",
+          element: <Home />,
+        },
+        {
+          icon: <TagIcon {...icon} />,
+          name: lang === 'ar' ? "مالكي الشاليهات" : "Chalets Owners Page",
+          path: "/HomeAdmin",
+          element: <HomeAdminPage />,
+        },
+        {
           icon: <TagIcon {...icon} />,
           name: lang === 'ar' ? "مالكي الشاليهات" : "Chalets Owners Page",
           path: "/chaletOwners",
@@ -56,10 +69,15 @@ export const routes = [
           element: <ReservationsPage/>,
         },
         {
-          icon: <CreditCardIcon {...icon} />,
-          name: lang === 'ar' ? "صفحة الشاليهات" : "Chalets Page",
+          icon: <ShoppingBagIcon {...icon} />,
+          name:lang ==='ar'? "الشاليهات" : "Chalets",
           path: "/chalets",
-          element: <ChaletsPage />,
+          element: <Chalets />,
+        },  {
+          icon: <ShoppingBagIcon {...icon} />,
+          name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
+          path: "/propertieschalets",
+          element: <Properties />,
         },
         {
           icon: <WalletIcon {...icon} />,
@@ -80,23 +98,6 @@ export const routes = [
           element: <Feedback />,
         },
       ] : []),
-
-   
-      ...(userRole === '1' ? [
-        {
-          icon: <ShoppingBagIcon {...icon} />,
-          name: lang === 'ar' ? "الاصناف" : "Category",
-          path: "/category",
-          element: <Category />,
-        },
-        {
-          icon: <ShoppingBagIcon {...icon} />,
-          name: lang === 'ar' ? "المنتجات" : "Products",
-          path: "/products",
-          element: <Products />,
-        },
-      ] 
-      : []),
 
       ...(userRole === '4' ? [
         {
@@ -122,6 +123,39 @@ export const routes = [
           name: lang === 'ar' ? "صفحة المستخدمين لمالكي الشاليهات" : "Users page",
           path: "/Users",
           element: <UsersPage/>,
+        },
+      ] : []),
+
+      ...(userRole === '5' ? [
+        {
+          icon: <TagIcon {...icon} />,
+          name: lang === 'ar' ? "الصفحة الرئيسية" : "Home Page",
+          path: "/HomeSuperAdmin",
+          element:<HomeSuperAdmin/>,
+        },
+        {
+          icon: <TagIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة  الشاليهات" : "Chalets Page",
+          path: "/Chalets",
+          element:<ChaletsPage/>,
+        },
+        {
+          icon: <WalletIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة الحجوزات لمالكي الشاليهات" : "Reservation Page Of Chalets Owners Page",
+          path: "/ChaletsOwners",
+          element: <ChaletsOwnersPage/>,
+        },
+        {
+          icon: <UserCircleIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة المستخدمين لمالكي الشاليهات" : "Users page",
+          path: "/Users",
+          element: <UsersPage/>,
+        },
+        {
+          icon: <UserCircleIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة الحجوزات" : "Reservations page",
+          path: "/ReservationsPage",
+          element: <ReservationePage/>,
         },
       ] : []),
     ],

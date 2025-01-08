@@ -84,10 +84,11 @@ export function SignIn({ setIsAuthenticated }) {
           Cookies.set('authtoken', res.data.token, { expires: 7, secure: true });
           Cookies.set('userRole',res.data.user_type_id)
           setIsAuthenticated(true);
-          navigate(`/${lang}`);
-        } else {
-          setErrorMessage("Invalid MFA code or login failed.");
-        }
+          if (res.data.user_type_id === 1) {
+            navigate(`/dashboard/home`);
+          } else {
+            setErrorMessage("You are not authorized to access.");
+          }}
       }
     } catch (error) {
       console.error("Login error:", error);

@@ -28,8 +28,6 @@ import UpdateFooter from "./pages/dashboard/Footer/UpdateFooter.jsx";
 import AddSocail from "./pages/dashboard/Footer/AddSocial.jsx";
 import UpdateSocial from "./pages/dashboard/Footer/UpdateSocial.jsx";
 
-import AllPrivacyPolicy from "./pages/dashboard/PrivacyPolicy/AllPrivacyPolicy.jsx"
-
 import UpdatePrivacyPolicy from "./pages/dashboard/PrivacyPolicy/UpdatePrivacyPolicy.jsx"
 import PrivacyPolicies from "./pages/dashboard/PrivacyPolicy/AllPrivacyPolicy.jsx";
 import AddPrivacyPolicy from "./pages/dashboard/PrivacyPolicy/AddPrivacyPolicy.jsx";
@@ -42,6 +40,10 @@ import AddChalets from "./pages/dashboard/Chalets/AddChalets";
 import UpdateChalets from "./pages/dashboard/Chalets/UpdateChalets";
 import AddDetails from "./pages/dashboard/Chalets/AddDetails";
 import UpdateDetails from "./pages/dashboard/Chalets/UpdateDetails";
+import AddProperties from "./pages/dashboard/Properties/AddProperties";
+import UpdateProerties from "./pages/dashboard/Properties/UpdateProperties";
+import AddBriefChalets from "./pages/dashboard/Properties/AddBriefChalets";
+import UpdateBriefChalets from "./pages/dashboard/Properties/UpdateBriefChalets";
 // export const API_URL="https://mazr3tnabackend.kassel.icu";
 export const API_URL="http://localhost:5000";
 function App() {
@@ -50,8 +52,9 @@ function App() {
     const token = Cookies.get('authtoken');
     if (token) {
       setIsAuthenticated(!!token);
-    }
+      }
   }, []);
+  
   return (
     <>
       <DirectionHandler />
@@ -94,6 +97,10 @@ function App() {
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
 <Route path="adddetails" element={<AddDetails />} />
 <Route path="updatedetails/:id" element={<UpdateDetails />} />
+<Route path="addchaletproperties" element={<AddProperties />} />
+<Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />
+<Route path="addbriefchalets" element={<AddBriefChalets />} />
+<Route path="updatebriefchalets/:id" element={<UpdateBriefChalets />} />
 
       </Route>
       <Route path="/auth/*" element={<Auth />} />

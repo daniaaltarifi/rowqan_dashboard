@@ -22,8 +22,9 @@ import Cookies from "js-cookie";
 export function Home() {
   const [statisticsChartsData, setStatisticsChartsData] = useState([]);
   const lang = Cookies.get('lang') || 'en';
-
+ 
   useEffect(() => {
+ 
     const fetchData = async () => {
       try {
         const userResponse = await axios.get(`${API_URL}/auth/getalluser`);
@@ -129,8 +130,8 @@ export function Home() {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
+  
   }, []);
 
   return (

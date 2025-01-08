@@ -36,6 +36,10 @@ import AddTermsAndConditions from "@/pages/dashboard/TermsConditions/AddTermsAnd
 import UpdateTermsAndConditions from "@/pages/dashboard/TermsConditions/UpdateTermsAndConditions";
 import AddHeader from "@/pages/dashboard/Header/AddHeader";
 import UpdateHeader from "@/pages/dashboard/Header/UpdateHeader";
+import AddChalets from "@/pages/dashboard/Chalets/AddChalets";
+import UpdateChalets from "@/pages/dashboard/Chalets/UpdateChalets";
+import AddDetails from "@/pages/dashboard/Chalets/AddDetails";
+import UpdateDetails from "@/pages/dashboard/Chalets/UpdateDetails";
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
@@ -93,6 +97,11 @@ export function Dashboard() {
         <Route path="addheader" element={<AddHeader />} />
         <Route path="updateheader/:id" element={<UpdateHeader />} />
        
+{/* /////////////////////////////////////// */}
+<Route path="addchalet" element={<AddChalets />} />
+<Route path="updatechalet/:id" element={<UpdateChalets />} />
+<Route path="adddetails" element={<AddDetails />} />
+<Route path="updatedetails/:id" element={<UpdateDetails />} />
 
 
 

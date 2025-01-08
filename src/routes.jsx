@@ -26,6 +26,8 @@ import PrivacyPolicies from "./pages/dashboard/PrivacyPolicy/AllPrivacyPolicy";
 import AllTermsAndConditions from "./pages/dashboard/TermsConditions/AllTermsAndConditions"
 import Header from "./pages/dashboard/Header/Header";
 import Cookies from "js-cookie";
+import Chalets from "./pages/dashboard/Chalets/Chalets";
+import Properties from "./pages/dashboard/Properties/Properties";
 
 const lang = Cookies.get('lang') || 'en';
 
@@ -53,9 +55,14 @@ export const routes = [
       },
       {
         icon: <ShoppingBagIcon {...icon} />,
-        name:lang ==='ar'? "الاصناف" : "Category",
-        path: "/category",
-        element: <Category />,
+        name:lang ==='ar'? "الشاليهات" : "Chalets",
+        path: "/chalets",
+        element: <Chalets />,
+      },  {
+        icon: <ShoppingBagIcon {...icon} />,
+        name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
+        path: "/propertieschalets",
+        element: <Properties />,
       },
       {
         icon: <ShoppingBagIcon {...icon} />,

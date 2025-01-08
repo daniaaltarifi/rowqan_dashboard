@@ -1,6 +1,6 @@
 import { HomeIcon, TagIcon } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
-import { Home, Products } from "@/pages/dashboard";
+import { Home } from "@/pages/dashboard";
 import HomeAdminPage from "./Admin DashBoard/HomeAdminPage";
 import ReservationsPage from "./Admin DashBoard/ReservationsPage";
 import HomeChaletOwners from "./ChaletsOwners DashBoard/HomeChaletOwners";
@@ -9,6 +9,8 @@ import React, { useState, useEffect } from "react";
 import Chalets from "./pages/dashboard/Chalets/Chalets";
 import Properties from "./pages/dashboard/Properties/Properties";
 import HomeSuperAdmin from "./SuperAdmin DashBoard/HomeSuperAdmin";
+import Abouts from "./pages/dashboard/About/Abouts";
+import FooterData from "./pages/dashboard/Footer/FooterData";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -68,6 +70,18 @@ export const useRoutes = () => {
                 name: lang === "ar" ? "صفحة الحجوزات" : "Reservations Page",
                 path: "/reservationsPage",
                 element: <ReservationsPage />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
+                name: lang === "ar" ? "صفحة الحجوزات" : "Setting",
+                path: "/setting",
+                element: <Abouts />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
+                name: lang === "ar" ? "أسفل الصفحة" : "Footer",
+                path: "/footer",
+                element: <FooterData />,
               },
             ]
           : []),

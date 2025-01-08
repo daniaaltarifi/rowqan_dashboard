@@ -96,7 +96,7 @@ const handleShow = (id, type) => {
     <div className="mt-12 mb-8 flex flex-col gap-12">
         
     <Card>
-      <CardHeader variant="gradient" color="green" className="mb-8 p-6">
+      <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }} className="mb-8 p-6">
         <Typography variant="h6" color="white">
        {lang ==='ar'? "جدول الشاليهات" :"  Chalets Table "}
         </Typography>
@@ -104,7 +104,7 @@ const handleShow = (id, type) => {
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
       <Link to="/dashboard/addchalet">
     <Button
-  className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#D87C55]"
+  className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#F2C79D]"
   style={{ marginLeft: '80px' }} 
 >
   <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة شاليه" : "Add Chalets "}
@@ -185,13 +185,13 @@ const handleShow = (id, type) => {
                         <div className="flex items-center">
                           <Button 
                             onClick={() => navigate(`/dashboard/updatechalet/${chalet.id}`)}
-                            className="mr-2 bg-[#D87C55] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+                            className="mr-2 bg-[#6DA6BA] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                           >
                             <PencilIcon className="h-5 w-5 mr-1 " /> {lang ==='ar'? "تعديل" : "Edit "}
                           </Button>
                           <Button 
    onClick={() => handleShow(chalet.id, 'chalet')} // Pass 'chalet' type
-   className="text-white-600 bg-[#F5C16C] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+   className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
                           >
                             <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
                           </Button>
@@ -212,7 +212,7 @@ const handleShow = (id, type) => {
        id={ChaletsIdToDelete} // Pass the chalet ID to DeleteModule
       />
       <Card>
-      <CardHeader variant="gradient" color="green" className="mb-8 p-6">
+      <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }}className="mb-8 p-6">
         <Typography variant="h6" color="white">
        {lang ==='ar'? "جدول تفاصيل الشاليهات" :"  Chalets Details Table "}
         </Typography>
@@ -220,7 +220,7 @@ const handleShow = (id, type) => {
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
       <Link to="/dashboard/adddetails">
     <Button
-  className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#D87C55]"
+  className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#F2C79D]"
   style={{ marginLeft: '80px' }} 
 >
   <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة  تفاصيل شاليه" : "Add Chalets Details "}
@@ -285,12 +285,12 @@ const handleShow = (id, type) => {
                         <div className="flex items-center">
                           <Button 
                             onClick={() => navigate(`/dashboard/updatedetails/${details.id}`)}
-                            className="mr-2 bg-[#D87C55] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+                            className="mr-2 bg-[#6DA6BA] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                           >
                             <PencilIcon className="h-5 w-5 mr-1 " /> {lang ==='ar'? "تعديل" : "Edit "}
                           </Button>
                           <Button 
-  onClick={() => handleShow(details.id, 'details')}className="text-white-600 bg-[#F5C16C] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+  onClick={() => handleShow(details.id, 'details')}className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
                           >
                             <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
                           </Button>

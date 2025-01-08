@@ -21,7 +21,7 @@ function UpdateSocial() {
       const fetchsocial = async () => {
         try {
           const response = await axios.get(
-            `${API_URL}/social/getsocialbyid/${id}`
+            `${API_URL}/footericons/getFooterIconById/${id}`
           );
           setlink_to(response.data.link_to);
           setExistingicon(response.data.icon); 
@@ -43,14 +43,14 @@ function UpdateSocial() {
       }
 
       try {
-        await axios.put(`${API_URL}/social/updatesocial/${id}`, formData, {
+        await axios.put(`${API_URL}/footericons/updateFooterIcon/${id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
         Swal.fire({
           link_to: "Success!",
-          text: "Social Media Updated successfully.",
+          text: "icon Updated successfully.",
           icon: "success",
           confirmButtonText: "OK",
         });
@@ -70,7 +70,7 @@ function UpdateSocial() {
     <section className="m-8 flex gap-4">
       <div className="w-full mt-24">
         <div className="text-center">
-          <Typography variant="h2" className="font-bold mb-4">{lang ==='ar'? "تعديل تواصل اجنماعي " :"Update Social Media"}</Typography>
+          <Typography variant="h2" className="font-bold mb-4">{lang ==='ar'? "تعديل صورة " :"Update icon"}</Typography>
         </div>
         <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleUpdateSocial}>
           <div className="grid grid-cols-1 gap-6 ">
@@ -89,7 +89,7 @@ function UpdateSocial() {
             <Typography variant="small" color="blue-gray" className=" font-medium">{lang ==='ar'? "الصورة" :"Icon"}</Typography>
             <div className="flex flex-col">
               {existing_icon && (
-                <img src={`${API_URL}/${existing_icon}`} alt="Existing brand" className="mb-2 w-32 h-32 object-cover" />
+                <img src={`https://res.cloudinary.com/durjqlivi/${existing_icon}`} alt="Existing" className="mb-2 w-32 h-32 object-cover" />
               )}
                 <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "من المستحسن استخدام تنسيق WebP للصور." :"It is recommended to use the WebP format for images."}</Typography>
 
@@ -114,7 +114,7 @@ function UpdateSocial() {
             </div>
           </div>
           <Button type="submit" className="mt-6" fullWidth>
-          {lang ==='ar'? "تعديل تواصل اجنماعي " :"Update Social Media"}          </Button>
+          {lang ==='ar'? "تعديل  " :"Update "}          </Button>
         </form>
       </div>
     </section>

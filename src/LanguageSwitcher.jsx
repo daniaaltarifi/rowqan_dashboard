@@ -12,9 +12,9 @@ const LanguageSwitcher = () => {
   return (
     <div className="language-switcher">
       <Button
-  className="bg-[#D87C55]  transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"onClick={() => handleLanguageChange('en')}>en</Button>
+  className="bg-[#6DA6BA]  transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"onClick={() => handleLanguageChange('en')}>en</Button>
        <Button
-  className="bg-[#F5C16C]  transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"onClick={() => handleLanguageChange('ar')}>ar</Button>
+  className="bg-[#F2C79D]  transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"onClick={() => handleLanguageChange('ar')}>ar</Button>
     </div>
   );
 };

@@ -145,7 +145,7 @@ function AddChalets() {
 
           <Button
   type="submit"
-  className="mt-6 bg-[#D87C55] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
+  className="mt-6 bg-[#6DA6BA] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
   fullWidth
 >
 {lang ==='ar'? "اضافة" : "Add  "}</Button>

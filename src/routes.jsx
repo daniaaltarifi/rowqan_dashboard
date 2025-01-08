@@ -2,15 +2,13 @@ import { HomeIcon, TagIcon } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
 import { Home } from "@/pages/dashboard";
 import HomeAdminPage from "./Admin DashBoard/HomeAdminPage";
-import ReservationsPage from "./Admin DashBoard/ReservationsPage";
+import ReservationsPage from "./SuperAdmin DashBoard/ReservationsPage";
 import HomeChaletOwners from "./ChaletsOwners DashBoard/HomeChaletOwners";
 import ChaletsPage from "./Admin DashBoard/ChaletsPage";
 import React, { useState, useEffect } from "react";
 import Chalets from "./pages/dashboard/Chalets/Chalets";
 import Properties from "./pages/dashboard/Properties/Properties";
 import HomeSuperAdmin from "./SuperAdmin DashBoard/HomeSuperAdmin";
-import Abouts from "./pages/dashboard/About/Abouts";
-import FooterData from "./pages/dashboard/Footer/FooterData";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -61,13 +59,19 @@ export const useRoutes = () => {
               },
               {
                 icon: <TagIcon {...icon} />,
-                name: lang === "ar" ? "مالكي الشاليهات" : "Chalets Owners Page",
-                path: "/HomeAdmin",
-                element: <HomeAdminPage />,
+                name: lang === "ar" ? "مالكي الشاليهات" : "Chalets Owners",
+                path: "/ChaletsOwners",
+                element: <ChaletsOwnersPageAdmin />,
               },
               {
                 icon: <TagIcon {...icon} />,
-                name: lang === "ar" ? "صفحة الحجوزات" : "Reservations Page",
+                name: lang === "ar" ? "صفحة المستخدمين" : "Users",
+                path: "/usersSuperAdmin",
+                element: <Users />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
+                name: lang === "ar" ? "صفحة الحجوزات" : "Reservations",
                 path: "/reservationsPage",
                 element: <ReservationsPage />,
               },
@@ -113,25 +117,35 @@ export const useRoutes = () => {
               },
               {
                 icon: <TagIcon {...icon} />,
+                name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
+                path: "/propertieschalets",
+                element: <Properties />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
                 name:lang ==='ar'? "الشاليهات" : "Chalets",
                 path: "/chalets",
                 element: <Chalets />,
               },  {
                 icon: <TagIcon {...icon} />,
-                name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
-                path: "/propertieschalets",
-                element: <Properties />,
+
                 name: lang === "ar"
                  ? "صفحة المسؤول الرئيسية"
-                  : "Home Super Admin Page",
-                path: "/HomeSuperAdmin",
-                element: <HomeSuperAdmin />,
+                  : "Chalets Owners",
+                path: "/ChaletOwnersPage",
+                element: <ChaletsOwnersPage />,
               },
               {
                 icon: <TagIcon {...icon} />,
-                name: lang === "ar" ? "صفحة الشاليهات" : "Chalets Page",
-                path: "/Chalets",
-                element: <ChaletsPage />,
+                name: lang === "ar" ? "صفحة المستخدمين" : "Users",
+                path: "/usersSuperAdmin",
+                element: <Users />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
+                name: lang === "ar" ? "صفحة الحجوزات" : "Reservations",
+                path: "/reservationsPage",
+                element: <ReservationsPage />,
               },
             ]
           : []),

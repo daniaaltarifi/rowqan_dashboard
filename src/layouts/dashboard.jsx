@@ -18,11 +18,6 @@ import AddProperties from "@/pages/dashboard/Properties/AddProperties";
 import UpdateProerties from "@/pages/dashboard/Properties/UpdateProperties";
 import AddBriefChalets from "@/pages/dashboard/Properties/AddBriefChalets";
 import UpdateBriefChalets from "@/pages/dashboard/Properties/UpdateBriefChalets";
-import AddImagesChalets from "@/pages/dashboard/Properties/AddImagesChalets";
-import UpdateHero from "@/pages/dashboard/About/UpdateHero";
-import UpdateBlog from "@/pages/dashboard/About/UpdateBlog";
-import AddBlog from "@/pages/dashboard/About/AddBlog";
-import AddFooter from "@/pages/dashboard/Footer/AddFooter";
 
 
 export function Dashboard() {
@@ -68,7 +63,8 @@ export function Dashboard() {
         <Route path="updatesocial/:id" element={<UpdateSocial />} />
         <Route path="addheader" element={<AddHeader />} />
         <Route path="updateheader/:id" element={<UpdateHeader />} />
-       
+        <Route path="reservationdetails/:id" element={<ReservationDetails />} />
+
 {/* /////////////////////////////////////// */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:id" element={<UpdateChalets />} />

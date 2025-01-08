@@ -1,13 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { IconButton } from "@material-tailwind/react";
-import {
-  Sidenav,
-  DashboardNavbar,
-  Configurator,
-  Footer,
-} from "@/widgets/layout";
-import routes from "@/routes";
+import { Sidenav, DashboardNavbar, Configurator, Footer } from "@/widgets/layout";
+import useRoutes from "@/routes"; 
 
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 import AddUser from "@/pages/dashboard/Users/AddUser";
@@ -44,9 +39,19 @@ import AddProperties from "@/pages/dashboard/Properties/AddProperties";
 import UpdateProerties from "@/pages/dashboard/Properties/UpdateProperties";
 import AddBriefChalets from "@/pages/dashboard/Properties/AddBriefChalets";
 import UpdateBriefChalets from "@/pages/dashboard/Properties/UpdateBriefChalets";
+
+
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
+
+
+  const routes = useRoutes();
+
+  
+  if (!routes) {
+    return <div>Loading...</div>; 
+  }
 
   return (
     <div className="min-h-screen bg-blue-gray-50/50">
@@ -68,6 +73,7 @@ export function Dashboard() {
         >
           <Cog6ToothIcon className="h-5 w-5" />
         </IconButton>
+
         <Routes>
           {routes.map(({ layout, pages }) =>
             layout === "dashboard" &&
@@ -110,10 +116,19 @@ export function Dashboard() {
 <Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />
 <Route path="addbriefchalets" element={<AddBriefChalets />} />
 <Route path="updatebriefchalets/:id" element={<UpdateBriefChalets />} />
+          {Array.isArray(routes) &&
+            routes.map(({ layout, pages }) =>
+              layout === "dashboard" &&
+              pages.map(({ path, element }) => (
+                <Route key={path} path={path} element={element} />
+              ))
+            )}
 
+          <Route path="adduser" element={<AddUser />} />
+          <Route path="updateuser/:id" element={<UpdateUser />} />
+          
+        </Routes>
 
-
-        </Routes>   
         <div className="text-blue-gray-600">
           <Footer />
         </div>

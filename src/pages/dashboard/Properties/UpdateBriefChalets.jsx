@@ -52,10 +52,9 @@ function UpdateBriefChalets() {
 
         try {
             await axios.put(`${API_URL}/BreifDetailsChalets/updateBreif/${id}`, 
-                { "type":updateBriefChalets.type,
+                {"type":updateBriefChalets.type,
                   "value":updateBriefChalets.value,
-                  lang,
-                  "chalet_id":updateBriefChalets.chalet_id},  // Correctly format the payload
+                  lang,"chalet_id":updateBriefChalets.chalet_id},  // Correctly format the payload
                 {
                     headers: {
                         "Content-Type": "application/json", // Correct Content-Type for JSON data
@@ -71,6 +70,7 @@ function UpdateBriefChalets() {
             navigate("/dashboard/propertieschalets");
         } catch (error) {
             console.error(error);
+            console.log("first error: ",updateBriefChalets.chalet_id)
             Swal.fire({
                 type: "Error!",
                 text: "Failed to update. Please try again.",
@@ -109,7 +109,7 @@ function UpdateBriefChalets() {
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الوصف" :"value"}</Typography>
                             <Input
                                 size="lg"
-                                name='type'
+                                name='value'
                                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                                 value={updateBriefChalets.value}
                                 onChange={handleChange}

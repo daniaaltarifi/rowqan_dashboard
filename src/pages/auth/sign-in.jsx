@@ -13,7 +13,6 @@ import { API_URL } from "@/App";
 
 export function SignIn({ setIsAuthenticated }) {
 
-  const [validated, setValidated] = useState(false);
   const [passwordvisible, setPasswordvisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [mfaCode, setMfaCode] = useState("");
@@ -85,10 +84,17 @@ export function SignIn({ setIsAuthenticated }) {
           Cookies.set('userRole',res.data.user_type_id)
           setIsAuthenticated(true);
           if (res.data.user_type_id === 1) {
-            navigate(`/dashboard/home`);
-          } else {
+            navigate('/dashboard/home');
+          }
+          else if (res.data.user_type_id === 4){
+            navigate('/HomeChaletsOwners');
+          }
+          else {
             setErrorMessage("You are not authorized to access.");
-          }}
+          }
+        } else {
+          setErrorMessage("Invalid MFA code or login failed.");
+        }
       }
     } catch (error) {
       console.error("Login error:", error);

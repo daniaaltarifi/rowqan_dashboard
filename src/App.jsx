@@ -36,6 +36,14 @@ import AddHeader from "./pages/dashboard/Header/AddHeader.jsx";
 import UpdateHeader from "./pages/dashboard/Header/UpdateHeader.jsx";
 import LanguageSwitcher from "./LanguageSwitcher";
 import DirectionHandler from "./DirectionHandler";
+import AddChalets from "./pages/dashboard/Chalets/AddChalets";
+import UpdateChalets from "./pages/dashboard/Chalets/UpdateChalets";
+import AddDetails from "./pages/dashboard/Chalets/AddDetails";
+import UpdateDetails from "./pages/dashboard/Chalets/UpdateDetails";
+import AddProperties from "./pages/dashboard/Properties/AddProperties";
+import UpdateProerties from "./pages/dashboard/Properties/UpdateProperties";
+import AddBriefChalets from "./pages/dashboard/Properties/AddBriefChalets";
+import UpdateBriefChalets from "./pages/dashboard/Properties/UpdateBriefChalets";
 // export const API_URL="https://mazr3tnabackend.kassel.icu";
 export const API_URL="http://localhost:5000";
 function App() {
@@ -44,8 +52,9 @@ function App() {
     const token = Cookies.get('authtoken');
     if (token) {
       setIsAuthenticated(!!token);
-    }
+      }
   }, []);
+  
   return (
     <>
       <DirectionHandler />
@@ -83,6 +92,16 @@ function App() {
         <Route  path="addprivacypolicy"  element={<AddPrivacyPolicy/>} />
         <Route  path="updateprivacypolicy"  element={<UpdatePrivacyPolicy/>} />
         <Route  path="updatetermsandconditions"  element={<UpdateTermsAndConditions/>} />
+        {/* ////////////////////////////////////////////////// */}
+<Route path="addchalet" element={<AddChalets />} />
+<Route path="updatechalet/:id" element={<UpdateChalets />} />
+<Route path="adddetails" element={<AddDetails />} />
+<Route path="updatedetails/:id" element={<UpdateDetails />} />
+<Route path="addchaletproperties" element={<AddProperties />} />
+<Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />
+<Route path="addbriefchalets" element={<AddBriefChalets />} />
+<Route path="updatebriefchalets/:id" element={<UpdateBriefChalets />} />
+
       </Route>
       <Route path="/auth/*" element={<Auth />} />
       <Route path="/auth/sign-in" element={<SignIn setIsAuthenticated={setIsAuthenticated} />} />

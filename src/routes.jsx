@@ -6,6 +6,8 @@ import ReservationsPage from "./Admin DashBoard/ReservationsPage";
 import HomeChaletOwners from "./ChaletsOwners DashBoard/HomeChaletOwners";
 import ChaletsPage from "./Admin DashBoard/ChaletsPage";
 import React, { useState, useEffect } from "react";
+import Chalets from "./pages/dashboard/Chalets/Chalets";
+import Properties from "./pages/dashboard/Properties/Properties";
 import HomeSuperAdmin from "./SuperAdmin DashBoard/HomeSuperAdmin";
 
 const lang = Cookies.get("lang") || "en"; 
@@ -43,6 +45,17 @@ export const useRoutes = () => {
                 name: lang === "ar" ? "الرئيسية" : "Home",
                 path: "/home",
                 element: <Home />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
+                name:lang ==='ar'? "الشاليهات" : "Chalets",
+                path: "/chalets",
+                element: <Chalets />,
+              },  {
+                icon: <TagIcon {...icon} />,
+                name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
+                path: "/propertieschalets",
+                element: <Properties />,
               },
               {
                 icon: <TagIcon {...icon} />,
@@ -86,6 +99,14 @@ export const useRoutes = () => {
               },
               {
                 icon: <TagIcon {...icon} />,
+                name:lang ==='ar'? "الشاليهات" : "Chalets",
+                path: "/chalets",
+                element: <Chalets />,
+              },  {
+                icon: <TagIcon {...icon} />,
+                name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
+                path: "/propertieschalets",
+                element: <Properties />,
                 name: lang === "ar"
                  ? "صفحة المسؤول الرئيسية"
                   : "Home Super Admin Page",

@@ -1,132 +1,179 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   Input,
-  Checkbox,
   Button,
   Typography,
 } from "@material-tailwind/react";
 import { API_URL } from "../../../App.jsx";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import axios from 'axios'; // Ensure Axios is imported
-import Cookies from "js-cookie";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function AddUser() {
-  const [first_name, setFirst_name] = useState("");
-  const [last_name, setLast_name] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const navigate = useNavigate();
-  const lang = Cookies.get('lang') || 'en';
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [country, setCountry] = useState("");
+    const [password, setPassword] = useState(""); 
+    const [userRole, setUserRole] = useState(""); 
+    const [roles, setRoles] = useState([]);
+    const lang = Cookies.get('lang') || 'en';
 
-  const handleAddUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(`${API_URL}/auth/signup/post`, {
-        first_name,
-        last_name,
-        password,
-        email,
-        role,
-        // balance,
-      });
-      Swal.fire({
-        title: "Success!",
-        text: "User added successfully.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-      navigate("/dashboard/users");
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to add. Please try again.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    }
-  };
+    const navigate = useNavigate();
 
-  return (
-    <section className="m-8 flex gap-4">
-      <div className="w-full mt-24">
-        <div className="text-center">
-          <Typography variant="h2" className="font-bold mb-4"> {lang ==='ar'? "اضافة مستخدم" : "Add User  "}</Typography>
-        </div>
-        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleAddUser}>
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* First Column */}
-            <div className="flex flex-col">
-              <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الاسم الاول" : "First Name "}</Typography>
-              <Input
-              required
-                size="lg"
-                placeholder="John"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => setFirst_name(e.target.value)}
-              />
-              <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "البريد الالكتروني" : "Your email "}</Typography>
-              <Input
-              required
-              type='email'
-                size="lg"
-                placeholder="name@mail.com"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "كلمة السر" : "Password "}</Typography>
-              <Input
-                type="password"
-                size="lg"
-                placeholder="********"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => setPassword(e.target.value)}
-              required
-              />
-            </div>
+    const handleAddUser = async (e) => {
+        e.preventDefault();
 
-            {/* Second Column */}
-            <div className="flex flex-col">
-              <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الاسم الاخير" : "Last Name "}</Typography>
-              <Input
-                size="lg"
-                placeholder="Doe"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => setLast_name(e.target.value)}
-              required
+        const userData = {
+            name,
+            email,
+            phone_number: phoneNumber,
+            country,
+            password,
+            lang,
+            user_type_id: userRole, 
+        };
 
-              />
-             <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الصلاحية" : "Role "}</Typography>
-<select
-  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-  onChange={(e) => setRole(e.target.value)}
-  required
+        try {
+            await axios.post(`${API_URL}/users/createUser`, userData);
+            Swal.fire({
+                title: "Success!",
+                text: "User added successfully.",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+            navigate("/dashboard/users");
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                title: "Error!",
+                text: "Failed to add user. Please try again.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        }
+    };
+
+    const fetchRoles = useCallback(async () => {
+      try {
+        const response = await axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`);
+        console.log("API Response:", response.data);
+        if (Array.isArray(response.data)) {
+          setRoles(response.data); 
+        } else {
+          console.error("Error: Roles data is not in the expected format.");
+        }
+      } catch (err) {
+        console.error("Error fetching roles:", err);
+      }
+    }, [lang]);
+
+    useEffect(() => {
+      fetchRoles();
+    }, [fetchRoles]);
+
+    return (
+        <section className="m-8 flex gap-4">
+            <div className="w-full mt-24">
+                <div className="text-center">
+                    <Typography variant="h2" className="font-bold mb-4">
+                        {lang === 'ar' ? "إضافة مستخدم" : "Add User"}
+                    </Typography>
+                </div>
+                <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleAddUser}>
+                    <div className="grid grid-cols-1 gap-6">
+                        <div className="flex flex-col">
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                                {lang === 'ar' ? "اسم المستخدم" : "Name"}
+                            </Typography>
+                            <Input
+                                required
+                                size="lg"
+                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                onChange={(e) => setName(e.target.value)}
+                            />
+
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                                {lang === 'ar' ? "البريد الإلكتروني" : "Email"}
+                            </Typography>
+                            <Input
+                                required
+                                size="lg"
+                                type="email"
+                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                                {lang === 'ar' ? "رقم الهاتف" : "Phone Number"}
+                            </Typography>
+                            <Input
+                                required
+                                size="lg"
+                                type="tel"
+                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                                {lang === 'ar' ? "البلد" : "Country"}
+                            </Typography>
+                            <Input
+                                required
+                                size="lg"
+                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                onChange={(e) => setCountry(e.target.value)}
+                            />
+
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                                {lang === 'ar' ? "كلمة المرور" : "Password"}
+                            </Typography>
+                            <Input
+                                required
+                                size="lg"
+                                type="password"
+                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                                {lang === 'ar' ? "نوع المستخدم" : "User Type"}
+                            </Typography>
+                            <select
+    className="form-select block w-full p-3 mt-2 text-lg bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#D87C55] focus:border-[#D87C55] focus:outline-none"
+    name="user_role"
+    value={userRole}
+    onChange={(e) => setUserRole(e.target.value)} 
+    required
 >
-  <option value="">  {lang ==='ar'? "اختر صلاحيتكك" : "Choose a Role "}</option> {/* Set value to empty string */}
-  <option value="user">User</option>
-  <option value="admin">Admin</option>
+    <option value="" className="text-gray-500">{lang === 'ar' ? "اختيار الدور" : "Select Role"}</option>
+    {roles.length > 0 ? (
+      roles.map((role) => (
+        <option key={role.id} value={role.id} className="text-black">
+          {role.type}
+        </option>
+      ))
+    ) : (
+      <option disabled>{lang === 'ar' ? "جارِ تحميل الأدوار..." : "Loading roles..."}</option>
+    )}
 </select>
-{/* 
-              <Typography variant="small" color="blue-gray" className="mb-2 font-medium">Balance</Typography>
-              <Input
-                size="lg"
-                placeholder="10.00"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => setBalance(e.target.value)}
-              /> */}
-            </div>
-          </div>
 
-          <Button type="submit" className="mt-6" fullWidth>
-          {lang ==='ar'? "اضافة مستخدم" : "  Add User   "}
-          </Button>
-        </form>
-      </div>
-    </section>
-  );
+                        </div>
+                    </div>
+
+                    <Button
+                        type="submit"
+                        className="mt-6 bg-[#D87C55] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
+                        fullWidth
+                    >
+                        {lang === 'ar' ? "إضافة" : "Add"}
+                    </Button>
+                </form>
+            </div>
+        </section>
+    );
 }
 
 export default AddUser;

@@ -11,7 +11,8 @@ import AddCode from "./pages/dashboard/Codes/AddCodes.jsx";
 import UpdateCode from "./pages/dashboard/Codes/UpdateCode.jsx";
 import AddSlide from "./pages/dashboard/Slider/AddSlide.jsx";
 import UpdateSlide from "./pages/dashboard/Slider/UpdateSlide.jsx";
-import { SignIn } from "./pages/auth";
+import SignIn from './pages/auth/sign-in';
+
 
 import AddCategory from "./pages/dashboard/Category/AddCategory";
 import AddProduct from "./pages/dashboard/Products/AddProducts/AddProduct";

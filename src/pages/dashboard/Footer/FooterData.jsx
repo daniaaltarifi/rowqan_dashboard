@@ -22,9 +22,11 @@ function FooterData() {
     const [showModal, setShowModal] = useState(false);
     const [FooterIdToDelete, setFooterIdToDelete] = useState(null); // Store the ID of the Footer to delete
     const lang = Cookies.get('lang') || 'en';
+  const [itemType, setItemType] = useState(null); // Store the ID of the slide to delete
 
-    const handleShow = (id) => {
+    const handleShow = (id,type) => {
       setFooterIdToDelete(id); // Set the Footer ID to delete
+      setItemType(type);   // Set the type (either 'chalet' or 'details')
       setShowModal(true);
     };
   
@@ -35,7 +37,7 @@ function FooterData() {
   
     const fetchFooter = async () => {
       try {
-        const response = await axios.get(`${API_URL}/footer/get/footer`);
+        const response = await axios.get(`${API_URL}/footer/getAllFooters/${lang}`);
         setFooter(response.data);
       } catch (error) {
         console.error(error);
@@ -43,7 +45,7 @@ function FooterData() {
     };
     const fetchSocial = async () => {
       try {
-        const response = await axios.get(`${API_URL}/social/get/social`);
+        const response = await axios.get(`${API_URL}/footericons/getAllFooterIcons`);
         setSocial(response.data);
       } catch (error) {
         console.error(error);
@@ -53,10 +55,18 @@ function FooterData() {
       fetchFooter();
       fetchSocial()
     }, []);
-    const handleDelete = async (id) => {
+    const handleDelete = async () => {
+      // const { idToDelete, itemType } = this.state;
+    
       try {
-        await axios.delete(`${API_URL}/social/delete/social/${id}`);
-        setSocial(Blogs.filter((b) => b.id !== id));
+        // Conditional logic to handle different delete operations
+        if (itemType === 'footer') {
+          await axios.delete(`${API_URL}/footer/deleteFooter/${FooterIdToDelete}/${lang}`);
+          setFooter(Footer.filter((foot) => foot.id !== FooterIdToDelete)); // Remove from list
+        } else if (itemType === 'social') {
+          await axios.delete(`${API_URL}/footericons/deleteFooterIcon/${FooterIdToDelete}/${lang}`);
+          setSocial(socail.filter((footericons) => footericons.id !== FooterIdToDelete)); // Remove from list
+        }
       } catch (error) {
         console.error(error);
       }
@@ -67,16 +77,24 @@ function FooterData() {
     <div className="mt-12 mb-8 flex flex-col gap-12">
         
     <Card>
-      <CardHeader variant="gradient" color="green" className="mb-8 p-6">
+      <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }} className="mb-8 p-6">
         <Typography variant="h6" color="white">
         {lang ==='ar'? "جدول اسفل الصفحة " :"Footer Table"}
         </Typography>
       </CardHeader>
+        <Link to="/dashboard/addfooter">
+          <Button
+        className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#F2C79D]"
+        style={{ marginLeft: '80px' }} 
+      >
+        <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة" : "Add Footer "}
+      </Button>
+      </Link>
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {[`${lang ==='ar'? "البريد الالكتروني" : "Email "}`,`${lang ==='ar'? "الرقم" : "Phone"}`,`${lang ==='ar'? "الصورة" : "Logo"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
+              {[`${lang ==='ar'? "العنوان" : "title"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
                 <th
                   key={el}
                   className="border-b border-blue-gray-50 py-3 px-5 "
@@ -95,8 +113,6 @@ function FooterData() {
             {Footer.map(
               (foot,index) => {
                 const className = `py-3 px-5 ${index === Footer.length - 1 ? "" : "border-b border-blue-gray-50"}`;
-
-
                 return (
                   <tr key={foot.id}>
                     <td className={className}>
@@ -107,38 +123,25 @@ function FooterData() {
                             color="blue-gray"
                             className="font-semibold"
                           >
-                            {foot.email}
+                            {foot.title}
                           </Typography>
 
                         </div>
                       </div>
-                    </td>
-                    <td className={className}>
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-semibold"
-                          >
-                            {foot.phone}
-                          </Typography>
-
-                        </div>
-                      </div>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar src={`${API_URL}/${foot.logo}`}alt={"Footer"} size="md" variant="rounded" />
-                      </Typography>
                     </td>
                       <td className={className}>
                         <div className="flex items-center ">
                           <Button 
                     onClick={() => navigate(`/dashboard/updatefooter/${foot.id}`)}
-                    className="mr-2 flex items-center bg-[#D87C55] transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+                    className="mr-2 flex items-center bg-[#6DA6BA] transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                           >
                             <PencilIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "تعديل" : "Edit "}
+                          </Button>
+                          <Button 
+                    onClick={() => handleShow(foot.id,'footer')} // Pass the Blogs ID to handleShow
+                    className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+                          >
+                            <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
                           </Button>
                         </div>
                       </td>
@@ -152,17 +155,17 @@ function FooterData() {
       </CardBody>
     </Card>
     <Card>
-      <CardHeader variant="gradient" color="green" className="mb-8 p-6">
+      <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }}  className="mb-8 p-6">
         <Typography variant="h6" color="white">
-          {lang ==='ar'? "جدول التواصل الاجتماعي" :"Social Media Table"}
+          {lang ==='ar'? "جدول صور اسفل الصفحة" :"Icon Footer Table"}
         </Typography>
       </CardHeader>
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
       <Link to="/dashboard/addsocial"><Button
-  className="flex  bg-[#D87C55] items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"
+  className="flex  bg-[#F2C79D] items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"
   style={{ marginLeft: '80px' }} 
 >
-  <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة تواصل اجنماعي " :"Add Social media"}
+  <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة صورة " :"Add Icon"}
 </Button></Link>
         <table className="w-full min-w-[640px] table-auto">
           <thead>
@@ -204,20 +207,20 @@ function FooterData() {
                     </td>
                     <td className={className}>
                       <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar src={`${API_URL}/${soc.icon}`}alt={"Footer"} size="md" variant="rounded" />
+                      <Avatar src={`https://res.cloudinary.com/durjqlivi/${soc.icon}`}alt={"Footer"} size="md" variant="rounded" />
                       </Typography>
                     </td>
                       <td className={className}>
                         <div className="flex items-center ">
                           <Button 
                     onClick={() => navigate(`/dashboard/updatesocial/${soc.id}`)}
-                    className="mr-2 flex items-center bg-[#D87C55] transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+                    className="mr-2 flex items-center bg-[#6DA6BA] transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                           >
                             <PencilIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "تعديل" : "Edit "}
                           </Button>
                           <Button 
-                    onClick={() => handleShow(soc.id)} // Pass the Blogs ID to handleShow
-                    className="text-white-600 bg-[#F5C16C] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+                    onClick={() => handleShow(soc.id,'social')} // Pass the Blogs ID to handleShow
+                    className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
                           >
                             <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
                           </Button>

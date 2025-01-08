@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   Input,
@@ -15,6 +15,7 @@ function AddSocail() {
     const [link_to, setlink_to] = useState("");
     const [icon, seticon] = useState(null);
     const [iconName, seticonName] = useState("");
+    const [footer, setfooter] = useState([]);
     const lang = Cookies.get('lang') || 'en';
 
     const handleFileChange = (e) => {
@@ -32,11 +33,10 @@ function AddSocail() {
       e.preventDefault();
       const formData = new FormData();
       formData.append("link_to", link_to);
-      formData.append("icon", icon);
-  
+      formData.append("icon", icon);  
       try {
         const response = await axios.post(
-          `${API_URL}/social/addsocial`,
+          `${API_URL}/footericons/createFooterIcon`,
           formData,
           {
             headers: {
@@ -46,7 +46,7 @@ function AddSocail() {
         );
         Swal.fire({
           link_to: "Success!",
-          text: "Social media added successful.",
+          text: "icon added successful.",
           icon: "success",
           confirmButtonText: "OK",
         });
@@ -66,7 +66,7 @@ function AddSocail() {
     <section className="m-8 flex gap-4">
       <div className="w-full mt-24">
         <div className="text-center">
-          <Typography variant="h2" className="font-bold mb-4">{lang ==='ar'? "اضافة تواصل اجنماعي " :"Add Social media"}</Typography>
+          <Typography variant="h2" className="font-bold mb-4">{lang ==='ar'? "اضافة صورة " :"Add icon"}</Typography>
         </div>
         <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleAddSocail}>
           <div className="grid grid-cols-1 gap-6 ">
@@ -106,7 +106,7 @@ function AddSocail() {
           </div>
 
           <Button type="submit" className="mt-6" fullWidth>
-          {lang ==='ar'? "اضافة تواصل اجنماعي " :"Add Social media"}          </Button>
+          {lang ==='ar'? "اضافة  " :"Add icon"}          </Button>
         </form>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
   Button,
@@ -53,15 +53,19 @@ export function Configurator() {
     orange: "from-orange-400 to-orange-600",
     red: "from-red-400 to-red-600",
     pink: "from-pink-400 to-pink-600",
-  };
+    blue: "from-[#6DA6BA] to-[#6DA6BA]"
+    };
+    useEffect(() => {
+      // Setting default sidenav color to blue when the component mounts
+      setSidenavColor(dispatch, "blue");
+  
+      const stars = fetch(
+        "https://api.github.com/repos/creativetimofficial/material-tailwind-dashboard-react"
+      )
+        .then((response) => response.json())
+        .then((data) => setStars(formatNumber(data.stargazers_count, 1)));
+    }, [dispatch]);
 
-  React.useEffect(() => {
-    const stars = fetch(
-      "https://api.github.com/repos/creativetimofficial/material-tailwind-dashboard-react"
-    )
-      .then((response) => response.json())
-      .then((data) => setStars(formatNumber(data.stargazers_count, 1)));
-  }, []);
 
   return (
     <aside

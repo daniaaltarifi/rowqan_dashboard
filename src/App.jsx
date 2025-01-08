@@ -3,35 +3,13 @@ import { Dashboard, Auth } from "@/layouts";
 import Cookies from 'js-cookie';
 import './Styles/Brands.css';
 import { useState,useEffect } from "react";
-import AddUser from "./pages/dashboard/Users/AddUser.jsx";
-import UpdateUser from "./pages/dashboard/Users/UpdateUser.jsx";
-import AddBrand from "./pages/dashboard/Brands/AddCertificate.jsx";
-import UpdateBrand from "./pages/dashboard/Brands/UpdateCertificate.jsx";
-import AddCode from "./pages/dashboard/Codes/AddCodes.jsx";
-import UpdateCode from "./pages/dashboard/Codes/UpdateCode.jsx";
-import AddSlide from "./pages/dashboard/Slider/AddSlide.jsx";
-import UpdateSlide from "./pages/dashboard/Slider/UpdateSlide.jsx";
 import SignIn from './pages/auth/sign-in';
 
-
-import AddCategory from "./pages/dashboard/Category/AddCategory";
-import AddProduct from "./pages/dashboard/Products/AddProducts/AddProduct";
-import UpdateProduct from "./pages/dashboard/Products/UpdateProducts";
-import UpdateVariant from "./pages/dashboard/Products/UpdateVariants.jsx";
-import AddBlog from "./pages/dashboard/Blogs/AddBlog.jsx";
-import UpdateBlog from "./pages/dashboard/Blogs/UpdateBlog.jsx";
-
 import Abouts from "./pages/dashboard/About/Abouts.jsx";
-import AddAbout from "./pages/dashboard/About/AddAbout.jsx";
 import UpdateAbout from "./pages/dashboard/About/UpdateAbout.jsx";
 import UpdateFooter from "./pages/dashboard/Footer/UpdateFooter.jsx";
 import AddSocail from "./pages/dashboard/Footer/AddSocial.jsx";
 import UpdateSocial from "./pages/dashboard/Footer/UpdateSocial.jsx";
-
-import UpdatePrivacyPolicy from "./pages/dashboard/PrivacyPolicy/UpdatePrivacyPolicy.jsx"
-import PrivacyPolicies from "./pages/dashboard/PrivacyPolicy/AllPrivacyPolicy.jsx";
-import AddPrivacyPolicy from "./pages/dashboard/PrivacyPolicy/AddPrivacyPolicy.jsx";
-import UpdateTermsAndConditions from "./pages/dashboard/TermsConditions/UpdateTermsAndConditions.jsx";
 import AddHeader from "./pages/dashboard/Header/AddHeader.jsx";
 import UpdateHeader from "./pages/dashboard/Header/UpdateHeader.jsx";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -44,6 +22,11 @@ import AddProperties from "./pages/dashboard/Properties/AddProperties";
 import UpdateProerties from "./pages/dashboard/Properties/UpdateProperties";
 import AddBriefChalets from "./pages/dashboard/Properties/AddBriefChalets";
 import UpdateBriefChalets from "./pages/dashboard/Properties/UpdateBriefChalets";
+import AddImagesChalets from "./pages/dashboard/Properties/AddImagesChalets";
+import UpdateHero from "./pages/dashboard/About/UpdateHero";
+import UpdateBlog from "./pages/dashboard/About/UpdateBlog";
+import AddBlog from "./pages/dashboard/About/AddBlog";
+import AddFooter from "./pages/dashboard/Footer/AddFooter";
 // export const API_URL="https://mazr3tnabackend.kassel.icu";
 export const API_URL="http://localhost:5000";
 function App() {
@@ -62,36 +45,13 @@ function App() {
       <Route path="/dashboard/*" element={
         isAuthenticated ? <Dashboard /> : <Navigate to="/auth/sign-in" replace />
       }> 
-        <Route path="adduser" element={<AddUser />} />
-        <Route path="updateuser/:id" element={<UpdateUser />} />
-        <Route path="addcertificate" element={<AddBrand />} />
-        <Route path="updatebrand" element={<UpdateBrand />} />
-        <Route path="addcode" element={<AddCode />} />
-        <Route path="updatecode/:id" element={<UpdateCode />} />
-        <Route path="addslide" element={<AddSlide />} />
-        <Route path="updateslide/:id" element={<UpdateSlide />} />
-        <Route path="addcategory" element={<AddCategory />} />
-        <Route path="addproduct" element={<AddProduct />} />
-        <Route path="addblog" element={<AddBlog />} />
-        <Route path="updateblog/:id" element={<UpdateBlog />} />
-        <Route path="updatefooter/:id" element={<UpdateFooter />} />
-        <Route path="addsocial" element={<AddSocail />} />
         <Route path="updatesocial/:id" element={<UpdateSocial />} />
         <Route path="addheader" element={<AddHeader />} />
         <Route path="updateheader/:id" element={<UpdateHeader />} />
+        {/* <Route path="dashboard/abouts" element={<Abouts />} /> */}
 
 
-        <Route path="abouts" element={<Abouts />} />
-        <Route path="dashboard/abouts" element={<Abouts />} />
-        <Route path="addabout" element={<AddAbout />} />
-        <Route path="updateproducts/:id" element={<UpdateProduct />} /> 
-        <Route path="updatevariants/:id" element={<UpdateVariant />} />
-        <Route path="updateabouts/:id" element={<UpdateAbout />} />
-
-        <Route  path="allprivacypolicy"  element={<PrivacyPolicies/>} />
-        <Route  path="addprivacypolicy"  element={<AddPrivacyPolicy/>} />
-        <Route  path="updateprivacypolicy"  element={<UpdatePrivacyPolicy/>} />
-        <Route  path="updatetermsandconditions"  element={<UpdateTermsAndConditions/>} />
+     
         {/* ////////////////////////////////////////////////// */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
@@ -101,6 +61,15 @@ function App() {
 <Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />
 <Route path="addbriefchalets" element={<AddBriefChalets />} />
 <Route path="updatebriefchalets/:id" element={<UpdateBriefChalets />} />
+<Route path="addimgchalets" element={<AddImagesChalets />} />
+<Route path="abouts" element={<Abouts />} />
+<Route path="updateabouts/:id" element={<UpdateAbout />} />
+<Route path="updatehero/:id" element={<UpdateHero />} />
+<Route path="addblog" element={<AddBlog />} />
+<Route path="updateblog/:id" element={<UpdateBlog />} />
+<Route path="addfooter" element={<AddFooter />} />
+<Route path="updatefooter/:id" element={<UpdateFooter />} />
+<Route path="addsocial" element={<AddSocail />} />
 
       </Route>
       <Route path="/auth/*" element={<Auth />} />

@@ -34,11 +34,12 @@ function AddBlog() {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
-      formData.append("img", img);
+      formData.append("image", img);
+      formData.append("lang", lang);
   
       try {
         const response = await axios.post(
-          `${API_URL}/blogs/addblog`,
+          `${API_URL}/Blogs/createBlog`,
           formData,
           {
             headers: {
@@ -52,7 +53,7 @@ function AddBlog() {
           icon: "success",
           confirmButtonText: "OK",
         });
-        navigate("/dashboard/blogs");
+        navigate("/dashboard/setting");
       } catch (error) {
         console.error(error);
         Swal.fire({

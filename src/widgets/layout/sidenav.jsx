@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Link, NavLink } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import Logo from "../../Images/modern-farm-logo-vector-24193212-removebg-preview.png"; 
+import Logo from "../../Images/logo.png"; 
 import '../../Styles/Sidebar.css'
 import {
   Avatar,
@@ -29,7 +29,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
     >
       <div className={`relative`}>
         <Link to="/" className="py-6 px-8 text-center">
-          <img src={Logo} alt="Logo" className="h-10 md:h-16 lg:h-20 w-auto mx-auto mb-2" />
+          <img src={Logo} alt="Logo" className="h-10 md:h-16 lg:h-40 w-auto mx-auto" />
           <Typography
             variant="h6"
             color={sidenavType === "dark" ? "white" : "blue-gray"}
@@ -101,7 +101,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
 const lang = Cookies.get('lang') || 'en';
 Sidenav.defaultProps = {
   brandImg: "",
-  brandName:  lang ==='ar'? "لوحة تحكم مزرعتنا" :"Mazr3tna Dashboard",
+  brandName:  lang ==='ar'? "لوحة تحكم روقان" :"Rowqan Dashboard",
 };
 
 Sidenav.propTypes = {

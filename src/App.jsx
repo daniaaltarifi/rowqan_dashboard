@@ -28,8 +28,6 @@ import UpdateFooter from "./pages/dashboard/Footer/UpdateFooter.jsx";
 import AddSocail from "./pages/dashboard/Footer/AddSocial.jsx";
 import UpdateSocial from "./pages/dashboard/Footer/UpdateSocial.jsx";
 
-import AllPrivacyPolicy from "./pages/dashboard/PrivacyPolicy/AllPrivacyPolicy.jsx"
-
 import UpdatePrivacyPolicy from "./pages/dashboard/PrivacyPolicy/UpdatePrivacyPolicy.jsx"
 import PrivacyPolicies from "./pages/dashboard/PrivacyPolicy/AllPrivacyPolicy.jsx";
 import AddPrivacyPolicy from "./pages/dashboard/PrivacyPolicy/AddPrivacyPolicy.jsx";
@@ -53,7 +51,7 @@ function App() {
       <DirectionHandler />
     <Routes>
       <Route path="/dashboard/*" element={
-        isAuthenticated ? <Dashboard /> : <Navigate to="/sign-in" replace />
+        isAuthenticated ? <Dashboard /> : <Navigate to="/auth/sign-in" replace />
       }> 
         <Route path="adduser" element={<AddUser />} />
         <Route path="updateuser/:id" element={<UpdateUser />} />
@@ -86,7 +84,7 @@ function App() {
         <Route  path="updateprivacypolicy"  element={<UpdatePrivacyPolicy/>} />
         <Route  path="updatetermsandconditions"  element={<UpdateTermsAndConditions/>} />
       </Route>
-      {/* <Route path="/auth/*" element={<Auth />} /> */}
+      <Route path="/auth/*" element={<Auth />} />
       <Route path="/auth/sign-in" element={<SignIn setIsAuthenticated={setIsAuthenticated} />} />
       <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
 

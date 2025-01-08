@@ -84,7 +84,15 @@ export function SignIn({ setIsAuthenticated }) {
           Cookies.set('authtoken', res.data.token, { expires: 7, secure: true });
           Cookies.set('userRole',res.data.user_type_id)
           setIsAuthenticated(true);
-          navigate(`/${lang}`);
+          if(res.data.user_type_id === 1){
+            navigate('/HomeAdmin')
+          }
+          else if(res.data.user_type_id === 4){
+            navigate('/HomeChaletsOwners')
+          }
+          else if (res.data.user_type_id == 5){
+            navigate('/HomeSuperAdmin')
+          }
         } else {
           setErrorMessage("Invalid MFA code or login failed.");
         }

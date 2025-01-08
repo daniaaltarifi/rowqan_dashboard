@@ -24,6 +24,7 @@ import ChaletsPage from "./Admin DashBoard/ChaletsPage";
 import HomeChaletOwners from "./ChaletsOwners DashBoard/HomeChaletOwners";
 import Messages from "./ChaletsOwners DashBoard/Messages";
 import ReservationePage from "./ChaletsOwners DashBoard/ReservationePage";
+import HomeSuperAdmin from "./SuperAdmin DashBoard/HomeSuperAdmin";
 
 
 const lang = Cookies.get('lang') || 'en';
@@ -41,6 +42,12 @@ export const routes = [
     pages: [
     
       ...(userRole === '1' ? [
+        {
+          icon: <TagIcon {...icon} />,
+          name: lang === 'ar' ? "مالكي الشاليهات" : "Chalets Owners Page",
+          path: "/HomeAdmin",
+          element: <HomeAdminPage />,
+        },
         {
           icon: <TagIcon {...icon} />,
           name: lang === 'ar' ? "مالكي الشاليهات" : "Chalets Owners Page",
@@ -120,6 +127,39 @@ export const routes = [
           name: lang === 'ar' ? "صفحة المستخدمين لمالكي الشاليهات" : "Users page",
           path: "/Users",
           element: <UsersPage/>,
+        },
+      ] : []),
+
+      ...(userRole === '5' ? [
+        {
+          icon: <TagIcon {...icon} />,
+          name: lang === 'ar' ? "الصفحة الرئيسية" : "Home Page",
+          path: "/HomeSuperAdmin",
+          element:<HomeSuperAdmin/>,
+        },
+        {
+          icon: <TagIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة  الشاليهات" : "Chalets Page",
+          path: "/Chalets",
+          element:<ChaletsPage/>,
+        },
+        {
+          icon: <WalletIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة الحجوزات لمالكي الشاليهات" : "Reservation Page Of Chalets Owners Page",
+          path: "/ChaletsOwners",
+          element: <ChaletsOwnersPage/>,
+        },
+        {
+          icon: <UserCircleIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة المستخدمين لمالكي الشاليهات" : "Users page",
+          path: "/Users",
+          element: <UsersPage/>,
+        },
+        {
+          icon: <UserCircleIcon {...icon} />,
+          name: lang === 'ar' ? "صفحة الحجوزات" : "Reservations page",
+          path: "/ReservationsPage",
+          element: <ReservationePage/>,
         },
       ] : []),
     ],

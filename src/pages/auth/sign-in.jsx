@@ -89,6 +89,9 @@ export function SignIn({ setIsAuthenticated }) {
           else if (res.data.user_type_id === 4){
             navigate('/HomeChaletsOwners');
           }
+          else if (res.data.user_type_id === 5){
+            navigate('/HomeSuperAdmin');
+          }
           else {
             setErrorMessage("You are not authorized to access.");
           }

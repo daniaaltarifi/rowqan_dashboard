@@ -1,4 +1,5 @@
 import { useLocation, Link ,useNavigate} from "react-router-dom";
+import Swal from 'sweetalert2';
 import {
   Navbar,
   Typography,
@@ -30,23 +31,36 @@ export function DashboardNavbar() {
 
   const navigate=useNavigate()
   const handleLogout = async () => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/users/logout`,
-        {},
-        { withCredentials: true }
-      );
-      if (response.data.message === "Logged out successfully") {
-        navigate(`/auth/sign-in`);
-        Cookies.remove('authtoken')
-        Cookies.remove('userRole')
-        // localStorage.removeItem("account");
-        // window.location.reload()
+    Swal.fire({
+      title: lang === 'ar' ? 'هل أنت متأكد من تسجيل الخروج؟' : 'Are You Sure To Logged Out from this System',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: lang === 'ar' ? 'نعم' : 'Okay',
+      cancelButtonText: lang === 'ar' ? 'لا' : 'Cancel',
+      confirmButtonColor: '#3B82F6',
+      cancelButtonColor: '#F87171',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.post(
+            `${API_URL}/users/logout`,
+            {},
+            { withCredentials: true }
+          );
+          if (response.data.message === "Logged out successfully") {
+            navigate(`/auth/sign-in`);
+            Cookies.remove('authtoken');
+            Cookies.remove('userRole');
+            // localStorage.removeItem("account");
+            // window.location.reload()
+          }
+        } catch (error) {
+          console.error("Logout error:", error);
+        }
       }
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+    });
   };
+
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}

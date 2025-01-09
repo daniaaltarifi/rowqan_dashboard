@@ -18,6 +18,12 @@ import AddProperties from "@/pages/dashboard/Properties/AddProperties";
 import UpdateProerties from "@/pages/dashboard/Properties/UpdateProperties";
 import AddBriefChalets from "@/pages/dashboard/Properties/AddBriefChalets";
 import UpdateBriefChalets from "@/pages/dashboard/Properties/UpdateBriefChalets";
+import ReservationDetails from "@/SuperAdmin DashBoard/ReservationDetails";
+import AddImagesChalets from "@/pages/dashboard/Properties/AddImagesChalets";
+import UpdateHero from "@/pages/dashboard/About/UpdateHero";
+import AddBlog from "@/pages/dashboard/About/AddBlog";
+import UpdateBlog from "@/pages/dashboard/About/UpdateBlog";
+import AddFooter from "@/pages/dashboard/Footer/AddFooter";
 
 
 export function Dashboard() {

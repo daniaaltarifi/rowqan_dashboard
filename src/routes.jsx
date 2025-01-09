@@ -9,6 +9,10 @@ import React, { useState, useEffect } from "react";
 import Chalets from "./pages/dashboard/Chalets/Chalets";
 import Properties from "./pages/dashboard/Properties/Properties";
 import HomeSuperAdmin from "./SuperAdmin DashBoard/HomeSuperAdmin";
+import ChaletsOwnersPage from "./Admin DashBoard/ChaletsOwnersPage";
+import Users from "./pages/dashboard/Users/Users";
+import Abouts from "./pages/dashboard/About/Abouts";
+import FooterData from "./pages/dashboard/Footer/FooterData";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -61,7 +65,7 @@ export const useRoutes = () => {
                 icon: <TagIcon {...icon} />,
                 name: lang === "ar" ? "مالكي الشاليهات" : "Chalets Owners",
                 path: "/ChaletsOwners",
-                element: <ChaletsOwnersPageAdmin />,
+                element: <ChaletsOwnersPage />,
               },
               {
                 icon: <TagIcon {...icon} />,

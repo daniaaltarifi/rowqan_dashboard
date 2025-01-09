@@ -17,14 +17,9 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../App.jsx";
 import {
-  HomeIcon,
-  UserCircleIcon,
-  TagIcon, // Icon for Brands
-  ServerStackIcon,
-  RectangleStackIcon,
+  PhotoIcon ,
   ShoppingBagIcon,
-  CreditCardIcon,
-  WalletIcon, // Using CreditCardIcon for Coupon Codes
+  BellIcon ,
 } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
 export function StatisticsCard() {
@@ -40,6 +35,7 @@ const fetchData = async () => {
       axios.get(`${API_URL}/users/getAllUsers/${lang}`),
       axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
       axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`),
+      axios.get(`${API_URL}/Blogs/getAllBlogs/${lang}`),
       axios.get(`${API_URL}/payments/getPayments`),
     ]);
 
@@ -69,8 +65,8 @@ const fetchData = async () => {
     },
     {
       color: "gray",
-      icon: ShoppingBagIcon,
-      title: lang ==='ar'? "المنتجات" :"Chalets",
+      icon: PhotoIcon ,
+      title: lang ==='ar'? "الشاليهات" :"Chalets",
       value: products.length,
       footer: {
         color: "text-green-500",
@@ -81,7 +77,7 @@ const fetchData = async () => {
     {
       color: "gray",
       icon: ChartBarIcon,
-      title: lang ==='ar'? "الطلبات" : "Reservations Chalets",
+      title: lang ==='ar'? "الحجوزات" : "Reservations",
       value: orders.length,
       footer: {
         color: "text-red-500",
@@ -91,8 +87,8 @@ const fetchData = async () => {
     },
     {
       color: "gray",
-      icon: UserPlusIcon,
-      title: lang ==='ar'? "الاراء" :"Payments",
+      icon: BellIcon,
+      title: lang ==='ar'? "المدونات" :"Blogs",
       value: feedback.length,
       footer: {
         color: "text-green-500",

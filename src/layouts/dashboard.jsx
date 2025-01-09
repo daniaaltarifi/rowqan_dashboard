@@ -24,6 +24,14 @@ import UpdateHero from "@/pages/dashboard/About/UpdateHero";
 import AddBlog from "@/pages/dashboard/About/AddBlog";
 import UpdateBlog from "@/pages/dashboard/About/UpdateBlog";
 import AddFooter from "@/pages/dashboard/Footer/AddFooter";
+import ReservationCalendar from "@/pages/dashboard/Chalets/ReservationCalendar";
+import UpdateLogo from "@/pages/dashboard/Header/UpdateLogo";
+import AddContact from "@/pages/dashboard/Contact/AddContact";
+import UpdateContact from "@/pages/dashboard/Contact/UpdateContact";
+import AddRightTimeChalets from "@/pages/dashboard/TimeAndStatus/AddRightTimeChalet";
+import UpdateRightTimeChalet from "@/pages/dashboard/TimeAndStatus/UpdateRightTimeChalet";
+import AddStatusChalet from "@/pages/dashboard/TimeAndStatus/AddStatusChalet";
+import UpdateStatusChalet from "@/pages/dashboard/TimeAndStatus/UpdateStatusChalet";
 import AddUser from "@/pages/dashboard/Users/AddUser";
 
 
@@ -71,8 +79,6 @@ export function Dashboard() {
         <Route path="addheader" element={<AddHeader />} />
         <Route path="updateheader/:id" element={<UpdateHeader />} />
         <Route path="reservationdetails/:id" element={<ReservationDetails />} />
-
-{/* /////////////////////////////////////// */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="adduser" element={<AddUser />} />
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
@@ -90,6 +96,14 @@ export function Dashboard() {
 <Route path="addfooter" element={<AddFooter />} />
 <Route path="updatefooter/:id" element={<UpdateFooter />} />
 <Route path="addsocial" element={<AddSocail />} />
+<Route path="reservationcalendar/:chalet_id" element={<ReservationCalendar />} />
+<Route path="updatelogo/:id" element={<UpdateLogo />} />
+<Route path="addcontact" element={<AddContact />} />
+<Route path="updatecontact/:id" element={<UpdateContact />} />
+<Route path="addrighttimechalet" element={<AddRightTimeChalets />} />
+<Route path="updaterighttimechalet/:id" element={<UpdateRightTimeChalet />} />
+<Route path="addstatuschalet" element={<AddStatusChalet />} />
+<Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
 
           {Array.isArray(routes) &&
             routes.map(({ layout, pages }) =>
@@ -100,7 +114,6 @@ export function Dashboard() {
             )}
           
         </Routes>
-
         <div className="text-blue-gray-600">
           <Footer />
         </div>

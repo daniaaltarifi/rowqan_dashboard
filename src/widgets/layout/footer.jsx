@@ -13,7 +13,7 @@ export function Footer({ brandName, brandLink, routes }) {
         &copy; {year}, {lang ==='ar'? "صنع مع" :" made with"} 
           <HeartIcon className="-mt-0.5 inline-block h-3.5 w-3.5 text-red-600" /> {lang ==='ar'? "عن طريق " :"by"}{" "}
           <a
-            href={brandLink}
+            href={"https://www.kasselsoft.com"}
             target="_blank"
             className="transition-colors hover:text-blue-500 font-bold"
           >
@@ -43,7 +43,7 @@ export function Footer({ brandName, brandLink, routes }) {
 
 Footer.defaultProps = {
   brandName: "Creative Tim",
-  brandLink: "https://www.creative-tim.com",
+  brandLink: "https://www.kasselsoft.com",
   routes: [
     // { name: "Creative Tim", path: "https://www.creative-tim.com" },
     // { name: "About Us", path: "https://www.creative-tim.com/presentation" },

@@ -196,7 +196,7 @@ export function SignIn({ setIsAuthenticated }) {
           </div>
         </div>
   
-        <Button type="submit" className="mt-6" fullWidth>
+        <Button type="submit" className="mt-6" fullWidth style={{backgroundColor:"#6DA6BA"}}>
           {lang === 'ar' ? 'تسجيل الدخول' : 'Sign In'}
         </Button>
   
@@ -225,7 +225,7 @@ export function SignIn({ setIsAuthenticated }) {
               onChange={(e) => setMfaCode(e.target.value)}
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
             />
-            <Button onClick={handleSubmit} className="mt-4" fullWidth>
+            <Button onClick={handleSubmit} className="mt-4" fullWidth style={{backgroundColor:"#6DA6BA"}}>
               {lang === 'ar' ? 'تسجيل الدخول' : 'SGIN-IN'}
             </Button>
           </div>
@@ -233,9 +233,10 @@ export function SignIn({ setIsAuthenticated }) {
       </form>
     </div>
   
-  <div className="w-full lg:w-2/5 h-full hidden lg:block">
+  <div className="w-full lg:w-2/5 h-full hidden lg:block" >
   <img
-    src="/img/pattern.png"
+    src="/img/chal.jpg"
+    style={{height:"90vh"}}
     className="h-full w-full object-cover rounded-3xl"
   />
 </div>

@@ -27,7 +27,7 @@ export function Home() {
  
     const fetchData = async () => {
       try {
-        const userResponse = await axios.get(`${API_URL}/auth/getalluser`);
+        const userResponse = await axios.get(`${API_URL}/users/getAllUsers/${lang}`);
         const users = userResponse.data;
         const userCounts = {};
         users.forEach(user => {

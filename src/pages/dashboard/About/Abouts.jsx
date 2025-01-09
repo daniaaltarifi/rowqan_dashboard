@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import "../../../Styles/brands.css"; 
 import axios from "axios";
 import { API_URL } from "../../../App.jsx";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteModule from "../../../Components/DeleteModule.jsx";
 import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/outline";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo,useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Input,
@@ -13,46 +13,33 @@ function UpdateHeader() {
     const lang = Cookies.get('lang') || 'en';
 
     const [header, setheader] = useState({
-        title: "",
+        header_name: "",
         lang: "",
-        category_id: "",
+        url: "",
     });
     const navigate = useNavigate();
     const { id } = useParams();
-    const [main_product, setmain_product] = useState([]);
-    const fetchmain_product = useCallback(async () => {
-        try {
-          const response = await fetch(`${API_URL}/mainproduct/getmainproduct`);
-          if (!response.ok) throw new Error('Failed to fetch main_product');
-          const data = await response.json();
-          setmain_product(data);
-        } catch (error) {
-          console.error('Error fetching main_product:', error);
-        }
-      }, []);
-      
+   
     useEffect(() => {
         const fetchheader = async () => {
             try {
-                const response = await axios.get(`${API_URL}/header/getheaderbyid/${id}`);
-                setheader(response.data); // Assuming the API response has the same structure
+                const response = await axios.get(`${API_URL}/header/getHeaderById/${id}/${lang}`);
+                setheader( 
+                    {header_name: response.data.header_name,
+                    url: response.data.url
+                })
             } catch (error) {
                 console.error(error);
             }
         };
       
           fetchheader();
-          fetchmain_product()
     }, [id]);
-    const main_productOptions = useMemo(() => main_product.map(catg => (
-        <option key={catg.id} value={catg.id}>{catg.name}</option>
-      )), [main_product]);
-    
     const handleUpdateheader = async (e) => {
         e.preventDefault();
 
         try {
-            await axios.put(`${API_URL}/header/updateheader/${id}`, header);
+            await axios.put(`${API_URL}/header/updateHeader/${id}`, header);
             Swal.fire({
                 title: "Success!",
                 text: "Header updated successfully.",
@@ -63,7 +50,7 @@ function UpdateHeader() {
         } catch (error) {
             console.error(error);
             Swal.fire({
-                title: "Error!",
+                header_name: "Error!",
                 text: "Failed to update. Please try again.",
                 icon: "error",
                 confirmButtonText: "OK",
@@ -87,37 +74,30 @@ function UpdateHeader() {
                 <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleUpdateheader}>
                     <div className="grid grid-cols-1 gap-6">
                         <div className="flex flex-col">
-                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "العنوان" :"Title"}</Typography>
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "العنوان" :"header_name"}</Typography>
                             <Input
-                                name="title" // Ensure name is set for correct state mapping
+                                name="header_name" // Ensure name is set for correct state mapping
                                 size="lg"
                                 placeholder="dse1"
                                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                                value={header.title}
+                                value={header.header_name}
                                 onChange={handleChange}
                                 required
                             />
-                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "اللغة" :"Lang"}</Typography>
-                             <select
-                              name="lang"
-                              value={header.lang}  
-                              onChange={handleChange}
-                            className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">{lang ==='ar'? " اختر اللغة" :"Select lang"}</option>
-                    <option value="en">en</option>
-                    <option value="ar">ar</option>
-                  </select>
-                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الصنف" :" Category:"}</Typography>
-                                <select 
-                    name="category_id" 
-                    value={header.category_id}
-                    onChange={handleChange}
-                    className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">{lang ==='ar'? "اختر الصنف" :"Select a category"}</option>
-                    {main_productOptions}
-                  </select>
+                
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الرابط" :"Url"}
+                                         </Typography>
+                                         <Input
+                                         required
+                                           size="lg"
+                                           placeholder="ds12"
+                                name="url" // Ensure name is set for correct state mapping
+
+                                           value={header.url}
+                                           className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                           onChange={handleChange}
+                                           />
+                                        
                         </div>
                     </div>
                     <Button type="submit" className="mt-6" fullWidth>

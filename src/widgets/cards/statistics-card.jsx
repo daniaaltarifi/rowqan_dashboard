@@ -17,14 +17,9 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../App.jsx";
 import {
-  HomeIcon,
-  UserCircleIcon,
-  TagIcon, // Icon for Brands
-  ServerStackIcon,
-  RectangleStackIcon,
+  PhotoIcon ,
   ShoppingBagIcon,
-  CreditCardIcon,
-  WalletIcon, // Using CreditCardIcon for Coupon Codes
+  BellIcon ,
 } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
 export function StatisticsCard() {
@@ -37,10 +32,10 @@ export function StatisticsCard() {
 const fetchData = async () => {
   try {
     const [usersResponse, productsResponse, ordersResponse,feedbackResponse] = await Promise.all([
-      axios.get(`${API_URL}/auth/getalluser`),
-      axios.get(`${API_URL}/product/get/allproducts`),
-      axios.get(`${API_URL}/orders/getallorders`),
-      axios.get(`${API_URL}/feedback/getFeedback`),
+      axios.get(`${API_URL}/users/getAllUsers/${lang}`),
+      axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
+      axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`),
+      axios.get(`${API_URL}/Blogs/getAllBlogs/${lang}`),
     ]);
 
     setusers(usersResponse.data);
@@ -69,8 +64,8 @@ const fetchData = async () => {
     },
     {
       color: "gray",
-      icon: ShoppingBagIcon,
-      title: lang ==='ar'? "المنتجات" :"Products",
+      icon: PhotoIcon ,
+      title: lang ==='ar'? "الشاليهات" :"Chalets",
       value: products.length,
       footer: {
         color: "text-green-500",
@@ -81,7 +76,7 @@ const fetchData = async () => {
     {
       color: "gray",
       icon: ChartBarIcon,
-      title: lang ==='ar'? "الطلبات" : "Orders",
+      title: lang ==='ar'? "الحجوزات" : "Reservations",
       value: orders.length,
       footer: {
         color: "text-red-500",
@@ -91,8 +86,8 @@ const fetchData = async () => {
     },
     {
       color: "gray",
-      icon: UserPlusIcon,
-      title: lang ==='ar'? "الاراء" :"FeedBack",
+      icon: BellIcon,
+      title: lang ==='ar'? "المدونات" :"Blogs",
       value: feedback.length,
       footer: {
         color: "text-green-500",

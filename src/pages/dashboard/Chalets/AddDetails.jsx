@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card,
   Input,
-  Checkbox,
   Button,
   Typography,
 } from "@material-tailwind/react";
@@ -51,7 +49,6 @@ function AddDetails() {
             navigate("/dashboard/chalets");
         } catch (error) {
             console.error(error);
-            console.log("first error:", chalet_id, lang, Detail_Type);
             Swal.fire({
                 title: "Error!",
                 text: "Failed to add. Please try again.",

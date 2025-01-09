@@ -37,10 +37,10 @@ export function StatisticsCard() {
 const fetchData = async () => {
   try {
     const [usersResponse, productsResponse, ordersResponse,feedbackResponse] = await Promise.all([
-      axios.get(`${API_URL}/auth/getalluser`),
-      axios.get(`${API_URL}/product/get/allproducts`),
-      axios.get(`${API_URL}/orders/getallorders`),
-      axios.get(`${API_URL}/feedback/getFeedback`),
+      axios.get(`${API_URL}/users/getAllUsers/${lang}`),
+      axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
+      axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`),
+      axios.get(`${API_URL}/payments/getPayments`),
     ]);
 
     setusers(usersResponse.data);
@@ -70,7 +70,7 @@ const fetchData = async () => {
     {
       color: "gray",
       icon: ShoppingBagIcon,
-      title: lang ==='ar'? "المنتجات" :"Products",
+      title: lang ==='ar'? "المنتجات" :"Chalets",
       value: products.length,
       footer: {
         color: "text-green-500",
@@ -81,7 +81,7 @@ const fetchData = async () => {
     {
       color: "gray",
       icon: ChartBarIcon,
-      title: lang ==='ar'? "الطلبات" : "Orders",
+      title: lang ==='ar'? "الطلبات" : "Reservations Chalets",
       value: orders.length,
       footer: {
         color: "text-red-500",
@@ -92,7 +92,7 @@ const fetchData = async () => {
     {
       color: "gray",
       icon: UserPlusIcon,
-      title: lang ==='ar'? "الاراء" :"FeedBack",
+      title: lang ==='ar'? "الاراء" :"Payments",
       value: feedback.length,
       footer: {
         color: "text-green-500",

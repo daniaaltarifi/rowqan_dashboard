@@ -196,12 +196,14 @@ export function SignIn({ setIsAuthenticated }) {
       </form>
     </div>
   
-    <div className="w-full lg:w-2/5 h-full hidden lg:block">
-      <img
-        src="/img/pattern.png"
-        className="h-full w-full object-cover rounded-3xl"
-      />
-    </div>
+  <div className="w-full lg:w-2/5 h-full hidden lg:block">
+  <img
+    src="/img/pattern.png"
+    className="h-full w-full object-cover rounded-3xl"
+  />
+</div>
+
+
   </section>
   
   );

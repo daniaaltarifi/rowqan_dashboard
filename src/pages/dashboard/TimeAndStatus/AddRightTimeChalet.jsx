@@ -91,13 +91,18 @@ function AddRightTimeChalets() {
             {/* First Column */}
             <div className="flex flex-col">
               <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الاسم" :"name"} </Typography>
-              <Input
-              required
-                size="lg"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => {
-                  setname(e.target.value);
-                }}           />
+                 <select 
+  onChange={(e) => {
+    setname(e.target.value);
+  }}                        className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value=""> {lang ==='ar'? "الاسم" :"name"}</option>
+                    <option value="Morning"> {lang ==='ar'? "الصباح" :"Morning"}</option>
+                    <option value="Evening"> {lang ==='ar'? "المساء" :"Evening"}</option>
+                    <option value="Full day"> {lang ==='ar'? "اليوم كامل" :"Full day"}</option>
+
+                   
+                  </select>
                  <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الوقت" :"time"} </Typography>
               <Input
               required

@@ -106,7 +106,7 @@ function UpdateRightTimeChalet() {
                     <div className="grid grid-cols-1 gap-6 ">
                         <div className="flex flex-col">
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الاسم" :"name"}</Typography>
-                            <Input
+                            {/* <Input
                                 size="lg"
                                 name='name'
                                 placeholder="fragrance"
@@ -114,7 +114,20 @@ function UpdateRightTimeChalet() {
                                 value={updateRightTimeChalet.name}
                                 onChange={handleChange}
                                 required
-                            />
+                            /> */}
+                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+        {lang === 'ar' ? 'الاسم' : 'name'}
+      </Typography>
+      <select
+        value={updateRightTimeChalet.name}
+        onChange={handleChange}
+        name="name"
+        className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="Morning">{lang === 'ar' ? 'الصباح' : 'Morning'}</option>
+        <option value="Evening">{lang === 'ar' ? 'المساء' : 'Evening'}</option>
+        <option value="Full day">{lang === 'ar' ? 'اليوم كامل' : 'Full day'}</option>
+      </select>
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الوقت" :"time"}</Typography>
                             <Input
                                 size="lg"

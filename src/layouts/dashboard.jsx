@@ -32,6 +32,7 @@ import AddRightTimeChalets from "@/pages/dashboard/TimeAndStatus/AddRightTimeCha
 import UpdateRightTimeChalet from "@/pages/dashboard/TimeAndStatus/UpdateRightTimeChalet";
 import AddStatusChalet from "@/pages/dashboard/TimeAndStatus/AddStatusChalet";
 import UpdateStatusChalet from "@/pages/dashboard/TimeAndStatus/UpdateStatusChalet";
+import AddUser from "@/pages/dashboard/Users/AddUser";
 
 
 export function Dashboard() {
@@ -79,6 +80,7 @@ export function Dashboard() {
         <Route path="updateheader/:id" element={<UpdateHeader />} />
         <Route path="reservationdetails/:id" element={<ReservationDetails />} />
 <Route path="addchalet" element={<AddChalets />} />
+<Route path="adduser" element={<AddUser />} />
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
 <Route path="adddetails" element={<AddDetails />} />
 <Route path="updatedetails/:id" element={<UpdateDetails />} />

@@ -34,7 +34,7 @@ function Users() {
 
     const fetchusers = async () => {
         try {
-            const response = await axios.get(`${API_URL}/auth/getalluser`);
+            const response = await axios.get(`${API_URL}/users/getAllUsers/${lang}`);
             setusers(response.data);
             console.log("first user", response.data);
         } catch (error) {
@@ -68,7 +68,7 @@ function Users() {
         <>
             <div className="mt-12 mb-8 flex flex-col gap-12">
                 <Card>
-                    <CardHeader variant="gradient" color="green" className="mb-8 p-6">
+                    <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }} className="mb-8 p-6">
                         <Typography variant="h6" color="white">
                             {lang === 'ar' ? "جدول المستخدمين" : "Users Table"}
                         </Typography>
@@ -76,7 +76,7 @@ function Users() {
                     <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
                         <Link to="/dashboard/adduser">
                             <Button
-                                className="flex items-center bg-[#D87C55] transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"
+                                className="flex items-center bg-[#F2C79D] transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"
                                 style={{ marginLeft: '80px' }}
                             >
                                 <PlusIcon className="h-5 w-5 mr-1" />
@@ -108,7 +108,7 @@ function Users() {
                                                 <div className="flex items-center gap-4">
                                                     <div>
                                                         <Typography variant="small" color="blue-gray" className="font-semibold">
-                                                            {user.first_name} {user.last_name}
+                                                            {user.name} 
                                                         </Typography>
                                                     </div>
                                                 </div>
@@ -120,26 +120,26 @@ function Users() {
                                             </td>
                                             <td className={className}>
                                                 <Typography className="text-xs font-normal text-blue-gray-500">
-                                                    {user.role}
+                                                    {user.phone_number}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
                                                 <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {user.balance}
+                                                    {user.country}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
                                                 <div className="flex items-center">
                                                     <Button
                                                         onClick={() => navigate(`/dashboard/updateuser/${user.id}`)}
-                                                        className="mr-2 flex bg-[#D87C55] items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+                                                        className="mr-2 flex bg-[#6DA6BA] items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                                                     >
                                                         <PencilIcon className="h-5 w-5 mr-1" />
                                                         {lang === 'ar' ? "تعديل" : "Edit"}
                                                     </Button>
                                                     <Button
                                                         onClick={() =>  handleDelete={handleDelete}}
-                                                        className="text-white-600 bg-[#F5C16C] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+                                                        className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
                                                     >
                                                         <TrashIcon className="h-5 w-5 mr-1" />
                                                         {lang === 'ar' ? "حذف" : "Delete"}

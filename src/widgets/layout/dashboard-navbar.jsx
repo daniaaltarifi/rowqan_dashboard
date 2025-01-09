@@ -32,13 +32,14 @@ export function DashboardNavbar() {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        `${API_URL}/auth/logout`,
+        `${API_URL}/users/logout`,
         {},
         { withCredentials: true }
       );
-      if (response.data.Status === "Logout Success") {
+      if (response.data.message === "Logged out successfully") {
         navigate(`/auth/sign-in`);
         Cookies.remove('authtoken')
+        Cookies.remove('userRole')
         // localStorage.removeItem("account");
         // window.location.reload()
       }

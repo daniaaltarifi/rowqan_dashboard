@@ -49,7 +49,7 @@ export function Home() {
             },
           ],
           options: {
-            colors: "#388e3c",
+            colors: "#F2C79D",
             plotOptions: {
               bar: {
                 columnWidth: "16%",
@@ -63,7 +63,7 @@ export function Home() {
         };
 
         // Fetch feedback data
-        const feedbackResponse = await axios.get(`${API_URL}/feedback/getFeedback`); // Adjust to your feedback API endpoint
+        const feedbackResponse = await axios.get(`${API_URL}/chalets/getallchalets/${lang}`); // Adjust to your feedback API endpoint
         const feedbacks = feedbackResponse.data;
         // Process feedback data to count ratings
         const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -91,7 +91,7 @@ export function Home() {
             },
           ],
           options: {
-            colors: "#388e3c", // Example color for feedback chart
+            colors: "#F2C79D", // Example color for feedback chart
             plotOptions: {
               bar: {
                 columnWidth: "25%",
@@ -120,7 +120,7 @@ export function Home() {
           },
           {
             color: "white",
-            title: lang ==='ar'? "توزيع تقييمات التعليقات" :"Feedback Ratings Distribution",
+            title: lang ==='ar'? "توزيع تقييمات التعليقات" :"Reservations Distribution",
             description: lang ==='ar'? "نسبة التقييم من 1 الى 5" : "Percentage of Ratings from 1 to 5",
             footer: lang ==='ar'? "اخر تحديث" : "Last Updated",
             chart: feedbackChart,

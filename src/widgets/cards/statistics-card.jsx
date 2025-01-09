@@ -36,6 +36,7 @@ const fetchData = async () => {
       axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
       axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`),
       axios.get(`${API_URL}/Blogs/getAllBlogs/${lang}`),
+      axios.get(`${API_URL}/payments/getPayments`),
     ]);
 
     setusers(usersResponse.data);

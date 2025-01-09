@@ -35,7 +35,9 @@ import UpdateRightTimeChalet from "./pages/dashboard/TimeAndStatus/UpdateRightTi
 import AddStatusChalet from "./pages/dashboard/TimeAndStatus/AddStatusChalet";
 import UpdateStatusChalet from "./pages/dashboard/TimeAndStatus/UpdateStatusChalet";
 // export const API_URL="https://rowqanbackend.rowqan.com";
+import axios from 'axios'
 export const API_URL="http://localhost:5000";
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('authtoken'));
   useEffect(() => {
@@ -44,6 +46,43 @@ function App() {
       setIsAuthenticated(!!token);
       }
   }, []);
+  
+  const [ip, setIp] = useState(null);
+  const [access, setAccess] = useState(null); 
+ useEffect(() => {
+    fetch("https://api.ipify.org?format=text")
+      .then((response) => response.text())
+      .then((data) => {
+        setIp(data);
+      })
+      .catch((error) => console.error("Error fetching IP address:", error));
+  }, []);
+
+  useEffect(() => {
+    if (ip) {
+      axios
+        .get(`${API_URL}/dashboard`, { params: { ip: ip } })
+        .then((response) => {
+          if (response.data.message === "Access granted to the dashboard") {
+            setAccess(true); 
+          } else {
+            setAccess(false); 
+          }
+        })
+        .catch((error) => {
+          console.error("Error checking VPN or IP:", error);
+          setAccess(false); 
+        });
+    }
+  }, [ip]); 
+
+  if (access === null) {
+    return <div>Loading...</div>; 
+  }
+
+  if (!access) {
+    return <div>Access denied due to VPN/Proxy </div>; 
+  }   
   
   return (
     <>
@@ -90,7 +129,12 @@ function App() {
     </Routes>
     </>
 
-  );
+    
+
+  );  
 }
+
+
+
 
 export default App;

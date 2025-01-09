@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Cookies from 'js-cookie';
 import { API_URL } from "@/App";
-
+import Swal from 'sweetalert2';
 export function SignIn({ setIsAuthenticated }) {
 
   const [passwordvisible, setPasswordvisible] = useState(false);
@@ -47,15 +47,15 @@ export function SignIn({ setIsAuthenticated }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { email, password } = formData;
-
+  
     if (!email || !password) {
       setErrorMessage("Please fill in both fields.");
       return;
     }
-
+  
     try {
       let res;
-
+  
       if (!mfaCode) {
         res = await axios.post(`${API_URL}/users/login`, {
           email,
@@ -65,9 +65,15 @@ export function SignIn({ setIsAuthenticated }) {
         }, {
           withCredentials: true,
         });
-
+  
         if (res.status === 200 && res.data === "MFA code has been sent to your email. Please enter the code to complete login.") {
           setSmShow(true);
+  
+          Swal.fire({
+            title: lang === 'ar' ? 'تم إرسال الكود بنجاح' : 'MFA Code Sending Successfully',
+            icon: 'success',
+            confirmButtonText: lang === 'ar' ? 'موافق' : 'OK',
+          });
         }
       } else {
         res = await axios.post(`${API_URL}/users/login`, {
@@ -78,32 +84,63 @@ export function SignIn({ setIsAuthenticated }) {
         }, {
           withCredentials: true,
         });
-
+  
         if (res.status === 200) {
           Cookies.set('authtoken', res.data.token, { expires: 7, secure: true });
-          Cookies.set('userRole',res.data.user_type_id)
+          Cookies.set('userRole', res.data.user_type_id);
           setIsAuthenticated(true);
           if (res.data.user_type_id === 1) {
             navigate('/dashboard/home');
-          }
-          else if (res.data.user_type_id === 4){
+          } else if (res.data.user_type_id === 4) {
             navigate('/HomeChaletsOwners');
-          }
-          else if (res.data.user_type_id === 5){
+          } else if (res.data.user_type_id === 5) {
             navigate('/HomeSuperAdmin');
-          }
-          else {
+          } else {
             setErrorMessage("You are not authorized to access.");
+            Swal.fire({
+              title: lang === 'ar' ? 'تم إرسال الكود بنجاح' : 'You are not authorized to access.',
+              icon: 'error',
+              confirmButtonText: lang === 'ar' ? 'نعم' : 'Okay',
+              confirmButtonColor: '#3B82F6'
+            });
           }
         } else {
           setErrorMessage("Invalid MFA code or login failed.");
+          Swal.fire({
+            title: lang === 'ar' ? 'تم إرسال الكود بنجاح' : 'Invalid MFA code or login failed.',
+            icon: 'error',
+            confirmButtonText: lang === 'ar' ? 'موافق' : 'OK',
+            confirmButtonColor: '#3B82F6'
+          });
         }
       }
     } catch (error) {
       console.error("Login error:", error);
-      setErrorMessage("An error occurred during login.");
+  
+  
+      if (error.response && error.response.status === 400) {
+        Swal.fire({
+          title: lang === 'ar' ? 'عنوان البريد الإلكتروني أو كلمة المرور غير صحيحة' : 'Login failed',
+          icon: 'error',
+          confirmButtonText: lang === 'ar' ? 'موافق' : 'OK',
+          confirmButtonColor: '#3B82F6'
+        });
+      }
+      else if(!mfaCode){
+        Swal.fire({
+          title: lang === 'ar' ? 'تم إرسال الكود بنجاح' : 'Invalid MFA code or login failed.',
+          icon: 'error',
+          confirmButtonText: lang === 'ar' ? 'موافق' : 'OK',
+          confirmButtonColor: '#3B82F6'
+        });
+      } 
+            
+      else {
+        setErrorMessage("An error occurred during login.");
+      }
     }
   };
+  
 
   return (
     <section className="m-8 flex gap-4">

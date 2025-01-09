@@ -2,17 +2,18 @@ import { HomeIcon, TagIcon } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
 import { Home } from "@/pages/dashboard";
 import HomeAdminPage from "./Admin DashBoard/HomeAdminPage";
-import ReservationsPage from "./SuperAdmin DashBoard/ReservationsPage";
 import HomeChaletOwners from "./ChaletsOwners DashBoard/HomeChaletOwners";
 import ChaletsPage from "./Admin DashBoard/ChaletsPage";
 import React, { useState, useEffect } from "react";
 import Chalets from "./pages/dashboard/Chalets/Chalets";
+import ChaletsOwners from "./ChaletsOwners DashBoard/ChaletsOwners";
 import Properties from "./pages/dashboard/Properties/Properties";
-import HomeSuperAdmin from "./SuperAdmin DashBoard/HomeSuperAdmin";
+
 import ChaletsOwnersPage from "./Admin DashBoard/ChaletsOwnersPage";
-import Users from "./pages/dashboard/Users/Users";
+import Users from "./Admin DashBoard/UsersPage";
 import Abouts from "./pages/dashboard/About/Abouts";
 import FooterData from "./pages/dashboard/Footer/FooterData";
+import MessagesChaletOwners from "./ChaletsOwners DashBoard/MessagesChaletOwners";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -70,15 +71,10 @@ export const useRoutes = () => {
               {
                 icon: <TagIcon {...icon} />,
                 name: lang === "ar" ? "صفحة المستخدمين" : "Users",
-                path: "/usersSuperAdmin",
+                path: "/usersAdmin",
                 element: <Users />,
               },
-              {
-                icon: <TagIcon {...icon} />,
-                name: lang === "ar" ? "صفحة الحجوزات" : "Reservations",
-                path: "/reservationsPage",
-                element: <ReservationsPage />,
-              },
+
               {
                 icon: <TagIcon {...icon} />,
                 name: lang === "ar" ? "صفحة الحجوزات" : "Setting",
@@ -105,9 +101,25 @@ export const useRoutes = () => {
                 icon: <TagIcon {...icon} />,
                 name: lang === "ar"
                   ? "الصفحة الرئيسية لمالكي الشاليهات"
-                  : "Home Chalets Owners Page",
-                path: "/HomeChaletsOwners",
-                element: <HomeChaletOwners />,
+                  : "Chalets Owners",
+                path: "/ChaletsOwners",
+                element: <ChaletsOwners />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
+                name: lang === "ar"
+                  ? "الصفحة الرئيسية لمالكي الشاليهات"
+                  : "Chalets",
+                path: "/chalets",
+                element: <Chalets />,
+              },
+              {
+                icon: <TagIcon {...icon} />,
+                name: lang === "ar"
+                  ? "الصفحة الرئيسية لمالكي الشاليهات"
+                  : "Messages",
+                path: "/messages",
+                element: <MessagesChaletOwners />,
               },
             ]
           : []),
@@ -144,12 +156,6 @@ export const useRoutes = () => {
                 name: lang === "ar" ? "صفحة المستخدمين" : "Users",
                 path: "/usersSuperAdmin",
                 element: <Users />,
-              },
-              {
-                icon: <TagIcon {...icon} />,
-                name: lang === "ar" ? "صفحة الحجوزات" : "Reservations",
-                path: "/reservationsPage",
-                element: <ReservationsPage />,
               },
             ]
           : []),

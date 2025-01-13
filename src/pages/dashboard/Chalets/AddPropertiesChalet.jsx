@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card,
   Input,
-  Checkbox,
   Button,
   Typography,
 } from "@material-tailwind/react";
 import { API_URL } from "../../../App.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from 'axios'; // Ensure Axios is imported
 import Cookies from 'js-cookie';
-function AddProperties() {
+function AddPropertiesChalet() {
+    const {chalet_id}=useParams()
     const [title, settitle] = useState("");
-    const [Chalet_Id  , setChalet_Id  ] = useState("");
     const [img, setImg] = useState(null);
     const [imgName, setImgName] = useState("");
     const lang = Cookies.get('lang') || 'en';
@@ -30,22 +28,11 @@ function AddProperties() {
         }
     };
     const navigate = useNavigate();
-    useEffect(()=>{
 
-      const fetchChalets = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/chalets/getallchalets/${lang}`) ;
-            setChalets(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      fetchChalets()
-    },[])
     const handleAddProperties = async (e) => {
       e.preventDefault();
       const formData = new FormData();
-      formData.append("Chalet_Id", Chalet_Id );
+      formData.append("Chalet_Id", chalet_id );
       formData.append("title", title);
       formData.append("lang", lang);
       formData.append("image", img);
@@ -61,13 +48,10 @@ function AddProperties() {
               },
             }
           );
-        Swal.fire({
-          title: "Success!",
-          text: " Properties Chalets added successful.",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        navigate("/dashboard/propertieschalets");
+      settitle("")
+      setImg(null)
+      setImgName("")
+        // navigate(`/dashboard/addbriefchalets/${chalet_id}`);
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -78,6 +62,10 @@ function AddProperties() {
         });
       }
     };
+    const handleNavigateToCharactirestc=()=>{
+     navigate(`/dashboard/addcharchalets/${chalet_id}`);
+
+    }
   return (
     <section className="m-8 flex gap-4">
       <div className="w-full mt-24">
@@ -92,23 +80,12 @@ function AddProperties() {
               <Input
               required
                 size="lg"
+                value={title}
                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                 onChange={(e) => {
                   settitle(e.target.value);
                 }}           />
-                   <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الشاليه" :"Chalets"}</Typography>
-             
-               <select 
-                    onChange={(e)=>setChalet_Id(e.target.value) }
-                    className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">{lang ==='ar'? "اختر الشاليه" :"Select Chalets"}</option>
-                    {
-                    chalets.map((item) => (
-                    <option key={item.id} value={item.id}>{item.title}</option>))
-                  }
-                   
-                  </select>
+                 
                 <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الصورة" :"Image"}</Typography>
                 <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "من المستحسن استخدام تنسيق WebP للصور." :"It is recommended to use the WebP format for images."}</Typography>
                             <div className="relative">
@@ -132,13 +109,22 @@ function AddProperties() {
 
             </div>            
           </div>
+<div>
 
           <Button
   type="submit"
-  className="mt-6 bg-[#D87C55] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
-  fullWidth
+  className="mt-6  bg-[#F2C79D] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
+style={{width:"48%"}}
 >
 {lang ==='ar'? "اضافة" : "Add  "}</Button>
+<Button
+  type="submit"
+  className="mt-6 ms-2  bg-[#6DA6BA] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
+  style={{width:"50%"}}
+onClick={handleNavigateToCharactirestc}
+>
+{lang ==='ar'? "التالي" : "Next  "}</Button>
+</div>
 
         </form>
       </div>
@@ -146,4 +132,4 @@ function AddProperties() {
   );
 }
 
-export default AddProperties;
+export default AddPropertiesChalet;

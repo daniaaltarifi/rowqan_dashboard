@@ -124,12 +124,12 @@ function UsersPage() {
                       </td>
                       <td className={className}>
                         <div className="flex items-center">
-                          <Button
+                          {/* <Button
                             onClick={() => navigate(`/dashboard/updateuser/${user.id}`)}
                             className="mr-2 bg-[#D87C55] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                           >
                             <PencilIcon className="h-5 w-5 mr-1" /> {lang === 'ar' ? "تعديل" : "Edit"}
-                          </Button>
+                          </Button> */}
                           <Button
                             onClick={() => handleShow(user.id, 'user')}
                             className="text-white-600 bg-[#F5C16C] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"

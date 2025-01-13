@@ -24,7 +24,7 @@ export function SignIn({ setIsAuthenticated }) {
   const [ip, setIp] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const lang = location.pathname.split("/")[1] || "en";
+    const lang = Cookies.get('lang') || 'en';
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -36,6 +36,10 @@ import AddStatusChalet from "./pages/dashboard/TimeAndStatus/AddStatusChalet";
 import UpdateStatusChalet from "./pages/dashboard/TimeAndStatus/UpdateStatusChalet";
 // export const API_URL="https://rowqanbackend.rowqan.com";
 import axios from 'axios'
+import AddPropertiesChalet from "./pages/dashboard/Chalets/AddPropertiesChalet";
+import AddCharacterChalets from "./pages/dashboard/Chalets/AddCharacterChalets";
+import AddImagesSpecificChal from "./pages/dashboard/Chalets/AddImagesSpecificChal";
+import Messages from "./ChaletsOwners DashBoard/Messages";
 export const API_URL="http://localhost:5000";
 
 function App() {
@@ -97,12 +101,15 @@ function App() {
         {/* <Route path="dashboard/abouts" element={<Abouts />} /> */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
-<Route path="adddetails" element={<AddDetails />} />
+<Route path="adddetails/:chalet_id" element={<AddDetails />} />
 <Route path="updatedetails/:id" element={<UpdateDetails />} />
-<Route path="addchaletproperties" element={<AddProperties />} />
+<Route path="addchaletproperties/:chalet_id" element={<AddPropertiesChalet />} />
+<Route path="addproperties" element={<AddProperties />} />
 <Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />
+<Route path="addcharchalets/:chalet_id" element={<AddCharacterChalets />} />
 <Route path="addbriefchalets" element={<AddBriefChalets />} />
 <Route path="updatebriefchalets/:id" element={<UpdateBriefChalets />} />
+<Route path="addimgchalets/:chalet_id" element={<AddImagesSpecificChal />} />
 <Route path="addimgchalets" element={<AddImagesChalets />} />
 <Route path="abouts" element={<Abouts />} />
 <Route path="updateabouts/:id" element={<UpdateAbout />} />
@@ -120,6 +127,7 @@ function App() {
 <Route path="updaterighttimechalet/:id" element={<UpdateRightTimeChalet />} />
 <Route path="addstatuschalet" element={<AddStatusChalet />} />
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
+<Route path="messagebetweenusers/:user_id" element={<Messages />} />
 
       </Route>
       <Route path="/auth/*" element={<Auth />} />

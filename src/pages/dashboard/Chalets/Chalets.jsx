@@ -111,7 +111,7 @@ const handleShow = (id, type) => {
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {[`${lang ==='ar'? "العنوان" :"Title"}`,`${lang ==='ar'? "سعر الحجز" :"reserve_price"}`,`${lang ==='ar'? "الحالة" :"status "}`,`${lang ==='ar'? "الصورة" :"Image"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
+              {[`${lang ==='ar'? "العنوان" :"Title"}`,`${lang ==='ar'? "سعر الحجز" :"reserve_price"}`,`${lang ==='ar'? "قيمة الحجز" :"Initial amount"}`,`${lang ==='ar'? "الحالة" :"status "}`,`${lang ==='ar'? "الصورة" :"Image"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
                 <th
                   key={el}
                   className="border-b border-blue-gray-50 py-3 px-5 "
@@ -160,6 +160,17 @@ const handleShow = (id, type) => {
                             className="font-semibold"
                           >
                             {chalet.reserve_price}
+                          </Typography>
+                      </Typography>
+                    </td>
+                    <td className={className}>
+                      <Typography className="text-xs font-semibold text-blue-gray-600">
+                      <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold"
+                          >
+                            {chalet.intial_Amount}
                           </Typography>
                       </Typography>
                     </td>
@@ -228,14 +239,7 @@ const handleShow = (id, type) => {
         </Typography>
       </CardHeader>
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-      <Link to="/dashboard/adddetails">
-    <Button
-  className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#F2C79D]"
-  style={{ marginLeft: '80px' }} 
->
-  <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة  تفاصيل شاليه" : "Add Chalets Details "}
-</Button>
-</Link>
+     
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>

@@ -44,7 +44,7 @@ function AddUser() {
                 icon: "success",
                 confirmButtonText: "OK",
             });
-            navigate("/dashboard/users");
+            navigate("/dashboard/usersAdmin");
         } catch (error) {
             console.error(error);
             Swal.fire({

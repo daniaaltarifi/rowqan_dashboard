@@ -72,6 +72,12 @@ export const useRoutes = () => {
                 element: <ChaletsOwnersPage />,
               },
               {
+                icon: <TagIcon {...icon} />,
+                name: lang === "ar" ? "الرسائل" : "Messages",
+                path: "/messages",
+                element: <MessagesChaletOwners />,
+              },
+              {
                 icon: <UsersIcon {...icon} />,
                 name: lang === "ar" ? "صفحة المستخدمين" : "Users",
                 path: "/usersAdmin",

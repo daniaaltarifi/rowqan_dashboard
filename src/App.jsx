@@ -40,7 +40,8 @@ import AddPropertiesChalet from "./pages/dashboard/Chalets/AddPropertiesChalet";
 import AddCharacterChalets from "./pages/dashboard/Chalets/AddCharacterChalets";
 import AddImagesSpecificChal from "./pages/dashboard/Chalets/AddImagesSpecificChal";
 import Messages from "./ChaletsOwners DashBoard/Messages";
-// export const API_URL="http://localhost:5000";
+import UpdateUser from "./Admin DashBoard/UpdateUser";
+export const API_URL="http://localhost:5000";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('authtoken'));
@@ -103,6 +104,7 @@ function App() {
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
 <Route path="adddetails/:chalet_id" element={<AddDetails />} />
 <Route path="updatedetails/:id" element={<UpdateDetails />} />
+<Route path="updateUser/:id" element={<UpdateUser />} />
 <Route path="addchaletproperties/:chalet_id" element={<AddPropertiesChalet />} />
 <Route path="addproperties" element={<AddProperties />} />
 <Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />

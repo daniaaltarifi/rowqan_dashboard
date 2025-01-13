@@ -174,7 +174,7 @@ const handleShow = (id, type) => {
                   </Typography>
                   <Typography className="text-xs font-semibold text-blue-gray-600">
                     <Avatar
-                      src={`https://res.cloudinary.com/durjqlivi/${prop.image}`}
+                      src={`https://res.cloudinary.com/dqimsdiht/${prop.image}`}
                       alt={"Properties"}
                       size="sm"
                       variant="rounded"

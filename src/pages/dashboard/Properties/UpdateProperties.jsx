@@ -129,7 +129,7 @@ function UpdateProerties() {
                         <Typography variant="small" color="blue-gray" className="font-medium">{lang ==='ar'? "الصورة" :"Image"}</Typography>
                         <div className="flex flex-col">
                             {existing_img && (
-                                <img src={`https://res.cloudinary.com/durjqlivi/${existing_img}`} alt="Existing " className="mb-2 w-32 h-32 object-cover" />
+                                <img src={`https://res.cloudinary.com/dqimsdiht/${existing_img}`} alt="Existing " className="mb-2 w-32 h-32 object-cover" />
                             )}
                 <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "من المستحسن استخدام تنسيق WebP للصور." :"It is recommended to use the WebP format for images."}</Typography>
 

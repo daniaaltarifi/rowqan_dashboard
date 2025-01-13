@@ -119,6 +119,7 @@ function AddChalets() {
                    <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الحالة" :"status"}</Typography>
              
                <select 
+               required
                     onChange={(e)=>setstatus_id(e.target.value) }
                     className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >

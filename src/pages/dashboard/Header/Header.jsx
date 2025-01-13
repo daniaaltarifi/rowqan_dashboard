@@ -190,7 +190,7 @@ function Header() {
                   <tr key={log.id}>
                     <td className={className}>
                       <div className="flex items-center gap-4">
-                        <Avatar src={`https://res.cloudinary.com/durjqlivi/${log.image}`} alt={'logo'} size="lg" variant="rounded" />
+                        <Avatar src={`https://res.cloudinary.com/dqimsdiht/${log.image}`} alt={'logo'} size="lg" variant="rounded" />
                       
                       </div>
                     </td>                   

@@ -187,7 +187,7 @@ const handleShow = (id, type) => {
                     </td>
                     <td>
                     <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar   src={`https://res.cloudinary.com/durjqlivi/${chalet.image}`} alt={"chalets"} size="md" variant="rounded" />
+                      <Avatar   src={`https://res.cloudinary.com/dqimsdiht/${chalet.image}`} alt={"chalets"} size="md" variant="rounded" />
                       </Typography>
                     </td>
                      <td className={className}>

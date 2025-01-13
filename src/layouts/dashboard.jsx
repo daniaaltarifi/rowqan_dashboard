@@ -18,21 +18,12 @@ import AddProperties from "@/pages/dashboard/Properties/AddProperties";
 import UpdateProerties from "@/pages/dashboard/Properties/UpdateProperties";
 import AddBriefChalets from "@/pages/dashboard/Properties/AddBriefChalets";
 import UpdateBriefChalets from "@/pages/dashboard/Properties/UpdateBriefChalets";
-import ReservationDetails from "@/SuperAdmin DashBoard/ReservationDetails";
 import AddImagesChalets from "@/pages/dashboard/Properties/AddImagesChalets";
 import UpdateHero from "@/pages/dashboard/About/UpdateHero";
-import AddBlog from "@/pages/dashboard/About/AddBlog";
 import UpdateBlog from "@/pages/dashboard/About/UpdateBlog";
+import AddBlog from "@/pages/dashboard/About/AddBlog";
 import AddFooter from "@/pages/dashboard/Footer/AddFooter";
-import ReservationCalendar from "@/pages/dashboard/Chalets/ReservationCalendar";
-import UpdateLogo from "@/pages/dashboard/Header/UpdateLogo";
-import AddContact from "@/pages/dashboard/Contact/AddContact";
-import UpdateContact from "@/pages/dashboard/Contact/UpdateContact";
-import AddRightTimeChalets from "@/pages/dashboard/TimeAndStatus/AddRightTimeChalet";
-import UpdateRightTimeChalet from "@/pages/dashboard/TimeAndStatus/UpdateRightTimeChalet";
-import AddStatusChalet from "@/pages/dashboard/TimeAndStatus/AddStatusChalet";
-import UpdateStatusChalet from "@/pages/dashboard/TimeAndStatus/UpdateStatusChalet";
-import AddUser from "@/pages/dashboard/Users/AddUser";
+import Messages from "@/ChaletsOwners DashBoard/Messages";
 
 
 export function Dashboard() {
@@ -78,9 +69,9 @@ export function Dashboard() {
         <Route path="updatesocial/:id" element={<UpdateSocial />} />
         <Route path="addheader" element={<AddHeader />} />
         <Route path="updateheader/:id" element={<UpdateHeader />} />
-        <Route path="reservationdetails/:id" element={<ReservationDetails />} />
+       
+{/* /////////////////////////////////////// */}
 <Route path="addchalet" element={<AddChalets />} />
-<Route path="adduser" element={<AddUser />} />
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
 <Route path="adddetails" element={<AddDetails />} />
 <Route path="updatedetails/:id" element={<UpdateDetails />} />
@@ -96,15 +87,7 @@ export function Dashboard() {
 <Route path="addfooter" element={<AddFooter />} />
 <Route path="updatefooter/:id" element={<UpdateFooter />} />
 <Route path="addsocial" element={<AddSocail />} />
-<Route path="reservationcalendar/:chalet_id" element={<ReservationCalendar />} />
-<Route path="updatelogo/:id" element={<UpdateLogo />} />
-<Route path="addcontact" element={<AddContact />} />
-<Route path="updatecontact/:id" element={<UpdateContact />} />
-<Route path="addrighttimechalet" element={<AddRightTimeChalets />} />
-<Route path="updaterighttimechalet/:id" element={<UpdateRightTimeChalet />} />
-<Route path="addstatuschalet" element={<AddStatusChalet />} />
-<Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
-
+<Route path="messagebetweenusers/:user_id" element={<Messages />} />
           {Array.isArray(routes) &&
             routes.map(({ layout, pages }) =>
               layout === "dashboard" &&
@@ -114,6 +97,7 @@ export function Dashboard() {
             )}
           
         </Routes>
+
         <div className="text-blue-gray-600">
           <Footer />
         </div>

@@ -9,9 +9,11 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from 'axios'; // Ensure Axios is imported
 import Cookies from 'js-cookie';
+import { data } from 'autoprefixer';
 function AddChalets() {
     const [title, settitle] = useState("");
     const [reserve_price, setreserve_price] = useState("");
+    const [intial_Amount, setintial_Amount] = useState("");
     const [status_id , setstatus_id ] = useState("");
     const [img, setImg] = useState(null);
     const [imgName, setImgName] = useState("");
@@ -48,6 +50,7 @@ function AddChalets() {
       formData.append("lang", lang);
       formData.append("status_id", status_id);
       formData.append("reserve_price", reserve_price);
+      formData.append("intial_Amount", intial_Amount);
       formData.append("image", img);
   
     
@@ -61,13 +64,14 @@ function AddChalets() {
               },
             }
           );
-        Swal.fire({
-          title: "Success!",
-          text: "Chalets added successful.",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-        navigate("/dashboard/chalets");
+        // Swal.fire({
+        //   title: "Success!",
+        //   text: "Chalets added successful.",
+        //   icon: "success",
+        //   confirmButtonText: "OK",
+        // });
+        const chalet_id=response.data.id
+        navigate(`/dashboard/adddetails/${chalet_id}`);
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -96,7 +100,7 @@ function AddChalets() {
                 onChange={(e) => {
                   settitle(e.target.value);
                 }}           />
-                 <Typography variant="small" color="blue-gray" className="mb-2 font-medium">  {lang ==='ar'? "سعر الحجز" :"reserve_price"}              </Typography>
+                 <Typography variant="small" color="blue-gray" className="mb-2 font-medium">  {lang ==='ar'? "سعر الحجز" :"Starting_price"}              </Typography>
               <Input
               required
               type='number'
@@ -104,6 +108,14 @@ function AddChalets() {
                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                 onChange={(e) => setreserve_price(e.target.value)}
                 />
+                <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "قيمة الحجز" :"intial_Amount"} </Typography>
+              <Input
+              required
+                size="lg"
+                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                onChange={(e) => {
+                  setintial_Amount(e.target.value);
+                }}           />
                    <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الحالة" :"status"}</Typography>
              
                <select 

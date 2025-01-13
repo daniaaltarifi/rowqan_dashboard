@@ -5,29 +5,17 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { API_URL } from "../../../App.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from 'axios'; // Ensure Axios is imported
 import Cookies from 'js-cookie';
 function AddDetails() {
+  const {chalet_id}=useParams()
     const [Detail_Type, setDetail_Type] = useState("");
     const lang = Cookies.get('lang') || 'en';
     const [chalets, setChalets] = useState([]);
-    const [chalet_id, setChalet_id] = useState("");
 
     const navigate = useNavigate();
-    useEffect(()=>{
-
-        const fetchChalets= async () => {
-          try {
-            const response = await axios.get(`${API_URL}/chalets/getallchalets/${lang}`) ;
-            setChalets(response.data);
-          } catch (error) {
-            console.error(error);
-          }
-        };
-        fetchChalets()
-      },[])
       const handleAddDetails = async (e) => {
         e.preventDefault();
         try {
@@ -40,13 +28,13 @@ function AddDetails() {
                     },
                 }
             );
-            Swal.fire({
-                title: "Success!",
-                text: "Chalet details added successfully.",
-                icon: "success",
-                confirmButtonText: "OK",
-            });
-            navigate("/dashboard/chalets");
+            // Swal.fire({
+            //     title: "Success!",
+            //     text: "Chalet details added successfully.",
+            //     icon: "success",
+            //     confirmButtonText: "OK",
+            // });
+            navigate(`/dashboard/addchaletproperties/${chalet_id}`);
         } catch (error) {
             console.error(error);
             Swal.fire({
@@ -69,27 +57,14 @@ function AddDetails() {
             {/* First Column */}
             <div className="flex flex-col">
               <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "التفصيل" :"Detail_Type"} </Typography>
-              <Input
+              <textarea
               required
+               rows={10}
                 size="lg"
                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                 onChange={(e) => {
                   setDetail_Type(e.target.value);
                 }}           />              
-  <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الشاليهات" :"Chalets"}</Typography>
-                            <select 
-                    onChange={(e)=>setChalet_id(e.target.value) }
-                    name="chalet_id"
-    className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
->
-<option value="">{lang ==='ar'? "اختر شاليه" :"Select Chalet"}</option>
-
-    {chalets.map((item) => (
-        <option key={item.id} value={item.id}>
-            {item.title}
-        </option>
-    ))}
-</select>
             </div>            
           </div>
 

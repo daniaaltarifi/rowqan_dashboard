@@ -46,7 +46,13 @@ function Users() {
         try {
           
           await axios.delete(`${API_URL}/users/DeleteUser/${id}/${lang}`);
-        setChalets(Chalets.filter((chalet) => chalet.id !== ChaletsIdToDelete));
+        setusers(users.filter((chalet) => chalet.id !== userIdToDelete));
+        Swal.fire({
+                 title: "Success!",
+                 text: "user deleted successful.",
+                 icon: "success",
+                 confirmButtonText: "OK",
+               });
         } catch (error) {
             console.error(error);
 
@@ -130,15 +136,15 @@ function Users() {
                                             </td>
                                             <td className={className}>
                                                 <div className="flex items-center">
-                                                    <Button
+                                                    {/* <Button
                                                         onClick={() => navigate(`/dashboard/updateuser/${user.id}`)}
                                                         className="mr-2 flex bg-[#6DA6BA] items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                                                     >
                                                         <PencilIcon className="h-5 w-5 mr-1" />
                                                         {lang === 'ar' ? "تعديل" : "Edit"}
-                                                    </Button>
+                                                    </Button> */}
                                                     <Button
-                                                        onClick={() =>  handleDelete={handleDelete}}
+                                                        onClick={() =>  handleDelete(user.id)}
                                                         className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
                                                     >
                                                         <TrashIcon className="h-5 w-5 mr-1" />

@@ -45,7 +45,7 @@ const handleShow = (id, type) => {
   const fetchContact = async () => {
     try {
       const ContactRes = await
-        axios.get(`${API_URL}/ContactUs/getAllContactUs/${lang}`);
+        axios.get(`${API_URL}/Contacts/getAllContacts/${lang}`);
       setContact(ContactRes.data);
       
     } catch (error) {
@@ -58,7 +58,7 @@ const handleShow = (id, type) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/ContactUs/deletecontactus/${id}/${lang}`);
+      await axios.delete(`${API_URL}/Contacts/deleteContacts/${id}/${lang}`);
       setContact(Contact.filter((b) => b.id !== id));
     } catch (error) {
       console.error(error);
@@ -142,7 +142,7 @@ const handleShow = (id, type) => {
                     </td>
                     <td>
                     <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar   src={`https://res.cloudinary.com/durjqlivi/${cont.image}`} alt={"Contact"} size="md" variant="rounded" />
+                      <Avatar   src={`https://res.cloudinary.com/dqimsdiht/${cont.image}`} alt={"Contact"} size="md" variant="rounded" />
                       </Typography>
                     </td>
                      <td className={className}>

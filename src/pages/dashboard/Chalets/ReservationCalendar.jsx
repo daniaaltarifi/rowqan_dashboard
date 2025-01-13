@@ -4,6 +4,8 @@ import axios from "axios";
 import '../../../Styles/CalendarChalets.css'
 import { API_URL } from "@/App";
 import Cookies from "js-cookie";
+import clock from '../../../Images/Clock.png'
+
 function ReservationCalendar() {
   const { chalet_id } = useParams();
   const lang = Cookies.get('lang') || 'en';
@@ -80,9 +82,10 @@ function ReservationCalendar() {
     <>
       <div className="date-picker-container">
         <div className="calendar">
-          <h3 className="text-center" style={{ color: "#fff" }}>
-            Morning Reserved Date
+          <h3 className="text-center" style={{ color: "#fff" ,fontSize:"30px"}}>
+         Morning Date
           </h3>
+
           <div className="calendar-header">
             <button className="prev-month" onClick={handlePrevMonth}>
               Prev
@@ -144,8 +147,8 @@ function ReservationCalendar() {
           </div>
         </div>
         <div className="calendar">
-          <h3 className="text-center" style={{ color: "#fff" }}>
-            Evening Reserved Date
+          <h3 className="text-center" style={{ color: "#fff" ,fontSize:"30px"}}>
+            Evening Date
           </h3>
           <div className="calendar-header">
             <button className="prev-month" onClick={handlePrevMonth}>

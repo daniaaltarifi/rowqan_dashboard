@@ -47,8 +47,8 @@ const handleShow = (id, type) => {
   const fetchProperties = async () => {
     try {
       const [PropertiesRes,DetailsRes,imgChalRes] = await Promise.all([
-        axios.get(`${API_URL}/propschalets/getAllPropsChalet/${lang}`),
-        axios.get(`${API_URL}/BreifDetailsChalets/getAllBreifChalet/${lang}`),
+        axios.get(`${API_URL}/chalets/getAllChaletProps/${lang}`),
+        axios.get(`${API_URL}/chalets/getAllChaletsByPropsandDetails/${lang}`),
         axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
 
       ]) 
@@ -67,11 +67,20 @@ const handleShow = (id, type) => {
       // Conditional logic to handle different delete operations
       if (itemType === 'properties') {
         await axios.delete(`${API_URL}/propschalets/DeletePropChalet/${PropertiesIdToDelete}/${lang}`);
-        setProperties(Properties.filter((chalet) => chalet.id !== PropertiesIdToDelete)); // Remove from list
-      } else if (itemType === 'details') {
+        setProperties(
+          Properties.map((prop) => {
+            const filteredprop = prop.Chalets_Props?.filter((props) => props.id !== PropertiesIdToDelete);
+            return { ...prop, Chalets_Props: filteredprop };
+          })
+        );  
+          } else if (itemType === 'details') {
         await axios.delete(`${API_URL}/BreifDetailsChalets/deleteBreif/${PropertiesIdToDelete}/${lang}`);
-        setbriefChar(briefChar.filter((detail) => detail.id !== PropertiesIdToDelete)); // Remove from list
-      }
+        setbriefChar(
+          briefChar.map((char) => {
+            const filteredchar = char.BreifDetailsChalets?.filter((chars) => chars.id !== PropertiesIdToDelete);
+            return { ...char, BreifDetailsChalets: filteredchar };
+          })
+        );        }
       else if (itemType === 'images') {
         await axios.delete(`${API_URL}/chaletsimages/deleteChaletImage/${PropertiesIdToDelete}`);
         setImgChalets(
@@ -104,7 +113,7 @@ const handleShow = (id, type) => {
         </Typography>
       </CardHeader>
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-      <Link to="/dashboard/addchaletproperties">
+      <Link to="/dashboard/addproperties">
     <Button
   className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#F2C79D]"
   style={{ marginLeft: '80px' }} 
@@ -115,7 +124,7 @@ const handleShow = (id, type) => {
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {[`${lang ==='ar'? "العنوان" :"Title"}`,`${lang ==='ar'? "الشاليه" :"Chalets"}`,`${lang ==='ar'? "الصورة" :"Image"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
+              {[`${lang ==='ar'? "الشاليه" :"Chalets"}`,`${lang ==='ar'? "الخصائص" :"Properties"}`].map((el) => (
                 <th
                   key={el}
                   className="border-b border-blue-gray-50 py-3 px-5 "
@@ -152,37 +161,50 @@ const handleShow = (id, type) => {
                       </div>
                     </td>
                     <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-semibold"
-                          >
-                            {chalet.Chalet?.title}
-                          </Typography>
-                      </Typography>
-                    </td>
-                    <td>
-                    <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar   src={`https://res.cloudinary.com/durjqlivi/${chalet.image}`} alt={"Properties"} size="md" variant="rounded" />
-                      </Typography>
-                    </td>
-                     <td className={className}>
-                        <div className="flex items-center">
-                          <Button 
-                            onClick={() => navigate(`/dashboard/updatepropertieschalet/${chalet.id}`)}
-                            className="mr-2 bg-[#6DA6BA] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
-                          >
-                            <PencilIcon className="h-5 w-5 mr-1 " /> {lang ==='ar'? "تعديل" : "Edit "}
-                          </Button>
-                          <Button 
-   onClick={() => handleShow(chalet.id, 'properties')} // Pass 'chalet' type
-   className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
-                          >
-                            <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
-                          </Button>
-                        </div>
-                      </td>
+  {chalet.Chalets_Props && chalet.Chalets_Props.length > 0 ? (
+    chalet.Chalets_Props.map((prop) => (
+      <div key={prop.id}>
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <td className="p-2 text-left align-middle">
+                <Typography className="text-xs font-semibold text-blue-gray-600 flex ">
+                  <Typography variant="small" color="blue-gray" className="font-semibold">
+                    {prop.title}
+                  </Typography>
+                  <Typography className="text-xs font-semibold text-blue-gray-600">
+                    <Avatar
+                      src={`https://res.cloudinary.com/durjqlivi/${prop.image}`}
+                      alt={"Properties"}
+                      size="sm"
+                      variant="rounded"
+                    />
+                  </Typography>
+                </Typography>
+              </td>
+              <td className="p-2 text-right align-middle">
+                <div className="flex justify-end">
+                  <PencilIcon
+                    className="h-5 w-5 mr-1"
+                    onClick={() => navigate(`/dashboard/updatepropertieschalet/${prop.id}`)}
+                  />
+                  <TrashIcon
+                    className="h-5 w-5 mr-1"
+                    onClick={() => handleShow(prop.id, 'properties')}
+                  />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    ))
+  ) : (
+    <Typography variant="small" color="blue-gray" className="font-semibold">
+      No Properties Found
+    </Typography>
+  )}
+</td>
                   </tr>
                 );
               }
@@ -215,7 +237,7 @@ const handleShow = (id, type) => {
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {[`${lang ==='ar'? "النوع" :"type"}`,`${lang ==='ar'? "الوصف" :"value"}`,`${lang ==='ar'? "الشاليه" :"chalet "}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
+              {[`${lang ==='ar'? "الشاليه" :"chalet "}`,`${lang ==='ar'? "الوصف" :"value"}`].map((el) => (
                 <th
                   key={el}
                   className="border-b border-blue-gray-50 py-3 px-5 "
@@ -247,52 +269,52 @@ const handleShow = (id, type) => {
                             color="blue-gray"
                             className="font-semibold"
                           >
-                            {details.type}
-                          </Typography>
-                        
-                        </div>
-                      </div>
-                    </td><td className={className}>
-                      <div className="flex items-center gap-4">
-                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
-                        <div>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-semibold"
-                          >
-                            {details.value}
+                            {details.title}
                           </Typography>
                         
                         </div>
                       </div>
                     </td>
                     <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-semibold"
-                          >
-                            {details.Chalet?.title}
-                          </Typography>
-                      </Typography>
-                    </td>                 
-                     <td className={className}>
-                        <div className="flex items-center">
-                          <Button 
-                            onClick={() => navigate(`/dashboard/updatebriefchalets/${details.id}`)}
-                            className="mr-2 bg-[#6DA6BA] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
-                          >
-                            <PencilIcon className="h-5 w-5 mr-1 " /> {lang ==='ar'? "تعديل" : "Edit "}
-                          </Button>
-                          <Button 
-                          onClick={() => handleShow(details.id, 'details')}className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
-                          >
-                            <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
-                          </Button>
-                        </div>
-                      </td>
+  {details.BreifDetailsChalets && details.BreifDetailsChalets.length > 0 ? (
+    details.BreifDetailsChalets.map((char) => (
+      <div key={char.id}>
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <td className="p-2 text-left align-middle">
+                <Typography className="text-xs font-semibold text-blue-gray-600 flex ">
+                  <Typography variant="small" color="blue-gray" className="font-semibold">
+                    {char.type} 
+                  </Typography>
+                  <Typography variant="small" color="blue-gray" className="font-semibold ps-2">
+                    : {char.value}
+                  </Typography>
+                </Typography>
+              </td>
+              <td className="p-2 text-right align-middle">
+                <div className="flex justify-end">
+                  <PencilIcon
+                    className="h-5 w-5 mr-1"
+                    onClick={() => navigate(`/dashboard/updatebriefchalets/${char.id}`)}
+                    />
+                  <TrashIcon
+                    className="h-5 w-5 mr-1"
+                    onClick={() => handleShow(char.id, 'details')}
+                  />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    ))
+  ) : (
+    <Typography variant="small" color="blue-gray" className="font-semibold">
+      No Characteristics Found
+    </Typography>
+  )}
+</td>
                   </tr>
                 );
               }
@@ -358,20 +380,20 @@ const handleShow = (id, type) => {
                       </div>
                     </td>
                     <td className={className} style={{ display: 'flex', flexWrap: 'wrap' }}>
-  {details.ChaletsImages.map((img, index) => (
-    <Typography className="text-xs font-semibold text-blue-gray-600" key={index} style={{ marginRight: '10px' }}>
-      <Avatar 
-        src={`https://res.cloudinary.com/durjqlivi/${img.image}`} 
-        alt={"chalets"} 
-        size="lg" 
-        variant="rounded" 
-        style={{ marginRight: '8px' }}  // Adds space between the images
-      />
-        <div style={{ display: 'flex', justifyContent:"center" }}>
-       <TrashIcon className="h-5 w-5 mr-1"onClick={() => handleShow(img.id, 'images')}/> 
-       </div>
-    </Typography>
-  ))}
+            {details.ChaletsImages.map((img, index) => (
+         <Typography className="text-xs font-semibold text-blue-gray-600" key={index} style={{ marginRight: '10px' }}>
+        <Avatar 
+          src={`${img.image}`} 
+          alt={"chalets"} 
+          size="lg" 
+          variant="rounded" 
+          style={{ marginRight: '8px' }}  // Adds space between the images
+        />
+          <div style={{ display: 'flex', justifyContent:"center" }}>
+        <TrashIcon className="h-5 w-5 mr-1"onClick={() => handleShow(img.id, 'images')}/> 
+        </div>
+      </Typography>
+    ))}
 </td>
                   </tr>
                 );

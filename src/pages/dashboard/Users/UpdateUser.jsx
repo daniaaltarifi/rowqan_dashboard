@@ -28,15 +28,20 @@ function UpdateUser() {
     const handleUpdateUser = async (e) => {
         e.preventDefault();
 
+        // بناء الكائن المستخدم للتحديث
         const userData = {
             name,
             email,
             phone_number: phoneNumber,
             country,
-            password,
             lang,
             user_type_id: userRole, 
         };
+
+        // إذا تم إدخال كلمة مرور جديدة، أضفها إلى البيانات
+        if (password) {
+            userData.password = password;
+        }
 
         try {
             await axios.put(`${API_URL}/users/updateUser/${id}`, userData);  

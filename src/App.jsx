@@ -34,7 +34,7 @@ import AddRightTimeChalets from "./pages/dashboard/TimeAndStatus/AddRightTimeCha
 import UpdateRightTimeChalet from "./pages/dashboard/TimeAndStatus/UpdateRightTimeChalet";
 import AddStatusChalet from "./pages/dashboard/TimeAndStatus/AddStatusChalet";
 import UpdateStatusChalet from "./pages/dashboard/TimeAndStatus/UpdateStatusChalet";
-// export const API_URL="https://rowqanbackend.rowqan.com";
+export const API_URL="https://rowqanbackend.rowqan.com";
 import axios from 'axios'
 import AddPropertiesChalet from "./pages/dashboard/Chalets/AddPropertiesChalet";
 import AddCharacterChalets from "./pages/dashboard/Chalets/AddCharacterChalets";

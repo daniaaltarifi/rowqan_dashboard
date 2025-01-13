@@ -109,7 +109,7 @@ function Abouts() {
                                         </td>
                                         <td className={className}>
                                             <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                <Avatar         src={`https://res.cloudinary.com/durjqlivi/${main.image}`}  alt={"main Image"} size="lg" variant="rounded" />
+                                                <Avatar         src={`https://res.cloudinary.com/dqimsdiht/${main.image}`}  alt={"main Image"} size="lg" variant="rounded" />
                                             </Typography>
                                         </td>
                                         <td className={className}>
@@ -169,7 +169,7 @@ function Abouts() {
                                         </td>
                                         <td className={className}>
                                             <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                <Avatar         src={`https://res.cloudinary.com/durjqlivi/${about.image}`}  alt={"About Image"} size="lg" variant="rounded" />
+                                                <Avatar         src={`https://res.cloudinary.com/dqimsdiht/${about.image}`}  alt={"About Image"} size="lg" variant="rounded" />
                                             </Typography>
                                         </td>
                                         <td className={className}>
@@ -237,7 +237,7 @@ function Abouts() {
                                         </td>
                                         <td className={className}>
                                             <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                <Avatar         src={`https://res.cloudinary.com/durjqlivi/${blog.image}`}  alt={"About Image"} size="lg" variant="rounded" />
+                                                <Avatar         src={`https://res.cloudinary.com/dqimsdiht/${blog.image}`}  alt={"About Image"} size="lg" variant="rounded" />
                                             </Typography>
                                         </td>
                                         <td className={className}>

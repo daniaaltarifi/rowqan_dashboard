@@ -92,6 +92,7 @@ function AddRightTimeChalets() {
             <div className="flex flex-col">
               <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الاسم" :"name"} </Typography>
                  <select 
+                 required
   onChange={(e) => {
     setname(e.target.value);
   }}                        className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

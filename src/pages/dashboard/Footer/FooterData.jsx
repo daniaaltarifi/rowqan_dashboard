@@ -207,7 +207,7 @@ function FooterData() {
                     </td>
                     <td className={className}>
                       <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar src={`https://res.cloudinary.com/durjqlivi/${soc.icon}`}alt={"Footer"} size="md" variant="rounded" />
+                      <Avatar src={`https://res.cloudinary.com/dqimsdiht/${soc.icon}`}alt={"Footer"} size="md" variant="rounded" />
                       </Typography>
                     </td>
                       <td className={className}>

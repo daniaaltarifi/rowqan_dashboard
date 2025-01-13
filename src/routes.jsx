@@ -17,6 +17,8 @@ import RightTimeChalets from "./pages/dashboard/TimeAndStatus/RightTimeChalets";
 import Header from "./pages/dashboard/Header/Header";
 import Contact from "./pages/dashboard/Contact/Contact";
 import MessagesChaletOwners from "./ChaletsOwners DashBoard/MessagesChaletOwners";
+import ContactUsPage from "./Admin DashBoard/ContactUsPage";
+import ReservationsPage from "./Admin DashBoard/ReservationsPage";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -114,6 +116,18 @@ export const useRoutes = () => {
                 name: lang === "ar" ? "التواصل" : "Contact",
                 path: "/contact",
                 element: <Contact />,
+              },
+              {
+                icon: <ChatBubbleOvalLeftEllipsisIcon  {...icon} />,
+                name: lang === "ar" ? "التواصل" : "Contact Us",
+                path: "/contactUs",
+                element: <ContactUsPage />,
+              },
+              {
+                icon: <ChatBubbleOvalLeftEllipsisIcon  {...icon} />,
+                name: lang === "ar" ? "الحجوزات" : "Reservations",
+                path: "/reservations",
+                element: <ReservationsPage />,
               },
             ]
           : []),

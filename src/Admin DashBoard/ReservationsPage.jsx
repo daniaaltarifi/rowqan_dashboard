@@ -24,7 +24,7 @@ function ReservationsPage() {
   };
 
   const handleUpdateStatus = async (id, currentStatus) => {
-    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending"; // التبديل بين الحالة الحالية والحالة الجديدة
+    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending";
 
     const result = await Swal.fire({
       title: lang === "ar" ? "هل أنت متأكد من تحديث الحالة؟" : "Are you sure to update the status?",

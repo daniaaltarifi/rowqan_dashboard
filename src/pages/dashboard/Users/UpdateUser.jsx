@@ -46,7 +46,7 @@ function UpdateUser() {
                 icon: "success",
                 confirmButtonText: "OK",
             });
-            navigate("/dashboard/usersSuperAdmin");
+            navigate("/dashboard/usersAdmin");
         } catch (error) {
             console.error(error);
             Swal.fire({

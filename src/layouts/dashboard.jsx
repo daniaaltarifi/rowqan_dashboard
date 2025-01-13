@@ -24,6 +24,7 @@ import UpdateBlog from "@/pages/dashboard/About/UpdateBlog";
 import AddBlog from "@/pages/dashboard/About/AddBlog";
 import AddFooter from "@/pages/dashboard/Footer/AddFooter";
 import Messages from "@/ChaletsOwners DashBoard/Messages";
+import UpdateUser from "@/pages/dashboard/Users/UpdateUser";
 
 
 export function Dashboard() {
@@ -75,6 +76,8 @@ export function Dashboard() {
 <Route path="updatechalet/:id" element={<UpdateChalets />} />
 <Route path="adddetails" element={<AddDetails />} />
 <Route path="updatedetails/:id" element={<UpdateDetails />} />
+<Route path="updateUser/:id" element={<UpdateUser/>} />
+
 <Route path="addchaletproperties" element={<AddProperties />} />
 <Route path="updatepropertieschalet/:id" element={<UpdateProerties />} />
 <Route path="addbriefchalets" element={<AddBriefChalets />} />

@@ -1,60 +1,167 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Input,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
-import { API_URL } from "../../../App.jsx";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import axios from 'axios'; // Ensure Axios is imported
+
+import React, { useEffect, useState } from 'react'
+import '../../../Styles/Chalets.css'
 import Cookies from 'js-cookie';
-import { data } from 'autoprefixer';
+import {Button,Typography,} from "@material-tailwind/react";
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import { cities } from './CityData';
+import { getRoomOptions, getBathroomOptions, getFurnishedOptions, getFeatures, getAdditionalFeatures, getInterfaceOptions, getFamilyOptions, getkitchenOptions, getswimmingpoolsOptions } from './Data';
+import axios from 'axios';
+import { API_URL } from '@/App';
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+
 function AddChalets() {
-    const [title, settitle] = useState("");
-    const [reserve_price, setreserve_price] = useState("");
-    const [intial_Amount, setintial_Amount] = useState("");
-    const [status_id , setstatus_id ] = useState("");
-    const [img, setImg] = useState(null);
-    const [imgName, setImgName] = useState("");
-    const [status, setstatus] = useState([]);
-    const lang = Cookies.get('lang') || 'en';
+      const lang = Cookies.get('lang') || 'en';
+      const navigate = useNavigate();
+      const roomOptions = getRoomOptions();
+      const bathroomOptions = getBathroomOptions();
+      const furnishedOptions = getFurnishedOptions(lang);
+      const features = getFeatures();
+      const additionalFeatures = getAdditionalFeatures();
+      const interfaceOptions = getInterfaceOptions(lang);
+      const familyoptions = getFamilyOptions();
+      const kitchenOptions = getkitchenOptions();
+      const swimmingpoolsOptions = getswimmingpoolsOptions();
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImg(file);
-            setImgName(file.name); // Set the image name
-        } else {
-            setImg(null);
-            setImgName(""); // Reset if no file is selected
-        }
+      const [checkedFeatures, setCheckedFeatures] = useState([]);
+      const [checkedadditioanlFeatures, setCheckedadditioanlFeatures] = useState([]);
+      const [selectedCity, setSelectedCity] = useState('');
+      const [availableAreas, setAvailableAreas] = useState([]);
+      const [selectedArea, setSelectedArea] = useState('');
+      const [haveOffer, setHaveOffer] = useState(false);
+      const [status, setstatus] = useState([]);
+      const [mainInfoChalets, setMainInfoChalets] = useState({
+        title: "",
+        description: "",
+        Rating:null,
+        city: "",
+        area:"",
+        intial_Amount:null,
+        status_id: "",
+        image: null,
+    });
+    const labels = {
+      room: lang === 'ar' ? 'عدد الغرف' : 'numberofrooms',
+      bathroom: lang === 'ar' ? 'عدد الحمامات' : 'numberofbathrooms',
+      furnished: lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished',
+      interface: lang === 'ar' ? 'واجهة' : 'Interface',
+      building_area: lang === 'ar' ? 'مساحة البناء' : 'Building Area',
+      family: lang === 'ar' ? 'عدد الاسرة' : 'Number of Families',
+      kitchen: lang === 'ar' ? 'عدد الاسرة' : 'Number of Kitchen',
+      swimmingpools: lang === 'ar' ? 'عدد حمامات السباحة' : 'Numberof swimming pools',
     };
-    const navigate = useNavigate();
-    useEffect(()=>{
-
-      const fetchstatus_type = async () => {
-        try {
-          const response = await axios.get(`${API_URL}/status/getallstatuses/${lang}`)          ;
-          setstatus(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      fetchstatus_type()
-    },[])
-    const handleAddChalets = async (e) => {
-      e.preventDefault();
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("lang", lang);
-      formData.append("status_id", status_id);
-      formData.append("reserve_price", reserve_price);
-      formData.append("intial_Amount", intial_Amount);
-      formData.append("image", img);
   
-    
-      try {
+    // Initialize state with dynamic keys
+    const [formDataState, setFormDataState] = useState({
+      [labels.room]: '',
+      [labels.bathroom]: '',
+      [labels.furnished]: '',
+      [labels.interface]: '',
+      [labels.building_area]: '',
+      [labels.family]: '',
+      [labels.kitchen]: '',
+      [labels.swimmingpools]: '',
+    });
+      useEffect(()=>{
+        const fetchstatus_type = async () => {
+          try {
+            const response = await axios.get(`${API_URL}/status/getallstatuses/${lang}`) ;
+            setstatus(response.data);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        fetchstatus_type()
+      },[])
+
+        const handleCityChange = (e) => {
+          const cityId = e.target.value;
+          setSelectedCity(cityId);
+          // Find the selected city and set its areas
+          const city = cities.find(city => city.id === cityId);
+          if (city) {
+            setAvailableAreas(city.areas);
+          } else {
+            setAvailableAreas([]);
+          }
+          setSelectedArea(''); // Reset selected area
+        };
+      
+        const handleAreaChange = (e) => {
+          setSelectedArea(e.target.value);
+        };
+  // Handle checkbox change
+  const handleCheckboxChange = (e) => {
+    const { id, checked } = e.target;
+
+    setCheckedFeatures((prevState) => {
+      if (checked) {
+        // Add the ID to the array if checked
+        setCheckedFeatures([...prevState, id])
+        console.log("checked features data", checkedFeatures);
+        return [...prevState, id];
+
+      } else {
+        // Remove the ID from the array if unchecked
+        return prevState.filter((featureId) => featureId !== id);
+      }
+    });
+  };
+
+  // Handle checkbox change
+  const handleAdditionalFeaturesChange = (e) => {
+    const { id, checked } = e.target;
+
+    setCheckedadditioanlFeatures((prevState) => {
+      if (checked) {
+        // Add the ID to the array if checked
+        console.log("checked additional feat data", checkedadditioanlFeatures);
+        return [...prevState, id];
+      } else {
+        // Remove the ID from the array if unchecked
+        return prevState.filter((benefitId) => benefitId !== id);
+      }
+    });
+  };
+
+  const handleChange = (e, fieldName) => {
+    const value = e.target.value;
+    setFormDataState(prevState => ({
+      ...prevState,
+      [labels[fieldName]]: value, // Dynamically update based on the label
+    }));
+  };
+
+  const handleAddChalet = async(e) => {
+    e.preventDefault()
+    const typeData = formDataState;
+
+      const formData = new FormData();
+      formData.append("title", mainInfoChalets.title);
+      formData.append("description", mainInfoChalets.description);
+      formData.append("lang", lang);
+      formData.append("status_id", mainInfoChalets.status_id);
+      formData.append("Rating", mainInfoChalets.Rating);
+      formData.append("intial_Amount", mainInfoChalets.intial_Amount);
+      formData.append("city", selectedCity);
+      formData.append("area", selectedArea);
+      formData.append("image", mainInfoChalets.image);
+      formData.append("features",checkedFeatures);
+      formData.append("Additional_features",checkedadditioanlFeatures);
+      formData.append("type", JSON.stringify(typeData));  // Append the JSON data as a string
+     // Append multiple time slots dynamically
+     rightTimesData.forEach((timeSlot, index) => {
+       formData.append(`rightTimesData[${index}][image]`, timeSlot.image);
+      formData.append(`rightTimesData[${index}][type_of_time]`, timeSlot.type_of_time);
+      formData.append(`rightTimesData[${index}][from_time]`, timeSlot.from_time);
+      formData.append(`rightTimesData[${index}][to_time]`, timeSlot.to_time);
+      formData.append(`rightTimesData[${index}][price]`, timeSlot.price);
+      formData.append(`rightTimesData[${index}][After_Offer]`, timeSlot.After_Offer);
+      formData.append(`rightTimesData[${index}][lang]`, timeSlot.lang);
+    });
+          try {
           const response = await axios.post(
             `${API_URL}/chalets/createchalet`,
             formData,
@@ -64,14 +171,8 @@ function AddChalets() {
               },
             }
           );
-        // Swal.fire({
-        //   title: "Success!",
-        //   text: "Chalets added successful.",
-        //   icon: "success",
-        //   confirmButtonText: "OK",
-        // });
-        const chalet_id=response.data.id
-        navigate(`/dashboard/adddetails/${chalet_id}`);
+        const chalet_id=response.data.chalet.id;
+        navigate(`/dashboard/addimginchalets/${chalet_id}`);
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -82,89 +183,424 @@ function AddChalets() {
         });
       }
     };
+  
+      const handleChangemainInfoChalets = (e) => {
+        const { name, type, files } = e.target;
+        setMainInfoChalets({
+            ...mainInfoChalets,
+            [name]: type === "file" ? files[0] : e.target.value,
+        });
+    };
+    const [rightTimesData, setRightTimesData] = useState([
+      { type_of_time: "", from_time: "", to_time: "", price: null, After_Offer: null ,lang: lang,image:null},
+    ]);
+  
+    const addTimeSlot = () => {
+      setRightTimesData([
+        ...rightTimesData,
+        { type_of_time: "", from_time: "", to_time: "", price: null, After_Offer: null,lang: lang,image:null },
+      ]);
+    };
+  
+    const updateTimeSlot = (index, key, value) => {
+      const updatedData = [...rightTimesData];
+      updatedData[index][key] = value;
+      setRightTimesData(updatedData);
+    };
   return (
-    <section className="m-8 flex gap-4">
-      <div className="w-full mt-24">
-        <div className="text-center">
-          <Typography variant="h2" className="font-bold mb-4">{lang ==='ar'? "اضافة شاليه" : "Add Chalets "}</Typography>
-        </div>
-        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleAddChalets}>
-          <div className="grid grid-cols-1 gap-6 ">
-            {/* First Column */}
-            <div className="flex flex-col">
-              <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "العنوان" :"Title"} </Typography>
-              <Input
-              required
-                size="lg"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => {
-                  settitle(e.target.value);
-                }}           />
-                 <Typography variant="small" color="blue-gray" className="mb-2 font-medium">  {lang ==='ar'? "سعر الحجز" :"Starting_price"}              </Typography>
-              <Input
-              required
-              type='number'
-                size="lg"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => setreserve_price(e.target.value)}
-                />
-                <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "قيمة الحجز" :"intial_Amount"} </Typography>
-              <Input
-              required
-                size="lg"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => {
-                  setintial_Amount(e.target.value);
-                }}           />
-                   <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الحالة" :"status"}</Typography>
-             
-               <select 
-               required
-                    onChange={(e)=>setstatus_id(e.target.value) }
-                    className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">{lang ==='ar'? "اختر الحالة" :"Select status"}</option>
-                    {
-                    status.map((item) => (
-                    <option key={item.id} value={item.id}>{item.status}</option>))
-                  }
-                   
-                  </select>
-                <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الصورة" :"Image"}</Typography>
-                <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "من المستحسن استخدام تنسيق WebP للصور." :"It is recommended to use the WebP format for images."}</Typography>
-                            <div className="relative">
-                                <input
-                                required
-                                    type="file"
-                                    id="file_input"
-                                    onChange={handleFileChange}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                />
-                                <Button className="bg-gray-200 text-gray-800 hover:bg-gray-300 w-full text-left">
-                                {lang ==='ar'? "اختر الصورة  " :" Choose an image"}
-                                </Button>
-                                 {/* Display the image name if it exists */}
-                {imgName && (
-                    <Typography variant="small" color="blue-gray" className="mt-2">
-                        Selected File: {imgName}
-                    </Typography>
-                )}
-                            </div>
+    <>
+   <form onSubmit={handleAddChalet}>
+    <div className='big_container_chalets'>
+         <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'تفاصيل الشاليه' : ' Chalets Details'}</Typography>
+         <p className="font-bold mb-3">{lang === 'ar' ? 'صورة الغلاف' : 'Cover Image'}</p>
+         <div>
+       <input type="file" name="image"onChange={handleChangemainInfoChalets}id="timeimg" className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+       </div>
+       <p className="font-bold mb-3">{lang === 'ar' ? 'عدد الغرف' : 'Number of rooms'}</p>
+<div className="flex flex-wrap">
+  {roomOptions.map((room, index) => (
+    <div
+      key={index}
+      onChange={(e) => handleChange(e, "room")}
+      className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto"
+    >
+      <input
+        type="radio"
+        id={`room-radio-${index}`}
+        value={room}
+        name="room-radio" // Unique name for room group
+        checked={formDataState[labels.room] === room}
+        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label
+        htmlFor={`room-radio-${index}`}
+        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
+      >
+        {room}
+      </label>
+    </div>
+  ))}
+</div>
 
-            </div>            
+<hr />
+
+<p className="font-bold my-3">{lang === 'ar' ? 'عدد الحمامات' : 'Number of bathrooms'}</p>
+<div className="flex flex-wrap">
+  {bathroomOptions.map((bathroom, index) => (
+    <div
+      key={index}
+      onChange={(e) => handleChange(e, "bathroom")}
+      className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto"
+    >
+      <input
+        type="radio"
+        id={`bathroom-radio-${index}`}
+        value={bathroom}
+        name="bathroom-radio" // Unique name for bathroom group
+        checked={formDataState[labels.bathroom] === bathroom}
+        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label
+        htmlFor={`bathroom-radio-${index}`}
+        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
+      >
+        {bathroom}
+      </label>
+    </div>
+  ))}
+</div>
+
+<hr />
+
+<p className="font-bold my-3">{lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished'}</p>
+<div className="flex flex-wrap">
+  {furnishedOptions.map((furn, index) => (
+    <div
+      key={index}
+      onChange={(e) => handleChange(e, "furnished")}
+      className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto"
+    >
+      <input
+        type="radio"
+        id={`furnished-radio-${index}`}
+        value={furn}
+        name="furnished-radio" // Unique name for furnished group
+        checked={formDataState[labels.furnished] === furn}
+        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label
+        htmlFor={`furnished-radio-${index}`}
+        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
+      >
+        {furn}
+      </label>
+    </div>
+  ))}
+</div>
+
+<hr />
+<p className='font-bold my-3'>{lang === 'ar' ? 'المزايا الرئيسية' : 'Key Features'}</p>
+      <ul className="flex flex-wrap gap-4 w-full text-sm font-medium text-gray-900 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      {features.map((feature) => (
+          <li key={feature.id} className="w-full sm:w-auto border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+            <div className="flex items-center">
+              <input
+                id={feature.id}
+                type="checkbox"
+                value={feature.id}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                checked={checkedFeatures.includes(feature.id)}
+                onChange={handleCheckboxChange}
+              />
+              <label htmlFor={feature.id} className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                {lang === 'ar' ? feature.ar : feature.en}
+              </label>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <hr />
+<p className='font-bold my-3'>{lang=== 'ar' ? 'المزايا الاضافية' : 'Additional Features'}</p>
+<ul className="flex flex-wrap gap-4 w-full text-sm font-medium text-gray-900 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        {additionalFeatures.map((benefit) => (
+          <li key={benefit.id} className="w-full sm:w-auto border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+            <div className="flex items-center">
+              <input
+                id={benefit.id}
+                type="checkbox"
+                value={benefit.id}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                checked={checkedadditioanlFeatures.includes(benefit.id)}
+                onChange={handleAdditionalFeaturesChange}
+              />
+              <label htmlFor={benefit.id} className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                {lang === 'ar' ? benefit.ar : benefit.en}
+              </label>
+            </div>
+          </li>
+        ))}
+      </ul>
+     <hr />
+    <p className="font-bold mb-3">{labels.interface}</p>
+      <div className="flex flex-wrap">
+        {interfaceOptions.map((inter, index) => (
+          <div key={index} onChange={(e) => handleChange(e, "interface")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
+            <input
+              type="radio"
+              id={`interface-radio-${index}`}
+              value={inter}
+              name="interface-radio"  
+              checked={formDataState[labels.interface] === inter}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor={`interface-radio-${index}`}
+              className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
+            >
+              {inter}
+            </label>
+          </div>
+        ))}
+      </div>
+      <hr />
+
+      {/* Building Area */}
+      <p className="font-bold mb-3">{labels.building_area}</p>
+      <div>
+        <input
+          type="number"
+          value={formDataState[labels.building_area]}
+          onChange={(e) => handleChange(e, "building_area")}
+          id="Building"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Building"
+          required
+        />
+      </div>
+      <hr />
+
+      {/* Family Option */}
+      <p className="font-bold mb-3">{labels.family}</p>
+      <div className="flex flex-wrap">
+        {familyoptions.map((family, index) => (
+          <div key={index} onChange={(e) => handleChange(e, "family")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
+            <input
+              type="radio"
+              id={`family-radio-${index}`}
+              value={family}
+              name="family-radio"  
+              checked={formDataState[labels.family] === family}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor={`family-radio-${index}`}
+              className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
+            >
+              {family}
+            </label>
+          </div>
+        ))}
+      </div>
+      <hr />
+
+      {/* Kitchen Option */}
+      <p className="font-bold mb-3">{labels.kitchen}</p>
+      <div className="flex flex-wrap">
+        {kitchenOptions.map((kitchen, index) => (
+          <div key={index} onChange={(e) => handleChange(e, "kitchen")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
+            <input
+              type="radio"
+              id={`kitchen-radio-${index}`}
+              value={kitchen}
+              name="kitchen-radio" 
+              checked={formDataState[labels.kitchen] === kitchen}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor={`kitchen-radio-${index}`}
+              className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
+            >
+              {kitchen}
+            </label>
+          </div>
+        ))}
+      </div>
+      <hr />
+
+      {/* Swimming Pools Option */}
+      <p className="font-bold mb-3">{labels.swimmingpools}</p>
+      <div className="flex flex-wrap">
+        {swimmingpoolsOptions.map((pools, index) => (
+          <div key={index} onChange={(e) => handleChange(e, "swimmingpools")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
+            <input
+              type="radio"
+              id={`swimmingpools-radio-${index}`}
+              value={pools}
+              name="swimmingpools-radio" 
+              checked={formDataState[labels.swimmingpools] === pools}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              htmlFor={`swimmingpools-radio-${index}`}
+              className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
+            >
+              {pools}
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <div className="big_container_chalets">
+    <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'الموقع' : 'Location'}</Typography>
+    <Form.Select
+        aria-label="Select City"
+        value={selectedCity}
+        onChange={handleCityChange}
+        className='select_location'
+      >
+        <option value="">{lang === 'ar' ? 'اختر مدينة' : 'Select City'}</option>
+        {cities.map((city) => (
+          <option key={city.id} value={city.id}>
+            {lang === 'ar' ? city.ar : city.en}
+          </option>
+        ))}
+      </Form.Select>
+      {/* Area Dropdown */}
+      <Form.Select
+        aria-label="Select Area"
+        className='select_location'
+        value={selectedArea}
+        onChange={handleAreaChange}
+        disabled={!selectedCity}  // Disable area dropdown if no city is selected
+      >
+        <option value="">{lang === 'ar' ? 'اختر منطقة' : 'Select Area'}</option>
+        {availableAreas.map((area, index) => (
+          <option key={index} value={area}>
+            {area}
+          </option>
+        ))}
+      </Form.Select>
+    </div>
+    <div className="big_container_chalets">
+    <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'الوقت' : 'Time'}</Typography>
+  {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
+   
+  {rightTimesData.map((timeSlot, index) => (
+        <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div>
+            <select
+              className="form-select"
+              value={timeSlot.type_of_time}
+              onChange={(e) => updateTimeSlot(index, "type_of_time", e.target.value)}
+            >
+              <option value="">{lang === "ar" ? "اختر نوع الوقت" : "Select Type of Time"}</option>
+              <option value="Morning">{lang === "ar" ? "صباحي" : "Morning"}</option>
+              <option value="Evening">{lang === "ar" ? "مسائي" : "Evening"}</option>
+              <option value="Full Day">{lang === "ar" ? "كل اليوم" : "Full Day"}</option>
+            </select>
           </div>
 
-          <Button
-  type="submit"
-  className="mt-6 bg-[#6DA6BA] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
-  fullWidth
->
-{lang ==='ar'? "اضافة" : "Add  "}</Button>
+          <div>
+            <label>From Time</label>
+            <input
+              type="time"
+              className="form-control"
+              value={timeSlot.from_time}
+              onChange={(e) => updateTimeSlot(index, "from_time", e.target.value)}
+            />
+          </div>
 
-        </form>
-      </div>
-    </section>
-  );
+          <div>
+            <label>To Time</label>
+            <input
+              type="time"
+              className="form-control"
+              value={timeSlot.to_time}
+              onChange={(e) => updateTimeSlot(index, "to_time", e.target.value)}
+            />
+          </div>
+
+          <div>
+           <input value={timeSlot.price} onChange={(e) => updateTimeSlot(index, "price", e.target.value)}type="number" id="Price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Price" required />
+          </div>
+              <div className="flex items-center mb-4">
+    <input onClick={()=>{setHaveOffer(!haveOffer)}} id="default-checkbox" type="checkbox" value="" className=" mx-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+    <label for="default-checkbox" className=" text-sm font-medium text-gray-900 dark:text-gray-300">Have Offer</label>
+    </div>
+    {haveOffer && (
+        <div >
+        <input type="number"  value={timeSlot.After_Offer} onChange={(e) => updateTimeSlot(index, "After_Offer", e.target.value)}id="after offer" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="After Offer" />
+    </div>
+    )}
+          <div>
+<input type="file" id="timeimg"  onChange={(e) => updateTimeSlot(index, "image", e.target.files[0])}
+ className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+</div>
+          </div>
+      ))}
+
+      <button
+        type="button"
+        className="mt-4 bg-[#F2C79D] text-white p-2 rounded"
+        onClick={addTimeSlot}
+      >
+        {lang === "ar" ? "إضافة وقت آخر" : "Add Another Time"}
+      </button>
+   {/* </div> */}
+   </div>
+   <div className="big_container_chalets">
+    <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'التفاصيل' : 'Details'}</Typography>
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5"> 
+    <div>
+      <InputGroup className="mb-3"> 
+      <input type="text"onChange={handleChangemainInfoChalets} id="title"name='title' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'العنوان' : 'Title'} required />
+
+      </InputGroup>
+    </div>
+    <div>
+      <InputGroup className="mb-3"> 
+      <input type="number"onChange={handleChangemainInfoChalets} id="rating"name='Rating' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'التصنيف' : 'Rating'} required />
+      </InputGroup>
+    </div>
+    <div>
+      <InputGroup className="mb-3"> 
+      <input type="number"onChange={handleChangemainInfoChalets} id="intial_Amount"name='intial_Amount' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'المبلغ الأولي' : 'intial_Amount'} required />
+      </InputGroup>
+    </div>
+    <div>
+         <select 
+          onChange={handleChangemainInfoChalets}
+          name="status_id"
+          className="block w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={mainInfoChalets.status_id} // Bind select value to status_id state
+      >
+        <option value="">{lang ==='ar'? "الحالة" :"Select status"}</option>
+          {status.map((item) => (
+              <option key={item.id} value={item.id}>
+                  {item.status}
+              </option>
+          ))}
+      </select>
+    </div>
+   </div>
+    <div>
+      <InputGroup className="mb-3"> 
+      <textarea type="text" rows={20}onChange={handleChangemainInfoChalets} name='description' id="Description" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'الوصف' : 'Description'} required />
+      </InputGroup>
+    </div>
+  
+    
+    <button 
+    type="submit" 
+    className="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    {lang=== 'ar' ? 'حفظ' : 'Submit'}
+   </button>
+</div>
+   </form>
+    </>
+
+  )
 }
 
-export default AddChalets;
+export default AddChalets

@@ -132,7 +132,7 @@ function Abouts() {
             <Card>
                 <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }} className="mb-8 p-6">
                     <Typography variant="h6" color="white">
-                        {lang ==='ar'? "جدول عن مزرعتنا" : "About Table "}
+                        {lang ==='ar'? "جدول عن روقان" : "About Table "}
                     </Typography>
                 </CardHeader>
                 <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
@@ -192,7 +192,7 @@ function Abouts() {
             <Card>
                 <CardHeader variant="gradient"style={{ backgroundColor: '#6DA6BA' }} className="mb-8 p-6">
                     <Typography variant="h6" color="white">
-                        {lang ==='ar'? "جدول المدونة" : "BLogs Table "}
+                        {lang ==='ar'? "جدول المدونة" : "Blogs Table "}
                     </Typography>
                 </CardHeader>
                  <Link to="/dashboard/addblog">

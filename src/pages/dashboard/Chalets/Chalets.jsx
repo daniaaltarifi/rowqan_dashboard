@@ -65,10 +65,23 @@ const handleShow = (id, type) => {
       if (itemType === 'chalet') {
         await axios.delete(`${API_URL}/chalets/deletechalet/${ChaletsIdToDelete}/${lang}`);
         setChalets(Chalets.filter((chalet) => chalet.id !== ChaletsIdToDelete)); // Remove from list
-      } else if (itemType === 'details') {
-        await axios.delete(`${API_URL}/chaletsdetails/deleteddetaile/${ChaletsIdToDelete}/${lang}`);
-        setChaletsDetails(ChaletsDetails.filter((detail) => detail.id !== ChaletsIdToDelete)); // Remove from list
-      }
+      } else if (itemType === 'time') {
+        await axios.delete(`${API_URL}/RightTimes/deleterighttime/${ChaletsIdToDelete}/${lang}`);
+        setChalets(
+          Chalets.map((chal) => {
+            const filteredchal = chal.RightTimeModels?.filter((chars) => chars.id !== ChaletsIdToDelete);
+            return { ...chal, RightTimeModels: filteredchal };
+          })
+        );       }
+        else if (itemType === 'images') {
+          await axios.delete(`${API_URL}/chaletsimages/deleteChaletImage/${ChaletsIdToDelete}`);
+          setChalets(
+            Chalets.map((detail) => {
+              const filteredImages = detail.ChaletsImages?.filter((img) => img.id !== ChaletsIdToDelete);
+              return { ...detail, ChaletsImages: filteredImages };
+            })
+          );
+           }
     } catch (error) {
       console.error(error);
     }
@@ -87,6 +100,7 @@ const handleShow = (id, type) => {
   useEffect(() => {
     fetchChalets();
   }, []);
+
   return (
     <>
     {/* <Button className="mt-6" >Add chalet</Button> */}
@@ -111,7 +125,7 @@ const handleShow = (id, type) => {
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {[`${lang ==='ar'? "العنوان" :"Title"}`,`${lang ==='ar'? "سعر الحجز" :"reserve_price"}`,`${lang ==='ar'? "قيمة الحجز" :"Initial amount"}`,`${lang ==='ar'? "الحالة" :"status "}`,`${lang ==='ar'? "الصورة" :"Image"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
+              {[`${lang ==='ar'? "العنوان" :"Title"}`,`${lang ==='ar'? "الوصف" :"description"}`,`${lang ==='ar'? "قيمة الحجز" :"Initial amount"}`,`${lang ==='ar'? "التصنيف" :"Rating"}`,`${lang ==='ar'? "المدينة" :"City"}`,`${lang ==='ar'? "المنطقة" :"Area"}`,`${lang ==='ar'? "الصورة" :"Image"}`,`${lang ==='ar'? "النوع" :"type"}`,`${lang ==='ar'? "الميزات" :"Features"}`,`${lang ==='ar'? "الميزات الاضافية" :"Additional_features"}`,`${lang ==='ar'? "الحالة" :"status "}`,,`${lang ==='ar'? "الاوقات" :"Times "}`,`${lang ==='ar'? "الصور" :"All Images"}`,`${lang ==='ar'? "اضافة صور" :"Add Images"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
                 <th
                   key={el}
                   className="border-b border-blue-gray-50 py-3 px-5 "
@@ -130,8 +144,19 @@ const handleShow = (id, type) => {
             {Chalets.map(
               (chalet,index) => {
                 const className = `py-3 px-5 ${index === Chalets.length - 1 ? "" : "border-b border-blue-gray-50"}`;
+                               // Parse the `type` field
+  let typeObject = {};
+  try {
+    // Remove outer escaping
+    const parsedType = JSON.parse(chalet.type);
+    // Parse the inner JSON
+    typeObject = JSON.parse(parsedType);
+  } catch (error) {
+    console.error("Error parsing chalet.type:", error);
+  }
 
-
+  // Convert the object to an array of key-value pairs
+  const typeList = Object.entries(typeObject);
                 return (
                   <tr key={chalet.id}>
                     <td className={className}>
@@ -145,23 +170,22 @@ const handleShow = (id, type) => {
                           >
                             {chalet.title}
                           </Typography>
-                          {/* <Typography className="text-xs font-normal text-blue-gray-500">
-                            {chalet.last_name}
-                          </Typography> */}
-
-                        </div>
+                         </div>
                       </div>
                     </td>
                     <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Typography
+                      <div className="flex items-center gap-4">
+                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                        <div>
+                          <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-semibold"
                           >
-                            {chalet.reserve_price}
-                          </Typography>
-                      </Typography>
+                            {chalet.description}
+                            </Typography>
+                         </div>
+                      </div>
                     </td>
                     <td className={className}>
                       <Typography className="text-xs font-semibold text-blue-gray-600">
@@ -175,6 +199,92 @@ const handleShow = (id, type) => {
                       </Typography>
                     </td>
                     <td className={className}>
+                      <div className="flex items-center gap-4">
+                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                        <div>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold"
+                          >
+                            {chalet.Rating}
+                          </Typography>
+                         </div>
+                      </div>
+                    </td>
+                    <td className={className}>
+                      <div className="flex items-center gap-4">
+                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                        <div>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold"
+                          >
+                            {chalet.city}
+                          </Typography>
+                         </div>
+                      </div>
+                    </td>
+                    <td className={className}>
+                      <div className="flex items-center gap-4">
+                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                        <div>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold"
+                          >
+                            {chalet.area}
+                          </Typography>
+                         </div>
+                      </div>
+                    </td>
+                    <td>
+
+                    <Typography className="text-xs font-semibold text-blue-gray-600">
+                      <Avatar   src={chalet.image} alt={"chalets"} size="md" variant="rounded" />
+                      </Typography>
+                      </td>
+
+                    <td className={className}>
+                      <div >
+                      {typeList.map(([key, value], i) => (
+                      <div key={i}>
+                      <strong>{key.replace(/_/g, " ")}:</strong> {value}
+                    </div>
+                     ))}
+                      </div>
+                    </td>
+                    <td className={className}>
+                      <div className="flex items-center gap-4">
+                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                        <div>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold"
+                          >
+                            {chalet.features}
+                          </Typography>
+                         </div>
+                      </div>
+                    </td>
+                    <td className={className}>
+                      <div className="flex items-center gap-4">
+                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
+                        <div>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold"
+                          >
+                            {chalet.Additional_features	}
+                          </Typography>
+                         </div>
+                      </div>
+                    </td>
+                    <td className={className}>
                       <Typography className="text-xs font-semibold text-blue-gray-600">
                       <Typography
                             variant="small"
@@ -185,11 +295,92 @@ const handleShow = (id, type) => {
                           </Typography>
                       </Typography>
                     </td>
-                    <td>
-                    <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Avatar   src={`https://res.cloudinary.com/dqimsdiht/${chalet.image}`} alt={"chalets"} size="md" variant="rounded" />
-                      </Typography>
-                    </td>
+                       <td className={className}>
+                    {chalet.RightTimeModels.map((time)=>(
+                       <div className="flex items-center gap-4" >
+                                                <div>
+
+                       <Typography
+                             variant="small"
+                             color="blue-gray"
+                             className="font-semibold"
+                           >
+                             {time.type_of_time } 
+                             from_time:{time.from_time }
+                             to_time:{time.to_time }
+                             price:{time.price }
+                             After Offer:{time.After_Offer }
+                           
+                             <td className="p-2 text-right align-middle">
+                <div className="flex justify-end">
+                  <PencilIcon
+                    className="h-5 w-5 mr-1"
+                    onClick={() => navigate(`/dashboard/updaterighttimechalet/${time.id}`)}
+                    />
+                 <TrashIcon
+            className="h-5 w-5 mr-1 text-red-500 hover:text-red-700 hover:scale-110 transition-transform"
+          onClick={() => handleShow(time.id, 'time')}
+                 /> 
+                <PlusIcon
+                    className="h-5 w-5 mr-1 text-blue-500"
+                    onClick={() => navigate(`/dashboard/addrighttimechalet/${chalet.id}`)}
+                    />
+
+                </div>
+              </td>
+                           </Typography>
+                           </div>
+                       </div>
+                    ))}
+                     </td>
+                     <td className={className} style={{ display: "flex", flexWrap: "wrap", gap: "15px", justifyContent: "flex-start", height: "auto",width:"80vh" }}>
+  {chalet.ChaletsImages.map((img, index) => {
+    // Check if the image URL is a video by looking for common video file extensions
+    const isVideo = /\.(mp4|webm|avi|mov|ogg)$/i.test(img.image);
+
+    return (
+      <div key={index} style={{ width: "200px", textAlign: "center" }}>
+        {/* Conditionally render video or image */}
+        {isVideo ? (
+          <video
+            src={img.image}
+            alt="chalets video"
+            controls
+            style={{
+              width: "100px", 
+              height: "auto", 
+              objectFit: "cover", 
+              borderRadius: "8px",  // Optional for rounded corners
+            }}
+          />
+        ) : (
+          <Avatar
+            src={img.image}
+            alt="chalets image"
+            variant="rounded"
+            style={{
+              width: "80px", 
+              height: "auto",
+              objectFit: "cover",
+              borderRadius: "8px",  // Optional for rounded corners
+            }}
+          />
+        )}
+
+        {/* Trash Icon */}
+        <div className="flex justify-center mt-2">
+          <TrashIcon className="h-5 w-5 text-red-500" onClick={() => handleShow(img.id, 'images')} />
+        </div>
+      </div>
+    );
+  })}
+</td>
+
+
+<td className={className}><PlusIcon
+      className="h-5 w-5 mr-1 text-blue-500"
+      onClick={() => navigate(`/dashboard/addimginchalets/${chalet.id}`)}
+      /></td>
                      <td className={className}>
                         <div className="flex items-center">
                           <Button 
@@ -232,92 +423,6 @@ const handleShow = (id, type) => {
         handleDelete={handleDelete} 
        id={ChaletsIdToDelete} // Pass the chalet ID to DeleteModule
       />
-      <Card>
-      <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }}className="mb-8 p-6">
-        <Typography variant="h6" color="white">
-       {lang ==='ar'? "جدول تفاصيل الشاليهات" :"  Chalets Details Table "}
-        </Typography>
-      </CardHeader>
-      <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-     
-        <table className="w-full min-w-[640px] table-auto">
-          <thead>
-            <tr>
-              {[`${lang ==='ar'? "التفاصيل" :"Detail_Type"}`,`${lang ==='ar'? "الشاليه" :"chalet "}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
-                <th
-                  key={el}
-                  className="border-b border-blue-gray-50 py-3 px-5 "
-                >
-                  <Typography
-                    variant="small"
-                    className="text-[11px] font-bold uppercase text-blue-gray-400"
-                  >
-                    {el}
-                  </Typography>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {ChaletsDetails.map(
-              (details,index) => {
-                const className = `py-3 px-5 ${index === ChaletsDetails.length - 1 ? "" : "border-b border-blue-gray-50"}`;
-
-
-                return (
-                  <tr key={details.id}>
-                    <td className={className}>
-                      <div className="flex items-center gap-4">
-                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
-                        <div>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-semibold"
-                          >
-                            {details.Detail_Type}
-                          </Typography>
-                          {/* <Typography className="text-xs font-normal text-blue-gray-500">
-                            {chalet.last_name}
-                          </Typography> */}
-
-                        </div>
-                      </div>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">
-                      <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-semibold"
-                          >
-                            {details.Chalet?.title}
-                          </Typography>
-                      </Typography>
-                    </td>                 
-                     <td className={className}>
-                        <div className="flex items-center">
-                          <Button 
-                            onClick={() => navigate(`/dashboard/updatedetails/${details.id}`)}
-                            className="mr-2 bg-[#6DA6BA] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
-                          >
-                            <PencilIcon className="h-5 w-5 mr-1 " /> {lang ==='ar'? "تعديل" : "Edit "}
-                          </Button>
-                          <Button 
-  onClick={() => handleShow(details.id, 'details')}className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
-                          >
-                            <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
-                          </Button>
-                        </div>
-                      </td>
-                  </tr>
-                );
-              }
-            )}
-          </tbody>
-        </table>
-      </CardBody>
-    </Card>
   </div>  
   </>
   )

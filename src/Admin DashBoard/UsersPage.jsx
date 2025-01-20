@@ -66,6 +66,8 @@ function Users() {
         }
     };
 
+
+
     useEffect(() => {
         fetchusers();
     }, []);
@@ -135,22 +137,24 @@ function Users() {
                                                 </Typography>
                                             </td>
                                             <td className={className}>
-                                                <div className="flex items-center">
-                                                    {/* <Button
-                                                        onClick={() => navigate(`/dashboard/updateuser/${user.id}`)}
-                                                        className="mr-2 flex bg-[#6DA6BA] items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
-                                                    >
-                                                        <PencilIcon className="h-5 w-5 mr-1" />
-                                                        {lang === 'ar' ? "تعديل" : "Edit"}
-                                                    </Button> */}
-                                                    <Button
-                                                        onClick={() =>  handleDelete(user.id)}
-                                                        className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
-                                                    >
-                                                        <TrashIcon className="h-5 w-5 mr-1" />
-                                                        {lang === 'ar' ? "حذف" : "Delete"}
-                                                    </Button>
-                                                </div>
+                                            <div className="flex space-x-4 rtl:space-x-reverse">
+    <Button
+        onClick={() => handleDelete(user.id)}
+        className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+    >
+        <TrashIcon className="h-5 w-5 mr-1" />
+        {lang === 'ar' ? "حذف" : "Delete"}
+    </Button>
+
+    <Button
+        onClick={() => navigate(`/dashboard/updateUser/${user.id}`)} 
+        className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+    >
+        <PencilIcon className="h-5 w-5 mr-1" /> 
+        {lang === 'ar' ? "تعديل" : "Update"}
+    </Button>
+</div>
+
                                             </td>
                                         </tr>
                                     );

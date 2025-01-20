@@ -1,0 +1,30 @@
+.big_container_chalets{
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 35px;
+}
+.select_location{
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+/* .cont_time{
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 1000px;
+    width: 100%;
+} */
+/* .card_radio{
+     border: 2px solid #c3c0c0;
+     display: flex;
+     padding: 5px;
+     margin: 5px;
+     border-radius: 5px;
+}
+.row_of_radio{
+     display: flex;
+     flex-wrap: wrap;
+} */

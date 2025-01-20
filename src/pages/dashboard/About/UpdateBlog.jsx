@@ -19,20 +19,21 @@ function UpdateBlog() {
     const lang = Cookies.get('lang') || 'en';
 
     useEffect(() => {
-      const fetchAboutPost = async () => {
+      const fetchBLogPost = async () => {
         try {
           const response = await axios.get(`${API_URL}/Blogs/getBlogById/${id}/en`);
-          setTitle(response.data.title); 
-          setDescription(response.data.description); 
-          setExistingImg(response.data.image); 
+          setTitle(response.data[0].title); 
+          setDescription(response.data[0].description); 
+          setExistingImg(response.data[0].image); 
+      
+
         } catch (error) {
           console.error(error);
         }
       };
 
-      fetchAboutPost();
+      fetchBLogPost();
     }, [id]);
-
     
     const handleUpdateBlogs = async (e) => {
       e.preventDefault();
@@ -82,8 +83,9 @@ function UpdateBlog() {
               <Input
                 size="lg"
                 placeholder="Enter title"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                name='title'
                 value={title}
+                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                 onChange={(e) => {
                   setTitle(e.target.value); 
                 }}
@@ -95,9 +97,10 @@ function UpdateBlog() {
               <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الوصف" :"Description"}</Typography>
               <Input
                 size="lg"
+                name='description'
+                value={description}
                 placeholder="Enter description"
                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                value={description}
                 onChange={(e) => {
                   setDescription(e.target.value); 
                 }}

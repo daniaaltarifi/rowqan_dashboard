@@ -32,7 +32,7 @@ function AddStatusChalet() {
                 icon: "success",
                 confirmButtonText: "OK",
             });
-            navigate("/dashboard/timeandstatus");
+            navigate("/dashboard/status");
         } catch (error) {
             console.error(error);
             Swal.fire({

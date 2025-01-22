@@ -26,12 +26,13 @@ import AddContact from "./pages/dashboard/Contact/AddContact";
 import UpdateContact from "./pages/dashboard/Contact/UpdateContact";
 import AddStatusChalet from "./pages/dashboard/TimeAndStatus/AddStatusChalet";
 import UpdateStatusChalet from "./pages/dashboard/TimeAndStatus/UpdateStatusChalet";
-// export const API_URL="https://rowqanbackend.rowqan.com";
+export const API_URL="https://rowqanbackend.rowqan.com";
 import axios from 'axios'
 import Messages from "./ChaletsOwners DashBoard/Messages";
 import UpdateUser from "./Admin DashBoard/UpdateUser";
 import AddImagesInChalets from "./pages/dashboard/Chalets/AddImageInChalets";
-export const API_URL="http://localhost:5000";
+import AddUser from "./pages/dashboard/Users/AddUser";
+// export const API_URL="http://localhost:5000";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('authtoken'));
@@ -93,6 +94,8 @@ function App() {
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />
 <Route path="addimginchalets/:chalet_id" element={<AddImagesInChalets />} />
+<Route path="adduser" element={<AddUser />} />
+
 <Route path="updateUser/:id" element={<UpdateUser />} />
 <Route path="addimgchalets" element={<AddImagesChalets />} />
 <Route path="abouts" element={<Abouts />} />
@@ -107,6 +110,7 @@ function App() {
 <Route path="updatelogo/:id" element={<UpdateLogo />} />
 <Route path="addcontact" element={<AddContact />} />
 <Route path="updatecontact/:id" element={<UpdateContact />} />
+
 <Route path="addstatuschalet" element={<AddStatusChalet />} />
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
 <Route path="messagebetweenusers/:user_id" element={<Messages />} />

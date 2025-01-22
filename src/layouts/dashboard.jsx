@@ -30,6 +30,7 @@ import AddContact from "@/pages/dashboard/Contact/AddContact";
 import UpdateContact from "@/pages/dashboard/Contact/UpdateContact";
 import AddStatusChalet from "@/pages/dashboard/TimeAndStatus/AddStatusChalet";
 import AddImagesInChalets from "@/pages/dashboard/Chalets/AddImageInChalets";
+import AddUser from "@/pages/dashboard/Users/AddUser";
 
 
 
@@ -80,6 +81,7 @@ export function Dashboard() {
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />
 
+<Route path="adduser" element={<AddUser />} />
 
 <Route path="updateUser/:id" element={<UpdateUser/>} />
 <Route path="addimginchalets/:chalet_id" element={<AddImagesInChalets />} />

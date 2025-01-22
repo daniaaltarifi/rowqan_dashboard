@@ -173,8 +173,8 @@ const handleShow = (id, type) => {
                          </div>
                       </div>
                     </td>
-                    <td className={className}>
-                      <div className="flex items-center gap-4">
+                    <td className={className} >
+                      <div className="flex items-center gap-4" style={{width:"100vh"}}>
                         {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
                         <div>
                           <Typography

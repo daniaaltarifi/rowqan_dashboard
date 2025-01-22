@@ -584,7 +584,7 @@ function AddChalets() {
       </select>
     </div>
    </div>
-    <div>
+    <div >
       <InputGroup className="mb-3"> 
       <textarea type="text" rows={20}onChange={handleChangemainInfoChalets} name='description' id="Description" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'الوصف' : 'Description'} required />
       </InputGroup>

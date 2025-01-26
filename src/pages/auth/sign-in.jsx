@@ -88,6 +88,7 @@ export function SignIn({ setIsAuthenticated }) {
         if (res.status === 200) {
           Cookies.set('authtoken', res.data.token, { expires: 7, secure: true });
           Cookies.set('userRole', res.data.user_type_id);
+          Cookies.set('receiverId', res.data.id);
           setIsAuthenticated(true);
           if (res.data.user_type_id === 1) {
             navigate('/dashboard/home');

@@ -4,19 +4,21 @@ import axios from 'axios'
 import { API_URL } from '@/App'
 import Cookies from 'js-cookie';
 import profile from "../Images/user.png";
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-function MessagesChaletOwners() {
+function UsersByChaletsMessages() {
+    const {chalet_id}=useParams()
   const [recentMessages,setRecentMessages]=useState([])
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-      const lang = Cookies.get('lang') || 'en';
+ const lang = Cookies.get('lang') || 'en';
+ const receiverId = Cookies.get('receiverId');
   
   useEffect(()=>{
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`${API_URL}/messages/getMessagesByChalet/${lang}`);
-          setRecentMessages(res.data);
+        const res = await axios.get(`${API_URL}/messages/getMessagesByRecieverId/${receiverId}/${chalet_id}`);
+          setRecentMessages(res.data.data);
       } catch (error) {
         console.error(error);
       }
@@ -46,14 +48,13 @@ function MessagesChaletOwners() {
         <div className="recent-chats">
           {dataToDisplay.map((message)=>(
             <Link 
-            // to={`/dashboard/messagebetweenusers/${message.senderId}`}
-            to={`/dashboard/usersbychaletsmessages/${message.Chalet?.id}`}
+            to={`messagebetweenusers/${message.senderId}`}
             >
-            <div className="recent-chat" >
-                <img src={message.Chalet?.image} alt="Profile"/>
+            <div className="recent-chat" key={message.id}>
+                <img src={profile} alt="Profile"/>
                 <div className="chat-info">
-                    <h5>{message.Chalet?.title}</h5>
-                    <p>{message.Chalet?.city}</p>
+                    <h5>{message.Sender?.name}</h5>
+                    <p>{message.message}</p>
                 </div>
             </div>
             </Link>
@@ -63,4 +64,4 @@ function MessagesChaletOwners() {
     </div>  )
 }
 
-export default MessagesChaletOwners
+export default UsersByChaletsMessages

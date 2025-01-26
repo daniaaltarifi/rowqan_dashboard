@@ -30,13 +30,13 @@ const UpdateChalets = () => {
             const [status, setstatus] = useState([]);
             
       const labels = {
-        room: lang === 'ar' ? 'عدد الغرف' : 'numberofrooms',
-        bathroom: lang === 'ar' ? 'عدد الحمامات' : 'numberofbathrooms',
+        room: lang === 'ar' ? 'عدد الغرف' : 'Number of Rooms',
+        bathroom: lang === 'ar' ? 'عدد الحمامات' : 'Number of Bathrooms',
         furnished: lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished',
         interface: lang === 'ar' ? 'واجهة' : 'Interface',
         building_area: lang === 'ar' ? 'مساحة البناء' : 'Building Area',
-        family: lang === 'ar' ? 'عدد الاسرة' : 'Number of Families',
-        kitchen: lang === 'ar' ? 'عدد الاسرة' : 'Number of Kitchen',
+        family: lang === 'ar' ? 'عدد الزوار' : 'Number of Visitors',
+        kitchen: lang === 'ar' ? 'عدد المطابخ' : 'Number of Kitchen',
         swimmingpools: lang === 'ar' ? 'عدد حمامات السباحة' : 'Numberof swimming pools',
       };
       useEffect(()=>{
@@ -55,18 +55,20 @@ const UpdateChalets = () => {
           .get(`${API_URL}/chalets/getchaletbyid/${chalet_id}`)
           .then(response => {
             const data = response.data;
-            let typeData = [];
+            let typeData = {};
             try {
-              typeData = JSON.parse(data.type);
-              if (Array.isArray(typeData)) {
-                typeData = typeData.map(item => JSON.parse(item));
+              // First, check if type is a string that looks like escaped JSON
+              if (typeof data.type === "string") {
+                // Parse the escaped JSON string
+                typeData = JSON.parse(data.type);
               } else {
-                typeData = [JSON.parse(typeData)];
+                // If it's already an object, use it as is
+                typeData = data.type;
               }
             } catch (error) {
-              console.error('Error parsing type data:', error);
+              console.error("Error parsing type data:", error);
             }
-      
+            
             const parsedFeatures = data.features
               ? data.features.replace(/(^"|"$)/g, '').split(',')
               : [];
@@ -81,14 +83,14 @@ const UpdateChalets = () => {
             setChaletData(data);
             setFormDataState({
               title: data.title,
-              room: typeData[0]?.numberofrooms,
-              bathroom: typeData[0]?.numberofbathrooms,
-              furnished: typeData[0]?.['Furnished/Unfurnished'],
-              interface: typeData[0]?.Interface,
-              building_area: typeData[0]?.['Building Area'],
-              family: typeData[0]?.['Number of Families'],
-              kitchen: typeData[0]?.['Number of Kitchen'],
-              swimmingpools: typeData[0]?.['Numberof swimming pools'],
+              room: typeData?.['Number of Rooms'],
+              bathroom: typeData?.['Number of Bathrooms'],
+              furnished: typeData?.['Furnished/Unfurnished'],
+              interface: typeData?.Interface,
+              building_area: typeData?.['Building Area'],
+              family: typeData?.['Number of Visitors'],
+              kitchen: typeData?.['Number of Kitchen'],
+              swimmingpools: typeData?.['Numberof swimming pools'],
               image: data.image,
               features: parsedFeatures,
               Additional_features: parsedAdditionalFeatures,
@@ -133,17 +135,16 @@ const UpdateChalets = () => {
       const preparePayload = () => {
         const payload = {
           ...formDataState, // Include other top-level fields
-          type: JSON.stringify({
-            numberofrooms: formDataState.room,
-            numberofbathrooms: formDataState.bathroom,
+          type: {
+            "Number of Rooms": formDataState.room,
+            "Number of Bathrooms": formDataState.bathroom,
             "Furnished/Unfurnished": formDataState.furnished,
             Interface: formDataState.interface,
             "Building Area": formDataState.building_area,
-            "Number of Families": formDataState.family,
+            "Number of Visitors": formDataState.family,
             "Number of Kitchen": formDataState.kitchen,
             "Numberof swimming pools": formDataState.swimmingpools,
-            Interface: formDataState.interface,
-          }),
+          },
           // Remove escaped quotes and format the features correctly
           features: formDataState.features.length ? formDataState.features.join(',') : '', // Join array and remove extra quotes
           Additional_features: formDataState.Additional_features.length ? formDataState.Additional_features.join(',') : '',

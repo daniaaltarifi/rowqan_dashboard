@@ -16,6 +16,7 @@ import React from "react";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../App.jsx";
+import { Link } from "react-router-dom";
 import {
   PhotoIcon ,
   ShoppingBagIcon,
@@ -57,6 +58,7 @@ const fetchData = async () => {
       icon: UsersIcon,
       title: lang ==='ar'? "المسنخدمين" : "Users",
       value: users.length,
+      link:"usersAdmin",
       footer: {
         color: "text-green-500",
         value: "+55%",
@@ -68,6 +70,7 @@ const fetchData = async () => {
       icon: PhotoIcon ,
       title: lang ==='ar'? "الشاليهات" :"Chalets",
       value: products.length,
+      link:"chalets",
       footer: {
         color: "text-green-500",
         value: "+3%",
@@ -79,6 +82,7 @@ const fetchData = async () => {
       icon: ChartBarIcon,
       title: lang ==='ar'? "الحجوزات" : "Reservations",
       value: orders.length,
+      link:"reservations",
       footer: {
         color: "text-red-500",
         value: "-2%",
@@ -90,6 +94,7 @@ const fetchData = async () => {
       icon: BellIcon,
       title: lang ==='ar'? "المدونات" :"Blogs",
       value: feedback.length,
+      link:"setting",
       footer: {
         color: "text-green-500",
         value: "+5%",
@@ -99,7 +104,7 @@ const fetchData = async () => {
   ];
   return (
     <>
-          {statisticsCardsData.map(({ icon, title, footer, color, value }) => (
+          {statisticsCardsData.map(({ icon, title, footer, color, value,link }) => (
 
     <Card key={title} className="border border-blue-gray-100 shadow-sm">
       <CardHeader
@@ -111,6 +116,7 @@ const fetchData = async () => {
       > 
   {React.createElement(icon)}  
   </CardHeader>
+  <Link to={`/dashboard/${link}`}>
       <CardBody className={lang ==='ar'? "p-4 text-left" : "p-4 text-right"}>
         <Typography variant="small" className="font-normal text-blue-gray-600">
           {title}
@@ -119,6 +125,8 @@ const fetchData = async () => {
           {value}
         </Typography>
       </CardBody>
+  </Link>
+
       {/* {footer && (
   <CardFooter className="border-t border-blue-gray-50 p-4">
     <Typography variant="small" className={footer.color}>

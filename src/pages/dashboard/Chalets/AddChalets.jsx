@@ -32,6 +32,9 @@ function AddChalets() {
       const [selectedArea, setSelectedArea] = useState('');
       const [haveOffer, setHaveOffer] = useState(false);
       const [status, setstatus] = useState([]);
+      const [imgName, setImgName] = useState("");
+       const [images, setImages] = useState([]);
+       const [isLoading, setIsLoading] = useState(false);
       const [mainInfoChalets, setMainInfoChalets] = useState({
         title: "",
         description: "",
@@ -42,14 +45,15 @@ function AddChalets() {
         status_id: "",
         image: null,
     });
+    
     const labels = {
-      room: lang === 'ar' ? 'عدد الغرف' : 'numberofrooms',
-      bathroom: lang === 'ar' ? 'عدد الحمامات' : 'numberofbathrooms',
+      room: lang === 'ar' ? 'عدد الغرف' : 'Number of Rooms',
+      bathroom: lang === 'ar' ? 'عدد الحمامات' : 'Number of Bathrooms',
       furnished: lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished',
       interface: lang === 'ar' ? 'واجهة' : 'Interface',
       building_area: lang === 'ar' ? 'مساحة البناء' : 'Building Area',
-      family: lang === 'ar' ? 'عدد الاسرة' : 'Number of Families',
-      kitchen: lang === 'ar' ? 'عدد الاسرة' : 'Number of Kitchen',
+      family: lang === 'ar' ? 'عدد الزوار' : 'Number of Visitors',
+      kitchen: lang === 'ar' ? 'عدد المطابخ' : 'Number of Kitchen',
       swimmingpools: lang === 'ar' ? 'عدد حمامات السباحة' : 'Numberof swimming pools',
     };
   
@@ -64,6 +68,16 @@ function AddChalets() {
       [labels.kitchen]: '',
       [labels.swimmingpools]: '',
     });
+    const handleFileChange = (e) => {
+      const files =Array.from(e.target.files);
+      if (files.length > 0) {
+          setImages(files); // Store files in state
+          setImgName(files.map((file) => file.name).join(", ")); // Store file names for display
+        } else {
+          setImages([]); // Reset if no files are selected
+          setImgName("");
+        }
+  };
       useEffect(()=>{
         const fetchstatus_type = async () => {
           try {
@@ -133,11 +147,28 @@ function AddChalets() {
       [labels[fieldName]]: value, // Dynamically update based on the label
     }));
   };
+    const handleAddChalet = async (e) => {
+      e.preventDefault();
+      setIsLoading(true);
 
-  const handleAddChalet = async(e) => {
-    e.preventDefault()
-    const typeData = formDataState;
-
+      // Check for "Evening" time slot
+      const hasEveningTimeSlot = rightTimesData.some(
+        (timeSlot) => timeSlot.type_of_time === "Evening"
+      );
+    
+      if (!hasEveningTimeSlot) {
+        Swal.fire({
+          title: lang === "ar" ? "خطأ!" : "Error!",
+          text: lang === "ar" ? "يجب إضافة نوع وقت مسائي" : "You should add a type of time 'Evening'.",
+          icon: "error",
+          confirmButtonText: lang === "ar" ? "حسناً" : "OK",
+        });
+        setIsLoading(false);
+        return;
+      }
+    
+      // Prepare Chalet Data
+      const typeData = formDataState;
       const formData = new FormData();
       formData.append("title", mainInfoChalets.title);
       formData.append("description", mainInfoChalets.description);
@@ -148,31 +179,36 @@ function AddChalets() {
       formData.append("city", selectedCity);
       formData.append("area", selectedArea);
       formData.append("image", mainInfoChalets.image);
-      formData.append("features",checkedFeatures);
-      formData.append("Additional_features",checkedadditioanlFeatures);
-      formData.append("type", JSON.stringify(typeData));  // Append the JSON data as a string
-     // Append multiple time slots dynamically
-     rightTimesData.forEach((timeSlot, index) => {
-       formData.append(`rightTimesData[${index}][image]`, timeSlot.image);
-      formData.append(`rightTimesData[${index}][type_of_time]`, timeSlot.type_of_time);
-      formData.append(`rightTimesData[${index}][from_time]`, timeSlot.from_time);
-      formData.append(`rightTimesData[${index}][to_time]`, timeSlot.to_time);
-      formData.append(`rightTimesData[${index}][price]`, timeSlot.price);
-      formData.append(`rightTimesData[${index}][After_Offer]`, timeSlot.After_Offer);
-      formData.append(`rightTimesData[${index}][lang]`, timeSlot.lang);
-    });
-          try {
-          const response = await axios.post(
-            `${API_URL}/chalets/createchalet`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-        const chalet_id=response.data.chalet.id;
-        navigate(`/dashboard/addimginchalets/${chalet_id}`);
+      formData.append("features", checkedFeatures);
+      formData.append("Additional_features", checkedadditioanlFeatures);
+      formData.append("type", JSON.stringify(typeData));
+    
+      // Append time slots dynamically
+      rightTimesData.forEach((timeSlot, index) => {
+        formData.append(`rightTimesData[${index}][type_of_time]`, timeSlot.type_of_time);
+        formData.append(`rightTimesData[${index}][from_time]`, timeSlot.from_time);
+        formData.append(`rightTimesData[${index}][to_time]`, timeSlot.to_time);
+        formData.append(`rightTimesData[${index}][price]`, timeSlot.price);
+        formData.append(`rightTimesData[${index}][After_Offer]`, timeSlot.After_Offer);
+        formData.append(`rightTimesData[${index}][lang]`, timeSlot.lang);
+      });
+    
+      try {
+        // Add Chalet
+        const chaletResponse = await axios.post(
+          `${API_URL}/chalets/createchalet`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+            const chalet_id = chaletResponse.data.chalet.id;
+        // Now, add images for the newly created chalet
+        await handleAddImagesInChalets(chalet_id); // Pass chalet_id to add images
+          navigate("/dashboard/chalets");
+    
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -181,9 +217,47 @@ function AddChalets() {
           icon: "error",
           confirmButtonText: "OK",
         });
+        setIsLoading(false);
       }
     };
-  
+    
+    const handleAddImagesInChalets = async (chalet_id) => {
+      // Now that we have the chalet_id, proceed with adding images
+      const formData = new FormData();
+      formData.append("chalet_id", chalet_id);
+    
+      images.forEach((file) => {
+        formData.append("image", file); // 'images[]' to treat it as an array in the backend
+      });
+    
+      try {
+        const response = await axios.post(
+          `${API_URL}/chaletsimages/createchaletImage`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+    
+        Swal.fire({
+          title: "Success!",
+          text: "Chalet and images added successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to add images. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    };
+    
       const handleChangemainInfoChalets = (e) => {
         const { name, type, files } = e.target;
         setMainInfoChalets({
@@ -192,13 +266,13 @@ function AddChalets() {
         });
     };
     const [rightTimesData, setRightTimesData] = useState([
-      { type_of_time: "", from_time: "", to_time: "", price: null, After_Offer: null ,lang: lang,image:null},
+      { type_of_time: "", from_time: "", to_time: "", price: null, After_Offer: null ,lang: lang},
     ]);
   
     const addTimeSlot = () => {
       setRightTimesData([
         ...rightTimesData,
-        { type_of_time: "", from_time: "", to_time: "", price: null, After_Offer: null,lang: lang,image:null },
+        { type_of_time: "", from_time: "", to_time: "", price: null, After_Offer: null,lang: lang},
       ]);
     };
   
@@ -533,10 +607,7 @@ function AddChalets() {
         <input type="number"  value={timeSlot.After_Offer} onChange={(e) => updateTimeSlot(index, "After_Offer", e.target.value)}id="after offer" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="After Offer" />
     </div>
     )}
-          <div>
-<input type="file" id="timeimg"  onChange={(e) => updateTimeSlot(index, "image", e.target.files[0])}
- className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
-</div>
+
           </div>
       ))}
 
@@ -560,7 +631,7 @@ function AddChalets() {
     </div>
     <div>
       <InputGroup className="mb-3"> 
-      <input type="number"onChange={handleChangemainInfoChalets} id="rating"name='Rating' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'التصنيف' : 'Rating'} required />
+      <input type="number"onChange={handleChangemainInfoChalets} id="rating"name='Rating' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'التصنيف' : 'Number of stars'} required />
       </InputGroup>
     </div>
     <div>
@@ -589,13 +660,84 @@ function AddChalets() {
       <textarea type="text" rows={20}onChange={handleChangemainInfoChalets} name='description' id="Description" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'الوصف' : 'Description'} required />
       </InputGroup>
     </div>
-  
+    <div className="grid grid-cols-1 gap-6 ">
+                  {/* First Column */}
+                  <div className="flex flex-col">
+                      <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الصور" :"Images"}</Typography>
+                      <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "من المستحسن استخدام تنسيق WebP للصور." :"It is recommended to use the WebP format for images."}</Typography>
+                                  <div className="relative">
+                                      <input
+                                         type="file"
+                                          id="file_input"
+                                          onChange={handleFileChange}
+                                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                          multiple
+                                      />
+                                      <Button className="bg-gray-200 text-gray-800 hover:bg-gray-300 w-full text-left">
+                                      {lang ==='ar'? "اختر الصورة  " :" Choose an image"}
+                                      </Button>
+                                       {/* Display the image name if it exists */}
+  <div className="file-preview flex mt-4">
+          {images.map((file, index) => {
+              if (file.type.startsWith("image/")) {
+                  // For image files
+                  return (
+                      <div key={index} className='mx-5'>
+                          <img
+                              src={URL.createObjectURL(file)} // Display the image
+                              alt={file.name}
+                              style={{ width: "70px", height: "70px", objectFit: "cover" }} // Style the image
+                          />
+                          <Typography variant="small" color="blue-gray">
+                              {file.name}
+                          </Typography>
+                      </div>
+                  );
+              } else if (file.type.startsWith("video/")) {
+                  // For video files
+                  return (
+                      <div key={index}>
+                          <video
+                              width="120"
+                              height="200"
+                              src={URL.createObjectURL(file)} // Display the video
+                          >
+                          </video>
+                          <Typography variant="small" color="blue-gray">
+                              {file.name}
+                          </Typography>
+                      </div>
+                      );
+                     } else {
+                  return null;
+                   }
+                    })}
+                   </div>
+                 </div>
+      
+                  </div>            
+            </div>
     
-    <button 
+    {/* <button 
     type="submit" 
     className="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
     {lang=== 'ar' ? 'حفظ' : 'Submit'}
-   </button>
+   </button> */}
+   <button 
+  type="submit" 
+  className="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+  disabled={isLoading}  // Disable button while loading
+>
+  {isLoading ? (
+    <div className="flex justify-center items-center space-x-2">
+      <div className="w-4 h-4 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <span>{lang === 'ar' ? 'جاري التحميل...' : 'Loading...'}</span>
+    </div>
+  ) : (
+    lang === 'ar' ? 'حفظ' : 'Submit'
+  )}
+</button>
+
 </div>
    </form>
     </>

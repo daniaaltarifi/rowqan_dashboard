@@ -32,6 +32,9 @@ import Messages from "./ChaletsOwners DashBoard/Messages";
 import UpdateUser from "./Admin DashBoard/UpdateUser";
 import AddImagesInChalets from "./pages/dashboard/Chalets/AddImageInChalets";
 import AddUser from "./pages/dashboard/Users/AddUser";
+import AddRightTime from "./pages/dashboard/TimeAndStatus/AddRightTime";
+import UsersByChaletsMessages from "./ChaletsOwners DashBoard/UsersByChaletsMessages";
+import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
 // export const API_URL="http://localhost:5000";
 
 function App() {
@@ -110,10 +113,12 @@ function App() {
 <Route path="updatelogo/:id" element={<UpdateLogo />} />
 <Route path="addcontact" element={<AddContact />} />
 <Route path="updatecontact/:id" element={<UpdateContact />} />
-
+<Route path="addrighttimechalet/:chalet_id" element={<AddRightTime />} />
+<Route path="updaterighttimechalet/:chalet_id/:time_id" element={<UpdateRightTime />} />
 <Route path="addstatuschalet" element={<AddStatusChalet />} />
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
-<Route path="messagebetweenusers/:user_id" element={<Messages />} />
+<Route path="usersbychaletsmessages/:chalet_id/messagebetweenusers/:user_id" element={<Messages />} />
+<Route path="usersbychaletsmessages/:chalet_id" element={<UsersByChaletsMessages />} />
 
       </Route>
       <Route path="/auth/*" element={<Auth />} />

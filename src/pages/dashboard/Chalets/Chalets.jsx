@@ -19,19 +19,17 @@ import {
   } from "@material-tailwind/react";
   import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
   import { authorsTableData, projectsTableData } from "@/data";
+import Swal from "sweetalert2";
+
 function Chalets() {
     const navigate = useNavigate();
   const [Chalets, setChalets] = useState([]);
-  const [ChaletsDetails, setChaletsDetails] = useState([]);
+  // const [ChaletsDetails, setChaletsDetails] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [ChaletsIdToDelete, setChaletsIdToDelete] = useState(null); // Store the ID of the slide to delete
   const [itemType, setItemType] = useState(null); // Store the ID of the slide to delete
   const lang = Cookies.get('lang') || 'en';
 
-//   const handleShow = (id) => {
-//     setChaletsIdToDelete(id); // Set the slide ID to delete
-//     setShowModal(true);
-//   };
 const handleShow = (id, type) => {
     setChaletsIdToDelete(id);  // Set the ID to delete (chalet or details)
     setItemType(type);   // Set the type (either 'chalet' or 'details')
@@ -47,10 +45,10 @@ const handleShow = (id, type) => {
     try {
       const [chaletsRes,DetailsRes] = await Promise.all([
         axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
-        axios.get(`${API_URL}/chaletsdetails/getalldetails/${lang}`)
+        // axios.get(`${API_URL}/chaletsdetails/getalldetails/${lang}`)
       ]) 
       setChalets(chaletsRes.data);
-      setChaletsDetails(DetailsRes.data);
+      // setChaletsDetails(DetailsRes.data);
       
     } catch (error) {
       console.error(error);
@@ -87,15 +85,20 @@ const handleShow = (id, type) => {
     }
   };
   
-
-//   const handleDelete = async (id) => {
-//     try {
-//       await axios.delete(`${API_URL}/chalets/deletechalet/${id}/${lang}`);
-//       setChalets(Chalets.filter((b) => b.id !== id));
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
+const parseType = (type) => {
+  try {
+    // Check if it's a double-escaped JSON
+    if (typeof type === "string") {
+      const parsedOnce = JSON.parse(type); // Parse once
+      // If the result is still a string, parse again
+      return typeof parsedOnce === "string" ? JSON.parse(parsedOnce) : parsedOnce;
+    }
+    return type; // Return as is if it's already an object
+  } catch (error) {
+    console.error("Error parsing type:", error);
+    return {}; // Return an empty object in case of error
+  }
+};
 
   useEffect(() => {
     fetchChalets();
@@ -125,7 +128,7 @@ const handleShow = (id, type) => {
         <table className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
-              {[`${lang ==='ar'? "العنوان" :"Title"}`,`${lang ==='ar'? "الوصف" :"description"}`,`${lang ==='ar'? "قيمة الحجز" :"Initial amount"}`,`${lang ==='ar'? "التصنيف" :"Rating"}`,`${lang ==='ar'? "المدينة" :"City"}`,`${lang ==='ar'? "المنطقة" :"Area"}`,`${lang ==='ar'? "الصورة" :"Image"}`,`${lang ==='ar'? "النوع" :"type"}`,`${lang ==='ar'? "الميزات" :"Features"}`,`${lang ==='ar'? "الميزات الاضافية" :"Additional_features"}`,`${lang ==='ar'? "الحالة" :"status "}`,,`${lang ==='ar'? "الاوقات" :"Times "}`,`${lang ==='ar'? "الصور" :"All Images"}`,`${lang ==='ar'? "اضافة صور" :"Add Images"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
+              {[`${lang ==='ar'? "العنوان" :"Title"}`,`${lang ==='ar'? "الوصف" :"description"}`,`${lang ==='ar'? "قيمة الحجز" :"Initial amount"}`,`${lang ==='ar'? "التصنيف" :"Number of stars"}`,`${lang ==='ar'? "المدينة" :"City"}`,`${lang ==='ar'? "المنطقة" :"Area"}`,`${lang ==='ar'? "الصورة" :"Image"}`,`${lang ==='ar'? "النوع" :"type"}`,`${lang ==='ar'? "الميزات" :"Features"}`,`${lang ==='ar'? "الميزات الاضافية" :"Additional_features"}`,`${lang ==='ar'? "الحالة" :"status "}`,,`${lang ==='ar'? "الاوقات" :"Times "}`,`${lang ==='ar'? "الصور" :"All Images"}`,`${lang ==='ar'? "اضافة صور" :"Add Images"}`,`${lang ==='ar'? "تنفيذ" :"Action"}`].map((el) => (
                 <th
                   key={el}
                   className="border-b border-blue-gray-50 py-3 px-5 "
@@ -145,18 +148,10 @@ const handleShow = (id, type) => {
               (chalet,index) => {
                 const className = `py-3 px-5 ${index === Chalets.length - 1 ? "" : "border-b border-blue-gray-50"}`;
                                // Parse the `type` field
-  let typeObject = {};
-  try {
-    // Remove outer escaping
-    const parsedType = JSON.parse(chalet.type);
-    // Parse the inner JSON
-    typeObject = JSON.parse(parsedType);
-  } catch (error) {
-    console.error("Error parsing chalet.type:", error);
-  }
+                               const typeObject = parseType(chalet.type);
 
-  // Convert the object to an array of key-value pairs
-  const typeList = Object.entries(typeObject);
+                               // Convert the object to a key-value list for rendering
+                               const typeList = Object.entries(typeObject);
                 return (
                   <tr key={chalet.id}>
                     <td className={className}>
@@ -247,13 +242,13 @@ const handleShow = (id, type) => {
                       </Typography>
                       </td>
 
-                    <td className={className}>
-                      <div >
+                    <td className={className} >
+                      <div style={{width:"250px"}} >
                       {typeList.map(([key, value], i) => (
-                      <div key={i}>
-                      <strong>{key.replace(/_/g, " ")}:</strong> {value}
-                    </div>
-                     ))}
+        <div key={i}>
+          <strong>{key.replace(/_/g, " ")}:</strong> {value}
+        </div>
+      ))}
                       </div>
                     </td>
                     <td className={className}>
@@ -295,51 +290,64 @@ const handleShow = (id, type) => {
                           </Typography>
                       </Typography>
                     </td>
-                       <td className={className}>
-                    {chalet.RightTimeModels.map((time)=>(
-                       <div className="flex items-center gap-4" >
-                                                <div>
+                       <td className={className} >
+                       {chalet.RightTimeModels && chalet.RightTimeModels.length > 0 ? (
+  chalet.RightTimeModels.map((time) => (
+    <div className="flex items-center gap-4" style={{ width: "550px" }} key={time.id}>
+      <Typography variant="small" color="blue-gray" className="font-semibold">
+        {time.type_of_time}, from_time: {time.from_time}, to_time: {time.to_time}, price: {time.price}, After Offer: {time.After_Offer}
+      </Typography>
 
-                       <Typography
-                             variant="small"
-                             color="blue-gray"
-                             className="font-semibold"
-                           >
-                             {time.type_of_time } 
-                             from_time:{time.from_time }
-                             to_time:{time.to_time }
-                             price:{time.price }
-                             After Offer:{time.After_Offer }
-                           
-                             <td className="p-2 text-right align-middle">
-                <div className="flex justify-end">
-                  <PencilIcon
-                    className="h-5 w-5 mr-1"
-                    onClick={() => navigate(`/dashboard/updaterighttimechalet/${time.id}`)}
-                    />
-                 <TrashIcon
+      <td className="p-2 text-right align-middle">
+        <div className="flex justify-end">
+          <PencilIcon
+            className="h-5 w-5 mr-1"
+            onClick={() => navigate(`/dashboard/updaterighttimechalet/${chalet.id}/${time.id}`)}
+          />
+          <TrashIcon
             className="h-5 w-5 mr-1 text-red-500 hover:text-red-700 hover:scale-110 transition-transform"
-          onClick={() => handleShow(time.id, 'time')}
-                 /> 
-                <PlusIcon
-                    className="h-5 w-5 mr-1 text-blue-500"
-                    onClick={() => navigate(`/dashboard/addrighttimechalet/${chalet.id}`)}
-                    />
+            onClick={() => handleShow(time.id, 'time')}
+          />
+          <PlusIcon
+            className="h-5 w-5 mr-1 text-blue-500"
+            onClick={() => navigate(`/dashboard/addrighttimechalet/${chalet.id}`)}
+          />
+        </div>
+      </td>
+    </div>
+  ))
+) : (
+  <div className="text-center text-gray-500">
+    {lang === "ar" ? "لا توجد بيانات للوقت المحدد." : "No data available for the selected time slot."}
+  </div>
+)}
 
-                </div>
-              </td>
-                           </Typography>
-                           </div>
-                       </div>
-                    ))}
                      </td>
-                     <td className={className} style={{ display: "flex", flexWrap: "wrap", gap: "15px", justifyContent: "flex-start", height: "auto",width:"80vh" }}>
+                     <td
+  className={className}
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "15px",
+    justifyContent: "flex-start",
+    height: "auto", // Adjusted to let content grow or shrink based on image/video
+    width: "80vh",  // Set to 100% to take full width of the container
+  }}
+>
   {chalet.ChaletsImages.map((img, index) => {
     // Check if the image URL is a video by looking for common video file extensions
     const isVideo = /\.(mp4|webm|avi|mov|ogg)$/i.test(img.image);
 
     return (
-      <div key={index} style={{ width: "200px", textAlign: "center" }}>
+      <div
+        key={index}
+        style={{
+          width: "100%", // Set width to 100% to scale down properly
+          maxWidth: "250px", // Limit width to 250px to prevent it from growing too large
+          textAlign: "center",
+          marginBottom: "10px", // Add space between each item
+        }}
+      >
         {/* Conditionally render video or image */}
         {isVideo ? (
           <video
@@ -347,10 +355,11 @@ const handleShow = (id, type) => {
             alt="chalets video"
             controls
             style={{
-              width: "100px", 
-              height: "auto", 
-              objectFit: "cover", 
-              borderRadius: "8px",  // Optional for rounded corners
+              width: "100%", // Make the video responsive
+              maxWidth: "100%", // Set max width for video to prevent it from getting too large
+              height: "130px", // Let height adjust automatically based on aspect ratio
+              objectFit: "cover", // Ensure content covers area without stretching
+              borderRadius: "8px", // Optional for rounded corners
             }}
           />
         ) : (
@@ -359,22 +368,27 @@ const handleShow = (id, type) => {
             alt="chalets image"
             variant="rounded"
             style={{
-              width: "80px", 
-              height: "auto",
-              objectFit: "cover",
-              borderRadius: "8px",  // Optional for rounded corners
+              width: "100%", // Make the image responsive
+              maxWidth: "100%", // Set max width for image to prevent it from getting too large
+              height: "130px", // Let height adjust automatically based on aspect ratio
+              objectFit: "cover", // Ensure image covers area without stretching
+              borderRadius: "8px", // Optional for rounded corners
             }}
           />
         )}
 
         {/* Trash Icon */}
         <div className="flex justify-center mt-2">
-          <TrashIcon className="h-5 w-5 text-red-500" onClick={() => handleShow(img.id, 'images')} />
+          <TrashIcon
+            className="h-5 w-5 text-red-500"
+            onClick={() => handleShow(img.id, 'images')}
+          />
         </div>
       </div>
     );
   })}
 </td>
+
 
 
 <td className={className}><PlusIcon

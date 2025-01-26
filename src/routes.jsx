@@ -18,6 +18,7 @@ import Contact from "./pages/dashboard/Contact/Contact";
 import MessagesChaletOwners from "./ChaletsOwners DashBoard/MessagesChaletOwners";
 import ContactUsPage from "./Admin DashBoard/ContactUsPage";
 import ReservationsPage from "./Admin DashBoard/ReservationsPage";
+import GetAllPayments from "./Admin DashBoard/GetAllPayments";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -128,6 +129,12 @@ export const useRoutes = () => {
                 name: lang === "ar" ? "الحجوزات" : "Reservations",
                 path: "/reservations",
                 element: <ReservationsPage />,
+              },
+              {
+                icon: <StopCircleIcon  {...icon} />,
+                name: lang === "ar" ? "المدفوعات" : "Payments",
+                path: "/GetAllPayments",
+                element: <GetAllPayments />,
               },
             ]
           : []),

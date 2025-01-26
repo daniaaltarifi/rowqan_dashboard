@@ -8,11 +8,12 @@ import axios from "axios";
 import { API_URL } from '@/App';
 import Cookies from 'js-cookie';
 function Messages() {
-  const {user_id}=useParams()
+  const {user_id,chalet_id}=useParams()
   const location = useLocation();
     const lang = Cookies.get('lang') || 'en';
   const chalet_title = location.state?.chalet_title || null;
-
+ const receiverId = Cookies.get('receiverId');
+console.log("user_id",user_id)
   const [messages, setMessages] = useState([
     // { text: "Hello bro", type: "received", timestamp: "2:37 pm" },
     // { text: "Whats up", type: "received", timestamp: "2:37 pm" },
@@ -23,7 +24,7 @@ function Messages() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`${API_URL}/messages/betweenMessage/${user_id}`);
+        const res = await axios.get(`${API_URL}/messages/getMessagesBySenderIdRecieverId/${user_id}/${receiverId}/${chalet_id}`);
     
         if (res.data && Array.isArray(res.data)) {
           const newMessages = res.data.map((messageObj) => {
@@ -40,6 +41,7 @@ function Messages() {
             };
           });
           setMessages(newMessages);
+          console.log("messages: " ,newMessages)
         } else {
           console.error("Unexpected data format", res.data);
         }
@@ -101,6 +103,8 @@ function Messages() {
           message,
           status:"received",
           lang,
+          chaletId:chalet_id,
+          receiverId: receiverId
         });
         console.log("first message sent", res.data);
       } catch (error) {

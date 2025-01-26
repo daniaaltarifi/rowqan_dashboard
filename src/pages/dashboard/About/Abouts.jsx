@@ -200,7 +200,7 @@ function Abouts() {
                   className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#F2C79D]"
                   style={{ marginLeft: '80px' }} 
                 >
-                  <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة شاليه" : "Add Blog "}
+                  <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة مدونة" : "Add Blog "}
                 </Button>
                 </Link>
                 <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">

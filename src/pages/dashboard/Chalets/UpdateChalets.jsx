@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {Button,Typography,} from "@material-tailwind/react";
-import { getRoomOptions, getBathroomOptions, getFurnishedOptions, getFeatures, getAdditionalFeatures, getInterfaceOptions, getFamilyOptions, getkitchenOptions, getswimmingpoolsOptions } from './Data';
+import { getRoomOptions, getBathroomOptions, getFeatures, getAdditionalFeatures, getInterfaceOptions, getFamilyOptions, getkitchenOptions, getswimmingpoolsOptions } from './Data';
 import { useParams } from 'react-router-dom';
 import { API_URL } from '@/App';
 import Form from 'react-bootstrap/Form';
@@ -18,7 +18,6 @@ const UpdateChalets = () => {
      const [formDataState, setFormDataState] = useState({});
       const roomOptions = getRoomOptions();
      const bathroomOptions = getBathroomOptions();
-      const furnishedOptions = getFurnishedOptions(lang);
       const features = getFeatures();
       const additionalFeatures = getAdditionalFeatures();
       const interfaceOptions = getInterfaceOptions(lang);
@@ -32,7 +31,6 @@ const UpdateChalets = () => {
       const labels = {
         room: lang === 'ar' ? 'عدد الغرف' : 'Number of Rooms',
         bathroom: lang === 'ar' ? 'عدد الحمامات' : 'Number of Bathrooms',
-        furnished: lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished',
         interface: lang === 'ar' ? 'واجهة' : 'Interface',
         building_area: lang === 'ar' ? 'مساحة البناء' : 'Building Area',
         family: lang === 'ar' ? 'عدد الزوار' : 'Number of Visitors',
@@ -85,7 +83,6 @@ const UpdateChalets = () => {
               title: data.title,
               room: typeData?.['Number of Rooms'],
               bathroom: typeData?.['Number of Bathrooms'],
-              furnished: typeData?.['Furnished/Unfurnished'],
               interface: typeData?.Interface,
               building_area: typeData?.['Building Area'],
               family: typeData?.['Number of Visitors'],
@@ -138,7 +135,6 @@ const UpdateChalets = () => {
           type: {
             "Number of Rooms": formDataState.room,
             "Number of Bathrooms": formDataState.bathroom,
-            "Furnished/Unfurnished": formDataState.furnished,
             Interface: formDataState.interface,
             "Building Area": formDataState.building_area,
             "Number of Visitors": formDataState.family,
@@ -244,32 +240,6 @@ const UpdateChalets = () => {
         className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
       >
         {bathroom}
-      </label>
-    </div>
-  ))}
-</div>
-<hr />
-<p className="font-bold my-3">{lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished'}</p>
-<div className="flex flex-wrap">
-  {furnishedOptions.map((furn, index) => (
-    <div
-      key={index}
-      onChange={(e) => handleChange(e, "furnished")}
-      className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto"
-    >
-      <input
-        type="radio"
-        id={`furnished-radio-${index}`}
-        value={furn}
-        name="furnished-radio" // Unique name for furnished group
-        checked={formDataState.furnished === furn}
-        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-      />
-      <label
-        htmlFor={`furnished-radio-${index}`}
-        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
-      >
-        {furn}
       </label>
     </div>
   ))}

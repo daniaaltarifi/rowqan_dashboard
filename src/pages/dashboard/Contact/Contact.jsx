@@ -58,7 +58,7 @@ const handleShow = (id, type) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/Contacts/deleteContacts/${id}/${lang}`);
+      await axios.delete(`${API_URL}/Contacts/deleteContacts/${id}`);
       setContact(Contact.filter((b) => b.id !== id));
     } catch (error) {
       console.error(error);

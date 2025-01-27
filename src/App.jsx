@@ -96,7 +96,7 @@ function App() {
         {/* <Route path="dashboard/abouts" element={<Abouts />} /> */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />
-<Route path="addimginchalets/:chalet_id" element={<AddImagesInChalets />} />
+{/* <Route path="addimginchalets/:chalet_id" element={<AddImagesInChalets />} /> */}
 <Route path="adduser" element={<AddUser />} />
 
 <Route path="updateUser/:id" element={<UpdateUser />} />

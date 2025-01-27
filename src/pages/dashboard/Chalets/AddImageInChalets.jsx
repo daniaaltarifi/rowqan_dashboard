@@ -11,8 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from 'axios'; // Ensure Axios is imported
 import Cookies from 'js-cookie';
-function AddImagesInChalets() {
-    const {chalet_id}=useParams()
+function AddImagesInChalets({chalet_id}) {
     const [imgName, setImgName] = useState("");
      const [images, setImages] = useState([]);
     const lang = Cookies.get('lang') || 'en';
@@ -28,8 +27,7 @@ function AddImagesInChalets() {
           }
     };
     const navigate = useNavigate();
-    const handleAddImagesInChalets = async (e) => {
-      e.preventDefault();
+    const handleAddImagesInChalets = async () => {
       const formData = new FormData();
       formData.append("chalet_id", chalet_id );
       images.forEach((file, index) => {
@@ -70,10 +68,10 @@ function AddImagesInChalets() {
   return (
     <section className="m-8 flex gap-4">
       <div className="w-full mt-24">
-        <div className="text-center">
+        {/* <div className="text-center">
           <Typography variant="h2" className="font-bold mb-4">{lang ==='ar'? "اضافة صور شاليه" : "Add images Chalets "}</Typography>
-        </div>
-        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleAddImagesInChalets}>
+        </div> */}
+        <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" >
           <div className="grid grid-cols-1 gap-6 ">
                 {/* First Column */}
                 <div className="flex flex-col">
@@ -90,6 +88,8 @@ function AddImagesInChalets() {
                                     <Button className="bg-gray-200 text-gray-800 hover:bg-gray-300 w-full text-left">
                                     {lang ==='ar'? "اختر الصورة  " :" Choose an image"}
                                     </Button>
+                    <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "  . اذا كنت لا تريد اضافة صور انقر على التالي " :"If you don`t want to add images click next to skip."}</Typography>
+
                                      {/* Display the image name if it exists */}
 <div className="file-preview flex mt-4">
         {images.map((file, index) => {
@@ -133,7 +133,8 @@ function AddImagesInChalets() {
           </div>
         <div>
           <Button
-  type="submit"
+type="button" 
+onClick={handleAddImagesInChalets}
   className="mt-6 bg-[#6DA6BA] text-white hover:bg-[#D87C55]/80 focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
   style={{width:"48%"}}
 >

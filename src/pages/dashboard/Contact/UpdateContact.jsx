@@ -45,7 +45,7 @@ function UpdateContact() {
         }
 
         try {
-            await axios.put(`${API_URL}/ContactUs/updatecontactus/${id}`, formData, {
+            await axios.put(`${API_URL}/Contacts/updateContacts/${id}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

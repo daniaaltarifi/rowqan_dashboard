@@ -209,7 +209,7 @@ function AddChalets() {
         // Now, add images for the newly created chalet
         // await handleAddImagesInChalets(chalet_id); // Pass chalet_id to add images
           // navigate("/dashboard/chalets");
-    
+    window.scrollTo(0, 3050);
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -219,43 +219,6 @@ function AddChalets() {
           confirmButtonText: "OK",
         });
         setIsLoading(false);
-      }
-    };
-    
-    const handleAddImagesInChalets = async (chalet_id) => {
-      // Now that we have the chalet_id, proceed with adding images
-      const formData = new FormData();
-      formData.append("chalet_id", chalet_id);
-    
-      images.forEach((file) => {
-        formData.append("image", file); // 'images[]' to treat it as an array in the backend
-      });
-    
-      try {
-        const response = await axios.post(
-          `${API_URL}/chaletsimages/createchaletImage`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-    
-        Swal.fire({
-          title: "Success!",
-          text: "Chalet and images added successfully.",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
-      } catch (error) {
-        console.error(error);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to add images. Please try again.",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
       }
     };
     

@@ -148,9 +148,29 @@ const UpdateChalets = () => {
         return payload;
       };
       
+  // const handleChange = (e, field) => {
+  //   setFormDataState({ ...formDataState, [field]: e.target.value });
+  // };
   const handleChange = (e, field) => {
-    setFormDataState({ ...formDataState, [field]: e.target.value });
+    if (field === 'image') {
+      // If the field is 'image', handle the file upload
+      const file = e.target.files[0]; // Get the selected file
+      console.log("first file: " , file)
+      if (file) {
+        setFormDataState((prevState) => ({
+          ...prevState,
+          [field]: file, // Update the state with the file object
+        }));
+      }
+    } else {
+      // For other fields, handle as normal
+      setFormDataState((prevState) => ({
+        ...prevState,
+        [field]: e.target.value, // Update the state with the selected value
+      }));
+    }
   };
+  
   const handleCheckboxChange = (e, featureId, field) => {
     const updatedFeatures = [...formDataState[field]];
   
@@ -170,7 +190,12 @@ const UpdateChalets = () => {
     const payload = preparePayload();
 
     // Update chalet data using the PUT API
-    axios.put(`${API_URL}/chalets/updatechalet/${chalet_id}`, payload)
+    // axios.put(`${API_URL}/chalets/updatechalet/${chalet_id}`, payload)
+    axios.put(`${API_URL}/chalets/updatechalet/${chalet_id}`, payload, {
+      headers: {
+        "Content-Type": "multipart/form-data", // Specify multipart/form-data
+      },
+    })  
       .then(response => {
          Swal.fire({
           title: "Success!",
@@ -178,7 +203,7 @@ const UpdateChalets = () => {
           icon: "success",
           confirmButtonText: "OK",
         });
-        navigate("/dashboard/chalets");
+        // navigate("/dashboard/chalets");
           })
       .catch(error => {
         console.error('Error updating chalet:', error);
@@ -191,7 +216,7 @@ const UpdateChalets = () => {
          <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'تفاصيل الشاليه' : ' Chalets Details'}</Typography>
          <p className="font-bold mb-3">{lang === 'ar' ? 'صورة الغلاف' : 'Cover Image'}</p>
          <div>
-       <input type="file" name="image"onChange={(e) => handleChange(e, 'room')}id="timeimg" className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+       <input type="file" name="image"onChange={(e) => handleChange(e, 'image')}id="timeimg" className="mt-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
        </div>
        <p className="font-bold mb-3">{lang === 'ar' ? 'عدد الغرف' : 'Number of rooms'}</p>
        <div className="flex flex-wrap">

@@ -25,32 +25,41 @@ import {
 import Cookies from "js-cookie";
 export function StatisticsCard() {
   const [users, setusers] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [feedback, setFeedback] = useState([]);
+  const [chalets, setChalets] = useState([]);
+  const [reservations, setReservations] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const lang = Cookies.get('lang') || 'en';
  
 const fetchData = async () => {
   try {
-    const [usersResponse, productsResponse, ordersResponse,feedbackResponse] = await Promise.all([
+    const [usersResponse, chaletsResponse,blogsResponse] = await Promise.all([
       axios.get(`${API_URL}/users/getAllUsers/${lang}`),
       axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
-      axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`),
+      // axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`),
       axios.get(`${API_URL}/Blogs/getAllBlogs/${lang}`),
       // axios.get(`${API_URL}/payments/getPayments`),
     ]);
 
     setusers(usersResponse.data);
-    setProducts(productsResponse.data);
-    setOrders(ordersResponse.data);
-    setFeedback(feedbackResponse.data);
+    setChalets(chaletsResponse.data);
+    // setOrders(ordersResponse.data);
+    setBlogs(blogsResponse.data);
   
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchReservations = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`);
+    setReservations(res.data);
   } catch (error) {
     console.error(error);
   }
 };
  useEffect(()=>{
  fetchData();
+ fetchReservations()
  },[])
   const statisticsCardsData = [
     {
@@ -69,7 +78,7 @@ const fetchData = async () => {
       color: "gray",
       icon: PhotoIcon ,
       title: lang ==='ar'? "الشاليهات" :"Chalets",
-      value: products.length,
+      value: chalets.length,
       link:"chalets",
       footer: {
         color: "text-green-500",
@@ -81,7 +90,7 @@ const fetchData = async () => {
       color: "gray",
       icon: ChartBarIcon,
       title: lang ==='ar'? "الحجوزات" : "Reservations",
-      value: orders.length,
+      value: reservations.length,
       link:"reservations",
       footer: {
         color: "text-red-500",
@@ -93,7 +102,7 @@ const fetchData = async () => {
       color: "gray",
       icon: BellIcon,
       title: lang ==='ar'? "المدونات" :"Blogs",
-      value: feedback.length,
+      value: blogs.length,
       link:"setting",
       footer: {
         color: "text-green-500",

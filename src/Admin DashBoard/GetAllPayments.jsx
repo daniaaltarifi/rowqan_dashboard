@@ -115,70 +115,82 @@ function GetAllPayments() {
                 </tr>
               </thead>
               <tbody>
-                {payments.map((payment, index) => {
-                  const className = `py-3 px-5 ${index === payments.length - 1 ? "" : "border-b border-blue-gray-50"}`;
-                  return (
-                    <tr key={payment.id}>
-                      <td className={className}>
-                        <Typography variant="small" color="blue-gray" className="font-semibold">
-                          {payment.UserName || 'N/A'}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {payment.Phone_Number}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-normal text-blue-gray-500">
-                          {payment.paymentMethod}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {payment.status}
-                        </Typography>
-                      </td>
-                      {payment.status === 'Pending' ? (
-                      <td className={className}>
-                      <Button
-                        onClick={() => handleUpdateStatus(payment.id, payment.status)}
-                        className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-yellow-500"
-                      >
-                        {lang === "ar" ? "تحديث الحالة" : "Update Status"}
-                      </Button>
-                    </td>
+                {payments.length > 0 ? (
+      payments.map((payment, index) => {
+        const className = `py-3 px-5 ${index === payments.length - 1 ? "" : "border-b border-blue-gray-50"}`;
+        return (
+          <tr key={payment.id}>
+            <td className={className}>
+              <Typography variant="small" color="blue-gray" className="font-semibold">
+                {payment.UserName || 'N/A'}
+              </Typography>
+            </td>
+            <td className={className}>
+              <Typography className="text-xs font-semibold text-blue-gray-600">
+                {payment.Phone_Number}
+              </Typography>
+            </td>
+            <td className={className}>
+              <Typography className="text-xs font-normal text-blue-gray-500">
+                {payment.paymentMethod}
+              </Typography>
+            </td>
+            <td className={className}>
+              <Typography className="text-xs font-semibold text-blue-gray-600">
+                {payment.status}
+              </Typography>
+            </td>
+            {payment.status === 'Pending' ? (
+            <td className={className}>
+            <Button
+              onClick={() => handleUpdateStatus(payment.id, payment.status)}
+              className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-yellow-500"
+            >
+              {lang === "ar" ? "تحديث الحالة" : "Update Status"}
+            </Button>
+          </td>
 
-                      ) : (
-                        <td></td>
-                      )}
-                      <td className={className}>
-                        {payment.Reservations_Chalet ? (
-                          <div>
-                            <Typography className="text-xs font-semibold text-blue-gray-600">
-                              Reservation ID: {payment.Reservations_Chalet.id}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              Start Date: {new Date(payment.Reservations_Chalet.start_date).toLocaleDateString()}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              Time: {payment.Reservations_Chalet.Time}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              Status: {payment.Reservations_Chalet.Status}
-                            </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              Total Amount: ${payment.Reservations_Chalet.Total_Amount}
-                            </Typography>
-                          </div>
-                        ) : (
-                          <Typography className="text-xs font-normal text-blue-gray-500">No reservation</Typography>
-                        )}
-                      </td>
-                      
-                    </tr>
-                  );
-                })}
+            ) : (
+              <td></td>
+            )}
+            <td className={className}>
+              {payment.Reservations_Chalet ? (
+                <div>
+                  <Typography className="text-xs font-semibold text-blue-gray-600">
+                    Reservation ID: {payment.Reservations_Chalet.id}
+                  </Typography>
+                  <Typography className="text-xs font-normal text-blue-gray-500">
+                    Start Date: {new Date(payment.Reservations_Chalet.start_date).toLocaleDateString()}
+                  </Typography>
+                  <Typography className="text-xs font-normal text-blue-gray-500">
+                    Time: {payment.Reservations_Chalet.Time}
+                  </Typography>
+                  <Typography className="text-xs font-normal text-blue-gray-500">
+                    Status: {payment.Reservations_Chalet.Status}
+                  </Typography>
+                  <Typography className="text-xs font-normal text-blue-gray-500">
+                    Total Amount: ${payment.Reservations_Chalet.Total_Amount}
+                  </Typography>
+                </div>
+              ) : (
+                <Typography className="text-xs font-normal text-blue-gray-500">No reservation</Typography>
+              )}
+            </td>
+            
+          </tr>
+        );
+      })
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="py-3 px-5 text-center">
+                      <Typography variant="small" color="blue-gray">
+                        No payments found.
+                      </Typography>
+                    </td>
+                  </tr>
+
+                )}
+          
               </tbody>
             </table>
           </CardBody>

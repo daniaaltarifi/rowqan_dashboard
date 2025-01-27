@@ -19,7 +19,7 @@ function UpdateContact() {
     useEffect(() => {
         const fetchcontact = async () => {
             try {
-                const response = await axios.get(`${API_URL}/ContactUs/getcontactusid/${id}/${lang}`);
+                const response = await axios.get(`${API_URL}/Contacts/getContactsbyid/${id}/${lang}`);
                 setUpdateContact({
                     title: response.data.title,
                     action: response.data.action,

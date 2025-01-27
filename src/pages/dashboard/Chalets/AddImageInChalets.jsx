@@ -112,8 +112,8 @@ function AddImagesInChalets({chalet_id}) {
                 return (
                     <div key={index}>
                         <video
-                            width="120"
-                            height="200"
+                                                       style={{ width: "70px", height: "70px", objectFit: "cover" }} // Style the image
+
                             src={URL.createObjectURL(file)} // Display the video
                         >
                         </video>

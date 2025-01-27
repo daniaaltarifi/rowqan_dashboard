@@ -148,10 +148,8 @@ const parseType = (type) => {
               (chalet,index) => {
                 const className = `py-3 px-5 ${index === Chalets.length - 1 ? "" : "border-b border-blue-gray-50"}`;
                                // Parse the `type` field
-                               const typeObject = parseType(chalet.type);
-
-                               // Convert the object to a key-value list for rendering
-                               const typeList = Object.entries(typeObject);
+                               const typeObject = chalet.type ? parseType(chalet.type) : null;
+                               const typeList = typeObject ? Object.entries(typeObject) : [];
                 return (
                   <tr key={chalet.id}>
                     <td className={className}>
@@ -241,19 +239,23 @@ const parseType = (type) => {
                       <Avatar   src={chalet.image} alt={"chalets"} size="md" variant="rounded" />
                       </Typography>
                       </td>
-
-                    <td className={className} >
+                {typeList.length > 0 ? (
+                <td className={className} >
                       <div style={{width:"250px"}} >
                       {typeList.map(([key, value], i) => (
-        <div key={i}>
-          <strong>{key.replace(/_/g, " ")}:</strong> {value}
-        </div>
-      ))}
+                 <div key={i}>
+                  <strong>{key.replace(/_/g, " ")}:</strong> {value}
+                  </div>
+                    ))}
                       </div>
                     </td>
+                      ): (
+                    <Typography className="text-xs font-semibold text-blue-gray-600">
+                     {lang ==='ar'? "لا يوجد معلومات" :"No Type data"}
+                    </Typography>
+                      )}       
                     <td className={className}>
                       <div className="flex items-center gap-4">
-                        {/* <Avatar src={img} alt={name} size="sm" variant="rounded" /> */}
                         <div>
                           <Typography
                             variant="small"

@@ -38,7 +38,7 @@ function AddContact() {
       formData.append("image", img);
       try {
           const response = await axios.post(
-            `${API_URL}/ContactUs/createcontactus`,
+            `${API_URL}/Contacts/createContacts`,
             formData,
             {
               headers: {

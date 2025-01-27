@@ -10,12 +10,13 @@ function MessagesChaletOwners() {
   const [recentMessages,setRecentMessages]=useState([])
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-      const lang = Cookies.get('lang') || 'en';
+  const lang = Cookies.get('lang') || 'en';
+  const receiverId = Cookies.get('receiverId');
   
   useEffect(()=>{
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`${API_URL}/messages/getMessagesByChalet/${lang}`);
+        const res = await axios.get(`${API_URL}/messages/getMessagesByChalet/${receiverId}/${lang}`);
           setRecentMessages(res.data);
       } catch (error) {
         console.error(error);

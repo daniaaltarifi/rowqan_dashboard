@@ -6,18 +6,18 @@ import {Button,Typography,} from "@material-tailwind/react";
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import { cities } from './CityData';
-import { getRoomOptions, getBathroomOptions, getFurnishedOptions, getFeatures, getAdditionalFeatures, getInterfaceOptions, getFamilyOptions, getkitchenOptions, getswimmingpoolsOptions } from './Data';
+import { getRoomOptions, getBathroomOptions, getFeatures, getAdditionalFeatures, getInterfaceOptions, getFamilyOptions, getkitchenOptions, getswimmingpoolsOptions } from './Data';
 import axios from 'axios';
 import { API_URL } from '@/App';
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import AddImagesInChalets from './AddImageInChalets';
 
 function AddChalets() {
       const lang = Cookies.get('lang') || 'en';
       const navigate = useNavigate();
       const roomOptions = getRoomOptions();
       const bathroomOptions = getBathroomOptions();
-      const furnishedOptions = getFurnishedOptions(lang);
       const features = getFeatures();
       const additionalFeatures = getAdditionalFeatures();
       const interfaceOptions = getInterfaceOptions(lang);
@@ -35,6 +35,9 @@ function AddChalets() {
       const [imgName, setImgName] = useState("");
        const [images, setImages] = useState([]);
        const [isLoading, setIsLoading] = useState(false);
+       const [isContImagesOpen, setIsContImagesOpen] = useState(false);
+       const [chalet_id, setChalet_id] = useState("");
+
       const [mainInfoChalets, setMainInfoChalets] = useState({
         title: "",
         description: "",
@@ -49,7 +52,6 @@ function AddChalets() {
     const labels = {
       room: lang === 'ar' ? 'عدد الغرف' : 'Number of Rooms',
       bathroom: lang === 'ar' ? 'عدد الحمامات' : 'Number of Bathrooms',
-      furnished: lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished',
       interface: lang === 'ar' ? 'واجهة' : 'Interface',
       building_area: lang === 'ar' ? 'مساحة البناء' : 'Building Area',
       family: lang === 'ar' ? 'عدد الزوار' : 'Number of Visitors',
@@ -61,7 +63,6 @@ function AddChalets() {
     const [formDataState, setFormDataState] = useState({
       [labels.room]: '',
       [labels.bathroom]: '',
-      [labels.furnished]: '',
       [labels.interface]: '',
       [labels.building_area]: '',
       [labels.family]: '',
@@ -205,9 +206,12 @@ function AddChalets() {
           }
         );
             const chalet_id = chaletResponse.data.chalet.id;
+            setChalet_id(chalet_id);
+            setIsContImagesOpen(true)
+            setIsLoading(false)
         // Now, add images for the newly created chalet
-        await handleAddImagesInChalets(chalet_id); // Pass chalet_id to add images
-          navigate("/dashboard/chalets");
+        // await handleAddImagesInChalets(chalet_id); // Pass chalet_id to add images
+          // navigate("/dashboard/chalets");
     
       } catch (error) {
         console.error(error);
@@ -345,34 +349,6 @@ function AddChalets() {
 </div>
 
 <hr />
-
-<p className="font-bold my-3">{lang === 'ar' ? 'مفروشة/غير مفروشة' : 'Furnished/Unfurnished'}</p>
-<div className="flex flex-wrap">
-  {furnishedOptions.map((furn, index) => (
-    <div
-      key={index}
-      onChange={(e) => handleChange(e, "furnished")}
-      className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto"
-    >
-      <input
-        type="radio"
-        id={`furnished-radio-${index}`}
-        value={furn}
-        name="furnished-radio" // Unique name for furnished group
-        checked={formDataState[labels.furnished] === furn}
-        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-      />
-      <label
-        htmlFor={`furnished-radio-${index}`}
-        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
-      >
-        {furn}
-      </label>
-    </div>
-  ))}
-</div>
-
-<hr />
 <p className='font-bold my-3'>{lang === 'ar' ? 'المزايا الرئيسية' : 'Key Features'}</p>
       <ul className="flex flex-wrap gap-4 w-full text-sm font-medium text-gray-900 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       {features.map((feature) => (
@@ -453,7 +429,7 @@ function AddChalets() {
       </div>
       <hr />
 
-      {/* Family Option */}
+      {/* Visitors Family Option */}
       <p className="font-bold mb-3">{labels.family}</p>
       <div className="flex flex-wrap">
         {familyoptions.map((family, index) => (
@@ -660,69 +636,11 @@ function AddChalets() {
       <textarea type="text" rows={20}onChange={handleChangemainInfoChalets} name='description' id="Description" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'الوصف' : 'Description'} required />
       </InputGroup>
     </div>
-    <div className="grid grid-cols-1 gap-6 ">
-                  {/* First Column */}
-                  <div className="flex flex-col">
-                      <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الصور" :"Images"}</Typography>
-                      <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "من المستحسن استخدام تنسيق WebP للصور." :"It is recommended to use the WebP format for images."}</Typography>
-                                  <div className="relative">
-                                      <input
-                                         type="file"
-                                          id="file_input"
-                                          onChange={handleFileChange}
-                                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                          multiple
-                                      />
-                                      <Button className="bg-gray-200 text-gray-800 hover:bg-gray-300 w-full text-left">
-                                      {lang ==='ar'? "اختر الصورة  " :" Choose an image"}
-                                      </Button>
-                                       {/* Display the image name if it exists */}
-  <div className="file-preview flex mt-4">
-          {images.map((file, index) => {
-              if (file.type.startsWith("image/")) {
-                  // For image files
-                  return (
-                      <div key={index} className='mx-5'>
-                          <img
-                              src={URL.createObjectURL(file)} // Display the image
-                              alt={file.name}
-                              style={{ width: "70px", height: "70px", objectFit: "cover" }} // Style the image
-                          />
-                          <Typography variant="small" color="blue-gray">
-                              {file.name}
-                          </Typography>
-                      </div>
-                  );
-              } else if (file.type.startsWith("video/")) {
-                  // For video files
-                  return (
-                      <div key={index}>
-                          <video
-                              width="120"
-                              height="200"
-                              src={URL.createObjectURL(file)} // Display the video
-                          >
-                          </video>
-                          <Typography variant="small" color="blue-gray">
-                              {file.name}
-                          </Typography>
-                      </div>
-                      );
-                     } else {
-                  return null;
-                   }
-                    })}
-                   </div>
-                 </div>
-      
-                  </div>            
-            </div>
-    
-    {/* <button 
-    type="submit" 
-    className="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-    {lang=== 'ar' ? 'حفظ' : 'Submit'}
-   </button> */}
+   
+
+
+
+
    <button 
   type="submit" 
   className="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -737,8 +655,11 @@ function AddChalets() {
     lang === 'ar' ? 'حفظ' : 'Submit'
   )}
 </button>
-
-</div>
+    {isContImagesOpen && (
+      <AddImagesInChalets chalet_id={chalet_id}/>
+    )}
+  
+   </div>
    </form>
     </>
 

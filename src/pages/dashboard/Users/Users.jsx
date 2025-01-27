@@ -36,7 +36,6 @@ function Users() {
         try {
             const response = await axios.get(`${API_URL}/users/getAllUsers/${lang}`);
             setusers(response.data);
-            console.log("first user", response.data);
         } catch (error) {
             console.error(error);
         }

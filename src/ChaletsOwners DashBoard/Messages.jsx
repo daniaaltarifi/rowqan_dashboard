@@ -13,11 +13,7 @@ function Messages() {
     const lang = Cookies.get('lang') || 'en';
   const chalet_title = location.state?.chalet_title || null;
  const receiverId = Cookies.get('receiverId');
-console.log("user_id",user_id)
   const [messages, setMessages] = useState([
-    // { text: "Hello bro", type: "received", timestamp: "2:37 pm" },
-    // { text: "Whats up", type: "received", timestamp: "2:37 pm" },
-    // { text: "Mm okay", type: "sent", timestamp: "2:47 pm" },
   ]);
 
   const [socket, setSocket] = useState(null);
@@ -41,7 +37,6 @@ console.log("user_id",user_id)
             };
           });
           setMessages(newMessages);
-          console.log("messages: " ,newMessages)
         } else {
           console.error("Unexpected data format", res.data);
         }
@@ -106,7 +101,6 @@ console.log("user_id",user_id)
           chaletId:chalet_id,
           receiverId: receiverId
         });
-        console.log("first message sent", res.data);
       } catch (error) {
         console.error("Error sending message:", error);
       }

@@ -30,7 +30,6 @@ export const API_URL="https://rowqanbackend.rowqan.com";
 import axios from 'axios'
 import Messages from "./ChaletsOwners DashBoard/Messages";
 import UpdateUser from "./Admin DashBoard/UpdateUser";
-import AddImagesInChalets from "./pages/dashboard/Chalets/AddImageInChalets";
 import AddUser from "./pages/dashboard/Users/AddUser";
 import AddRightTime from "./pages/dashboard/TimeAndStatus/AddRightTime";
 import UsersByChaletsMessages from "./ChaletsOwners DashBoard/UsersByChaletsMessages";

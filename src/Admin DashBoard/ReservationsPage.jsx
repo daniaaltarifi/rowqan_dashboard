@@ -50,35 +50,46 @@ function ReservationsPage() {
               </tr>
             </thead>
             <tbody>
-              {reservations.map((reservation, index) => {
-                const className = `py-3 px-5 ${index === reservations.length - 1 ? "" : "border-b border-blue-gray-50"}`;
-                return (
-                  <tr key={reservation.id}>
-                     <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.id}</Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.chalet.title}</Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.time}</Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.starting_price}</Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.total_amount}</Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">{new Date(reservation.date).toLocaleDateString()}</Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.reservation_type}</Typography>
-                    </td>
-                   
-                  </tr>
-                );
-              })}
+              {reservations.length > 0 ? (
+  reservations.map((reservation, index) => {
+    const className = `py-3 px-5 ${index === reservations.length - 1 ? "" : "border-b border-blue-gray-50"}`;
+    return (
+      <tr key={reservation.id}>
+         <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.id}</Typography>
+        </td>
+        <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.chalet.title}</Typography>
+        </td>
+        <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.time}</Typography>
+        </td>
+        <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.starting_price}</Typography>
+        </td>
+        <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.total_amount}</Typography>
+        </td>
+        <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{new Date(reservation.date).toLocaleDateString()}</Typography>
+        </td>
+        <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.reservation_type}</Typography>
+        </td>
+       
+      </tr>
+    );
+  })
+              ) : (
+                <tr>
+                  <td colSpan="7" className="py-3 px-5 text-center">
+                    <Typography variant="small" className="text-blue-gray-400">
+                      {lang === "ar"? "لا توجد حجوزات" : "No reservations found"}
+                    </Typography>
+                  </td>
+                </tr>
+              )}
+            
             </tbody>
           </table>
         </CardBody>

@@ -115,9 +115,7 @@ function AddChalets() {
       if (checked) {
         // Add the ID to the array if checked
         setCheckedFeatures([...prevState, id])
-        console.log("checked features data", checkedFeatures);
         return [...prevState, id];
-
       } else {
         // Remove the ID from the array if unchecked
         return prevState.filter((featureId) => featureId !== id);
@@ -132,7 +130,6 @@ function AddChalets() {
     setCheckedadditioanlFeatures((prevState) => {
       if (checked) {
         // Add the ID to the array if checked
-        console.log("checked additional feat data", checkedadditioanlFeatures);
         return [...prevState, id];
       } else {
         // Remove the ID from the array if unchecked

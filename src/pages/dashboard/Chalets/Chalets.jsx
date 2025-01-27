@@ -12,14 +12,8 @@ import {
     CardBody,
     Typography,
     Avatar,
-    Chip,
-    Tooltip,
-    Progress,
     Button,
   } from "@material-tailwind/react";
-  import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-  import { authorsTableData, projectsTableData } from "@/data";
-import Swal from "sweetalert2";
 
 function Chalets() {
     const navigate = useNavigate();
@@ -45,19 +39,15 @@ const handleShow = (id, type) => {
     try {
       const [chaletsRes,DetailsRes] = await Promise.all([
         axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
-        // axios.get(`${API_URL}/chaletsdetails/getalldetails/${lang}`)
       ]) 
       setChalets(chaletsRes.data);
-      // setChaletsDetails(DetailsRes.data);
       
     } catch (error) {
       console.error(error);
     }
   };
   
-  const handleDelete = async () => {
-    // const { idToDelete, itemType } = this.state;
-  
+  const handleDelete = async () => {  
     try {
       // Conditional logic to handle different delete operations
       if (itemType === 'chalet') {

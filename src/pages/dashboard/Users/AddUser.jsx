@@ -59,7 +59,6 @@ function AddUser() {
     const fetchRoles = useCallback(async () => {
       try {
         const response = await axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`);
-        console.log("API Response:", response.data);
         if (Array.isArray(response.data)) {
           setRoles(response.data); 
         } else {

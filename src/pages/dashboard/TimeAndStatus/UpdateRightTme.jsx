@@ -5,6 +5,8 @@ import { API_URL } from "../../../App.jsx";
 import Swal from "sweetalert2";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Form from 'react-bootstrap/Form';
+
 function UpdateRightTime() {
     const [updateRightTime, setUpdateRightTime] = useState({
         type_of_time: "",
@@ -80,14 +82,24 @@ function UpdateRightTime() {
                     <div className="grid grid-cols-1 gap-6 ">
                         <div className="flex flex-col">
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الوقت" :"type_of_time"}</Typography>
-                            <Input
+                            {/* <Input
                                 size="lg"
                                 name='type_of_time'
                                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                                 value={updateRightTime.type_of_time}
                                 onChange={handleChange}
                                 required
-                            /> 
+                            />  */}
+                             <Form.Select 
+              className="form-select "style={{height: '40px'}}
+              name='type_of_time'
+              value={updateRightTime.type_of_time}
+              onChange={handleChange}              >
+              <option value="">{lang === "ar" ? "اختر نوع الوقت" : "Select Type of Time"}</option>
+              <option value="Morning">{lang === "ar" ? "صباحي" : "Morning"}</option>
+              <option value="Evening">{lang === "ar" ? "مسائي" : "Evening"}</option>
+              <option value="Full Day">{lang === "ar" ? "كل اليوم" : "Full Day"}</option>
+            </Form.Select>
                         </div>
                         <div className="flex flex-col">
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "من الوقت" :"from_time"}</Typography>

@@ -15,12 +15,6 @@ function GetAllPayments() {
       setPayments(response.data);
     } catch (error) {
       console.error(error);
-      Swal.fire({
-        title: "Error",
-        text: "Failed to fetch payments. Please try again.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
     }
   };
   const handleUpdateStatus = async (id, currentStatus) => {

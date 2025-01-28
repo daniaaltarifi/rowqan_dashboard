@@ -40,7 +40,7 @@ function ReservationsPage() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["#","Chalet Title","time", "starting_price", "Total Amount", "Date", "reservation_type"].map((el) => (
+                {["#","Chalet Title","time", "starting_price", "Total Amount", "Start Date", "reservation_type"].map((el) => (
                   <th key={el} className="border-b border-blue-gray-50 py-3 px-5">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       {el}
@@ -71,7 +71,7 @@ function ReservationsPage() {
           <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.total_amount}</Typography>
         </td>
         <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{new Date(reservation.date).toLocaleDateString()}</Typography>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{new Date(reservation.start_date).toLocaleDateString()}</Typography>
         </td>
         <td className={className}>
           <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.reservation_type}</Typography>

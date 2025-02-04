@@ -93,6 +93,22 @@ function GetAllPayments() {
                   </th>
                   <th className="border-b border-blue-gray-50 py-3 px-5 ">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
+                    Starting Price                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-50 py-3 px-5 ">
+                    <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
+                    initial Amount                   </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-50 py-3 px-5 ">
+                    <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
+                    Remainning Amount                 </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-50 py-3 px-5 ">
+                    <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
+                    Total Amount                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-50 py-3 px-5 ">
+                    <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       Status
                     </Typography>
                   </th>
@@ -130,6 +146,26 @@ function GetAllPayments() {
               </Typography>
             </td>
             <td className={className}>
+              <Typography className="text-xs font-normal text-blue-gray-500">
+                {payment.Reservations_Chalet?.starting_price}
+              </Typography>
+            </td>
+            <td className={className}>
+              <Typography className="text-xs font-normal text-blue-gray-500">
+                {payment.initialAmount}
+              </Typography>
+            </td>
+            <td className={className}>
+              <Typography className="text-xs font-normal text-blue-gray-500">
+                {payment.RemainningAmount}
+              </Typography>
+            </td>
+            <td className={className}>
+              <Typography className="text-xs font-normal text-blue-gray-500">
+                {payment.Reservations_Chalet?.Total_Amount}
+              </Typography>
+            </td>
+            <td className={className}>
               <Typography className="text-xs font-semibold text-blue-gray-600">
                 {payment.status}
               </Typography>
@@ -164,6 +200,12 @@ function GetAllPayments() {
                   </Typography>
                   <Typography className="text-xs font-normal text-blue-gray-500">
                     Total Amount: ${payment.Reservations_Chalet.Total_Amount}
+                  </Typography>
+                  <Typography className="text-xs font-normal text-blue-gray-500">
+                  Additional visitors: {payment.Reservations_Chalet.additional_visitors}
+                  </Typography>
+                  <Typography className="text-xs font-normal text-blue-gray-500">
+                  Number of days: {payment.Reservations_Chalet.number_of_days}
                   </Typography>
                 </div>
               ) : (

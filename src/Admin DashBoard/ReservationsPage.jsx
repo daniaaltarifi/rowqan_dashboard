@@ -40,7 +40,7 @@ function ReservationsPage() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["#","Chalet Title","time", "starting_price", "Total Amount", "Start Date", "reservation_type"].map((el) => (
+                {["#",`User`,"Chalet Title","time", "starting_price", "Total Amount", "Start Date", "reservation_type"].map((el) => (
                   <th key={el} className="border-b border-blue-gray-50 py-3 px-5">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       {el}
@@ -57,6 +57,10 @@ function ReservationsPage() {
       <tr key={reservation.id}>
          <td className={className}>
           <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.id}</Typography>
+        </td>
+        <td className={className}>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.user ? `${reservation.user.name} ` : `No user`}</Typography>
+          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.user ? `${reservation.user.email} ` : ``}</Typography>
         </td>
         <td className={className}>
           <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.chalet.title}</Typography>

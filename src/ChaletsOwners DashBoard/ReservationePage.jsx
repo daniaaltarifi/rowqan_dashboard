@@ -100,6 +100,7 @@ function ReservationsPage() {
                   const className = `py-3 px-5 ${index === reservations.length - 1 ? "" : "border-b border-blue-gray-50"}`;
                   return (
                     <tr key={reservation.id}>
+                     
                       <td className={className}>
                         <div className="flex items-center gap-4">
                           <div>

@@ -14,6 +14,7 @@ import {
     Avatar,
     Button
 } from "@material-tailwind/react";
+import '../../../Styles/Chalets.css'
 
 function Abouts() {
     const navigate = useNavigate();
@@ -203,7 +204,7 @@ function Abouts() {
                   <PlusIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "اضافة مدونة" : "Add Blog "}
                 </Button>
                 </Link>
-                <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+                <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
                     <table className="w-full min-w-[640px] table-auto">
                         <thead>
                             <tr>

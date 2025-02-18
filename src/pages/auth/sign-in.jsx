@@ -127,6 +127,14 @@ export function SignIn({ setIsAuthenticated }) {
           confirmButtonColor: '#3B82F6'
         });
       }
+      else if (error.response && error.response.status === 403) {
+        Swal.fire({
+          title: lang === 'ar' ? 'تم حظر عنوان IP الخاص بك بسبب محاولات تسجيل الدخول الفاشلة العديدة' : 'Your IP is blocked due to too many failed login attempts',
+          icon: 'error',
+          confirmButtonText: lang === 'ar' ? 'موافق' : 'OK',
+          confirmButtonColor: '#3B82F6'
+        });
+      }
       else if(!mfaCode){
         Swal.fire({
           title: lang === 'ar' ? 'تم إرسال الكود بنجاح' : 'Invalid MFA code or login failed.',

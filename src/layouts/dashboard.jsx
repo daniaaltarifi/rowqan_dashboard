@@ -87,7 +87,7 @@ export function Dashboard() {
 <Route path="adduser" element={<AddUser />} />
 
 <Route path="updateUser/:id" element={<UpdateUser/>} />
-{/* <Route path="addimginchalets/:chalet_id" element={<AddImagesInChalets />} /> */}
+<Route path="addimginchalets/:chalet_id" element={<AddImagesChalets />} />
 <Route path="addimgchalets" element={<AddImagesChalets />} />
 <Route path="abouts" element={<Abouts />} />
 <Route path="updateabouts/:id" element={<UpdateAbout />} />

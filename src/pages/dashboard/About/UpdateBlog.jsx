@@ -95,15 +95,15 @@ function UpdateBlog() {
             
             <div className="flex flex-col">
               <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الوصف" :"Description"}</Typography>
-              <Input
+              <textarea
                 size="lg"
                 name='description'
                 value={description}
                 placeholder="Enter description"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                onChange={(e) => {
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"                 onChange={(e) => {
                   setDescription(e.target.value); 
                 }}
+                rows={30}
               />
             </div>
 

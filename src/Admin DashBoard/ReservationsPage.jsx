@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { API_URL } from "../App";
+import '../Styles/Chalets.css'
 
 function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
@@ -36,7 +37,7 @@ function ReservationsPage() {
             {lang === "ar" ? "جدول الحجوزات" : "Reservations Table"}
           </Typography>
         </CardHeader>
-        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+        <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>

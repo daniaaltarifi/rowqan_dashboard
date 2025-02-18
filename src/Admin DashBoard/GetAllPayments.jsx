@@ -4,6 +4,7 @@ import { API_URL } from "../App";
 import Swal from "sweetalert2";
 import { Card, CardHeader, CardBody, Typography, Button } from "@material-tailwind/react";
 import Cookies from "js-cookie";
+import '../Styles/Chalets.css'
 
 function GetAllPayments() {
   const [payments, setPayments] = useState([]);
@@ -72,7 +73,7 @@ function GetAllPayments() {
               Payments Table
             </Typography>
           </CardHeader>
-          <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+          <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>

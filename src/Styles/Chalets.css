@@ -11,20 +11,17 @@
     margin-bottom: 10px;
     width: 100%;
 }
-/* .cont_time{
-    display: flex;
-    flex-wrap: wrap;
-    min-width: 1000px;
-    width: 100%;
-} */
-/* .card_radio{
-     border: 2px solid #c3c0c0;
-     display: flex;
-     padding: 5px;
-     margin: 5px;
-     border-radius: 5px;
+.table-container{
+    max-height:500px;
+    overflow-y:auto;
 }
-.row_of_radio{
-     display: flex;
-     flex-wrap: wrap;
-} */
+.table-container::-webkit-scrollbar{
+    height: 15px;
+}
+.table-container::-webkit-scrollbar-thumb{
+    background-color: #888;
+    border-radius: 4px;
+}
+.table-container::-webkit-scrollbar-thumb:hover{
+    background-color: #555; 
+}

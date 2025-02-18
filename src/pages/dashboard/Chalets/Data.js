@@ -56,6 +56,6 @@ export const getInterfaceOptions = (lang) => [
   `${lang === 'ar' ? 'جنوبية شرقية' : 'southeast'}`,
   `${lang === 'ar' ? 'جنوبية غربية' : 'Southwest'}`,
 ];
-export const getFamilyOptions = () => ['1', '2', '3', '4', '5', '+6'];
+export const getFamilyOptions = () => ['1', '2', '3', '4', '5', '+10', '+20'];
 export const getkitchenOptions = () => ['1', '2', '3', '+4'];
 export const getswimmingpoolsOptions = () => ['1', '2', '+3'];

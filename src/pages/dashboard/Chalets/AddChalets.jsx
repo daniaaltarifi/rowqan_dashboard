@@ -6,7 +6,7 @@ import {Button,Typography,} from "@material-tailwind/react";
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import { cities } from './CityData';
-import { getRoomOptions, getBathroomOptions, getFeatures, getAdditionalFeatures, getInterfaceOptions, getFamilyOptions, getkitchenOptions, getswimmingpoolsOptions } from './Data';
+import { getRoomOptions, getBathroomOptions, getFeatures, getAdditionalFeatures, getFamilyOptions, getkitchenOptions, getswimmingpoolsOptions } from './Data';
 import axios from 'axios';
 import { API_URL } from '@/App';
 import Swal from "sweetalert2";
@@ -20,7 +20,7 @@ function AddChalets() {
       const bathroomOptions = getBathroomOptions();
       const features = getFeatures();
       const additionalFeatures = getAdditionalFeatures();
-      const interfaceOptions = getInterfaceOptions(lang);
+      // const interfaceOptions = getInterfaceOptions(lang);
       const familyoptions = getFamilyOptions();
       const kitchenOptions = getkitchenOptions();
       const swimmingpoolsOptions = getswimmingpoolsOptions();
@@ -52,7 +52,7 @@ function AddChalets() {
     const labels = {
       room: lang === 'ar' ? 'عدد الغرف' : 'Number of Rooms',
       bathroom: lang === 'ar' ? 'عدد الحمامات' : 'Number of Bathrooms',
-      interface: lang === 'ar' ? 'واجهة' : 'Interface',
+      // interface: lang === 'ar' ? 'واجهة' : 'Interface',
       building_area: lang === 'ar' ? 'مساحة البناء' : 'Building Area',
       family: lang === 'ar' ? 'عدد الزوار' : 'Number of Visitors',
       kitchen: lang === 'ar' ? 'عدد المطابخ' : 'Number of Kitchen',
@@ -63,7 +63,7 @@ function AddChalets() {
     const [formDataState, setFormDataState] = useState({
       [labels.room]: '',
       [labels.bathroom]: '',
-      [labels.interface]: '',
+      // [labels.interface]: '',
       [labels.building_area]: '',
       [labels.family]: '',
       [labels.kitchen]: '',
@@ -351,7 +351,7 @@ function AddChalets() {
         ))}
       </ul>
      <hr />
-    <p className="font-bold mb-3">{labels.interface}</p>
+    {/* <p className="font-bold mb-3">{labels.interface}</p>
       <div className="flex flex-wrap">
         {interfaceOptions.map((inter, index) => (
           <div key={index} onChange={(e) => handleChange(e, "interface")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
@@ -372,7 +372,7 @@ function AddChalets() {
           </div>
         ))}
       </div>
-      <hr />
+      <hr /> */}
 
       {/* Building Area */}
       <p className="font-bold mb-3">{labels.building_area}</p>
@@ -596,10 +596,6 @@ function AddChalets() {
       <textarea type="text" rows={20}onChange={handleChangemainInfoChalets} name='description' id="Description" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder={lang=== 'ar' ? 'الوصف' : 'Description'} required />
       </InputGroup>
     </div>
-   
-
-
-
 
    <button 
   type="submit" 

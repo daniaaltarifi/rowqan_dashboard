@@ -106,7 +106,7 @@ const parseType = (type) => {
        {lang ==='ar'? "جدول الشاليهات" :"  Chalets Table "}
         </Typography>
       </CardHeader>
-      <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+      <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
       <Link to="/dashboard/addchalet">
     <Button
   className="flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500 bg-[#F2C79D]"

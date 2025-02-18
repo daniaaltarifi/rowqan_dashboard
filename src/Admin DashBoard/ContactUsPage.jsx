@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { API_URL } from "../App";
-
+import '../Styles/Chalets.css'
 function ContactUsPage() {
   const [contacts, setContacts] = useState([]);
   const [lang] = useState("en");
@@ -72,7 +72,7 @@ function ContactUsPage() {
             {lang === "ar" ? "جدول التواصل" : "Contact Table"}
           </Typography>
         </CardHeader>
-        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+        <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>

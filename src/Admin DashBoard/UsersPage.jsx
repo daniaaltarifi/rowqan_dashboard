@@ -14,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
+import '../Styles/Chalets.css'
 
 function Users() {
     const navigate = useNavigate();
@@ -80,7 +81,7 @@ function Users() {
                             {lang === 'ar' ? "جدول المستخدمين" : "Users Table"}
                         </Typography>
                     </CardHeader>
-                    <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+                 <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
                         <Link to="/dashboard/adduser">
                             <Button
                                 className="flex items-center bg-[#F2C79D] transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"

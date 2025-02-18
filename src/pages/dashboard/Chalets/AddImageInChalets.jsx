@@ -91,7 +91,7 @@ function AddImagesInChalets({chalet_id}) {
                     <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "  . اذا كنت لا تريد اضافة صور انقر على التالي " :"If you don`t want to add images click next to skip."}</Typography>
 
                                      {/* Display the image name if it exists */}
-<div className="file-preview flex mt-4">
+<div className="file-preview flex flex-wrap mt-4">
         {images.map((file, index) => {
             if (file.type.startsWith("image/")) {
                 // For image files

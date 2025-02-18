@@ -20,7 +20,7 @@ const UpdateChalets = () => {
      const bathroomOptions = getBathroomOptions();
       const features = getFeatures();
       const additionalFeatures = getAdditionalFeatures();
-      const interfaceOptions = getInterfaceOptions(lang);
+      // const interfaceOptions = getInterfaceOptions(lang);
       const familyoptions = getFamilyOptions();
       const kitchenOptions = getkitchenOptions();
       const swimmingpoolsOptions = getswimmingpoolsOptions();
@@ -31,7 +31,7 @@ const UpdateChalets = () => {
       const labels = {
         room: lang === 'ar' ? 'عدد الغرف' : 'Number of Rooms',
         bathroom: lang === 'ar' ? 'عدد الحمامات' : 'Number of Bathrooms',
-        interface: lang === 'ar' ? 'واجهة' : 'Interface',
+        // interface: lang === 'ar' ? 'واجهة' : 'Interface',
         building_area: lang === 'ar' ? 'مساحة البناء' : 'Building Area',
         family: lang === 'ar' ? 'عدد الزوار' : 'Number of Visitors',
         kitchen: lang === 'ar' ? 'عدد المطابخ' : 'Number of Kitchen',
@@ -83,7 +83,7 @@ const UpdateChalets = () => {
               title: data.title,
               room: typeData?.['Number of Rooms'],
               bathroom: typeData?.['Number of Bathrooms'],
-              interface: typeData?.Interface,
+              // interface: typeData?.Interface,
               building_area: typeData?.['Building Area'],
               family: typeData?.['Number of Visitors'],
               kitchen: typeData?.['Number of Kitchen'],
@@ -135,7 +135,7 @@ const UpdateChalets = () => {
           type: {
             "Number of Rooms": formDataState.room,
             "Number of Bathrooms": formDataState.bathroom,
-            Interface: formDataState.interface,
+            // Interface: formDataState.interface,
             "Building Area": formDataState.building_area,
             "Number of Visitors": formDataState.family,
             "Number of Kitchen": formDataState.kitchen,
@@ -203,7 +203,7 @@ const UpdateChalets = () => {
           icon: "success",
           confirmButtonText: "OK",
         });
-        // navigate("/dashboard/chalets");
+        navigate("/dashboard/chalets");
           })
       .catch(error => {
         console.error('Error updating chalet:', error);
@@ -314,7 +314,7 @@ const UpdateChalets = () => {
   ))}
 </ul>
      <hr />
-    <p className="font-bold mb-3">{labels.interface}</p>
+    {/* <p className="font-bold mb-3">{labels.interface}</p>
       <div className="flex flex-wrap">
         {interfaceOptions.map((inter, index) => (
           <div key={index} onChange={(e) => handleChange(e, "interface")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
@@ -335,7 +335,7 @@ const UpdateChalets = () => {
           </div>
         ))}
       </div>
-      <hr />
+      <hr /> */}
       {/* Building Area */}
       <p className="font-bold mb-3">{labels.building_area}</p>
       <div>

@@ -34,6 +34,7 @@ import AddUser from "./pages/dashboard/Users/AddUser";
 import AddRightTime from "./pages/dashboard/TimeAndStatus/AddRightTime";
 import UsersByChaletsMessages from "./ChaletsOwners DashBoard/UsersByChaletsMessages";
 import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
+import AddImagesInChalets from "./pages/dashboard/Chalets/AddImageInChalets";
 // export const API_URL="http://localhost:5000";
 
 function App() {
@@ -95,7 +96,7 @@ function App() {
         {/* <Route path="dashboard/abouts" element={<Abouts />} /> */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />
-{/* <Route path="addimginchalets/:chalet_id" element={<AddImagesInChalets />} /> */}
+<Route path="addimginchalets/:chalet_id" element={<AddImagesChalets />} />
 <Route path="adduser" element={<AddUser />} />
 
 <Route path="updateUser/:id" element={<UpdateUser />} />

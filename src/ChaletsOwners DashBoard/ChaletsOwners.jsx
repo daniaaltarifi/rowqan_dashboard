@@ -14,6 +14,7 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import '../Styles/Chalets.css'
 
 function ChaletsOwnersPage() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ function ChaletsOwnersPage() {
               {lang === 'ar' ? "مالكي الشاليهات" : "Chalets Owners"}
             </Typography>
           </CardHeader>
-          <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+          <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>

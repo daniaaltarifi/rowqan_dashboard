@@ -7,12 +7,13 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { API_URL } from "../../../App.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from 'axios'; // Ensure Axios is imported
 import Cookies from 'js-cookie';
 function AddImagesChalets() {
-    const [chalet_id,setchalet_id] = useState(null);
+  const {chalet_id}=useParams()
+    // const [chalet_id,setchalet_id] = useState(null);
     const [img, setImg] = useState([]);
     const [imgName, setImgName] = useState("");
     const lang = Cookies.get('lang') || 'en';
@@ -65,7 +66,7 @@ function AddImagesChalets() {
           icon: "success",
           confirmButtonText: "OK",
         });
-        navigate("/dashboard/propertieschalets");
+        navigate("/dashboard/chalets");
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -86,7 +87,7 @@ function AddImagesChalets() {
           <div className="grid grid-cols-1 gap-6 ">
             {/* First Column */}
             <div className="flex flex-col">
-                   <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الشاليه" :"Chalets"}</Typography>
+                   {/* <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الشاليه" :"Chalets"}</Typography>
              
                <select 
                     onChange={(e)=>setchalet_id(e.target.value) }
@@ -98,7 +99,7 @@ function AddImagesChalets() {
                     <option key={item.id} value={item.id}>{item.title}</option>))
                   }
                    
-                  </select>
+                  </select> */}
                 <Typography variant="small" color="blue-gray" className="mb-2 font-medium"> {lang ==='ar'? "الصورة" :"Image"}</Typography>
                 <Typography variant="small" color="blue-gray" className="mb-2 ">{lang ==='ar'? "من المستحسن استخدام تنسيق WebP للصور." :"It is recommended to use the WebP format for images."}</Typography>
                             <div className="relative">

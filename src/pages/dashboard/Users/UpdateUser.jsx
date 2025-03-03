@@ -21,10 +21,12 @@ function UpdateUser() {
     const [userRole, setUserRole] = useState(""); 
     const [roles, setRoles] = useState([]);
     const lang = Cookies.get('lang') || 'en';
-
+    const [Chalets, setChalets] = useState([]);
+    const [selectedChalets, setSelectedChalets] = useState([]);
+  
     const navigate = useNavigate();
 
-    
+
     const handleUpdateUser = async (e) => {
         e.preventDefault();
 
@@ -35,9 +37,14 @@ function UpdateUser() {
             country,
             password,
             lang,
+            user_id:id,
             user_type_id: userRole, 
         };
-
+       // Only add chalet_ids if userRole is "1"
+        if (Number(userRole) === 1) {
+        userData.chalet_ids = selectedChalets;
+         }
+         console.log("userdata: " , userData)
         try {
             await axios.put(`${API_URL}/users/updateUser/${id}`, userData);  
             Swal.fire({
@@ -68,7 +75,12 @@ function UpdateUser() {
           setEmail(user.email);
           setPhoneNumber(user.phone_number);
           setCountry(user.country);
-          setUserRole(user.user_type_id);  
+          if (user.Users_Type.length > 0) {
+            setUserRole(user.Users_Type[0].id);  
+          } else {
+            console.error("User type not found");
+          }
+          setSelectedChalets(user.chalets.map((chalet) => chalet.id));  // Update selected chalets state
         } else {
           console.error("User not found");
         }
@@ -80,11 +92,19 @@ function UpdateUser() {
     
     const fetchRoles = useCallback(async () => {
       try {
-        const response = await axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`);
-        if (Array.isArray(response.data)) {
-          setRoles(response.data); 
+        const[responseUsersTypes,resChalets] = await Promise.all([
+            axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`),
+            axios.get(`${API_URL}/chalets/getchalets/${lang}`)
+        ])
+        if (Array.isArray(responseUsersTypes.data)) {
+          setRoles(responseUsersTypes.data); 
         } else {
           console.error("Error: Roles data is not in the expected format.");
+        }
+        if (Array.isArray(resChalets.data)) {
+            setChalets(resChalets.data); 
+        } else {
+            console.error("Error: Chalets data is not in the expected format.");
         }
       } catch (err) {
         console.error("Error fetching roles:", err);
@@ -95,6 +115,8 @@ function UpdateUser() {
       fetchUserData();  
       fetchRoles();  
     }, [fetchUserData, fetchRoles]);
+    console.log("user",userRole)
+
 
     return (
         <section className="m-8 flex gap-4">
@@ -185,6 +207,32 @@ function UpdateUser() {
                                   <option disabled>{lang === 'ar' ? "جارِ تحميل الأدوار..." : "Loading roles..."}</option>
                                 )}
                             </select>
+                            {Number(userRole) === 1 && (
+  <div className="mt-4">
+    <label className="block text-lg font-semibold">
+      {lang === 'ar' ? "اختر الشاليهات" : "Select Chalets"}
+    </label>
+    <div className="grid grid-cols-2 gap-3 mt-2">
+      {Chalets.map((chalet) => (
+        <label key={chalet.id} className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            value={chalet.id}
+            checked={selectedChalets.includes(chalet.id)}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              setSelectedChalets((prev) =>
+                checked ? [...prev, chalet.id] : prev.filter((id) => id !== chalet.id)
+              );
+            }}
+            className="w-5 h-5 text-[#D87C55] border-gray-300 rounded focus:ring-[#D87C55]"
+          />
+          <span>{chalet.title}</span>
+        </label>
+      ))}
+    </div>
+  </div>
+)}
 
                         </div>
                     </div>

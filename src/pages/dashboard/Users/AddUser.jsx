@@ -17,27 +17,71 @@ function AddUser() {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [country, setCountry] = useState("");
     const [password, setPassword] = useState(""); 
+    const [repeat_password, setRepeat_password] = useState(""); 
     const [userRole, setUserRole] = useState(""); 
     const [roles, setRoles] = useState([]);
     const lang = Cookies.get('lang') || 'en';
+    const [error, setError] = useState(""); 
+  const [Chalets, setChalets] = useState([]);
+  const [selectedChalets, setSelectedChalets] = useState([]); // Track selected chalets
 
     const navigate = useNavigate();
 
+    // const handleAddUser = async (e) => {
+    //     e.preventDefault();
+
+    //     const userData = {
+    //         name,
+    //         email,
+    //         phone_number: phoneNumber,
+    //         country,
+    //         password,
+    //         lang,
+    //         user_type_id: userRole, 
+    //     };
+
+    //     try {
+    //         await axios.post(`${API_URL}/users/createUser`, userData);
+    //         Swal.fire({
+    //             title: "Success!",
+    //             text: "User added successfully.",
+    //             icon: "success",
+    //             confirmButtonText: "OK",
+    //         });
+    //         navigate("/dashboard/usersAdmin");
+    //     } catch (error) {
+    //         console.error(error);
+    //         Swal.fire({
+    //             title: "Error!",
+    //             text: "Failed to add user. Please try again.",
+    //             icon: "error",
+    //             confirmButtonText: "OK",
+    //         });
+    //     }
+    // };
     const handleAddUser = async (e) => {
         e.preventDefault();
-
+        if (password !== repeat_password) {
+            setError('Password do not match')
+            return;
+          }
+      
         const userData = {
             name,
             email,
             phone_number: phoneNumber,
             country,
             password,
+            repeat_password,
+            user_type_id: Number(userRole),
             lang,
-            user_type_id: userRole, 
         };
-
+          // Only add chalet_ids if userRole is "1"
+          if (Number(userRole) === 1) {
+            userData.chalet_ids = selectedChalets;
+        }     
         try {
-            await axios.post(`${API_URL}/users/createUser`, userData);
+            await axios.post(`${API_URL}/users/createAdmin`, userData);
             Swal.fire({
                 title: "Success!",
                 text: "User added successfully.",
@@ -47,22 +91,30 @@ function AddUser() {
             navigate("/dashboard/usersAdmin");
         } catch (error) {
             console.error(error);
+            const errorMessage=error.response?.data?.message || "Failed to add user. Please try again"
             Swal.fire({
                 title: "Error!",
-                text: "Failed to add user. Please try again.",
+                text: errorMessage,
                 icon: "error",
                 confirmButtonText: "OK",
             });
         }
     };
-
     const fetchRoles = useCallback(async () => {
       try {
-        const response = await axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`);
-        if (Array.isArray(response.data)) {
-          setRoles(response.data); 
+        const[responseUsersTypes,resChalets] = await Promise.all([
+            axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`),
+            axios.get(`${API_URL}/chalets/getchalets/${lang}`)
+        ])
+        if (Array.isArray(responseUsersTypes.data)) {
+          setRoles(responseUsersTypes.data); 
         } else {
           console.error("Error: Roles data is not in the expected format.");
+        }
+        if (Array.isArray(resChalets.data)) {
+            setChalets(resChalets.data); 
+        } else {
+            console.error("Error: Chalets data is not in the expected format.");
         }
       } catch (err) {
         console.error("Error fetching roles:", err);
@@ -136,7 +188,17 @@ function AddUser() {
                                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-
+                         <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                                {lang === 'ar' ? "تأكيد كلمة المرور" : "repeat password"}
+                            </Typography>
+                            <Input
+                                required
+                                size="lg"
+                                type="password"
+                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                onChange={(e) => setRepeat_password(e.target.value)}
+                            />
+                            {error && <p className="text-red-500">{error}</p>}
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                                 {lang === 'ar' ? "نوع المستخدم" : "User Type"}
                             </Typography>
@@ -158,6 +220,32 @@ function AddUser() {
       <option disabled>{lang === 'ar' ? "جارِ تحميل الأدوار..." : "Loading roles..."}</option>
     )}
 </select>
+{userRole === "1" && (
+  <div className="mt-4">
+    <label className="block text-lg font-semibold">
+      {lang === 'ar' ? "اختر الشاليهات" : "Select Chalets"}
+    </label>
+    <div className="grid grid-cols-2 gap-3 mt-2">
+      {Chalets.map((chalet) => (
+        <label key={chalet.id} className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            value={chalet.id}
+            checked={selectedChalets.includes(chalet.id)}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              setSelectedChalets((prev) =>
+                checked ? [...prev, chalet.id] : prev.filter((id) => id !== chalet.id)
+              );
+            }}
+            className="w-5 h-5 text-[#D87C55] border-gray-300 rounded focus:ring-[#D87C55]"
+          />
+          <span>{chalet.title}</span>
+        </label>
+      ))}
+    </div>
+  </div>
+)}
 
                         </div>
                     </div>

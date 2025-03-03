@@ -29,12 +29,12 @@ import UpdateStatusChalet from "./pages/dashboard/TimeAndStatus/UpdateStatusChal
 export const API_URL="https://rowqanbackend.rowqan.com";
 import axios from 'axios'
 import Messages from "./ChaletsOwners DashBoard/Messages";
-import UpdateUser from "./Admin DashBoard/UpdateUser";
+import UpdateUser from "./pages/dashboard/Users/UpdateUser";
 import AddUser from "./pages/dashboard/Users/AddUser";
 import AddRightTime from "./pages/dashboard/TimeAndStatus/AddRightTime";
 import UsersByChaletsMessages from "./ChaletsOwners DashBoard/UsersByChaletsMessages";
 import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
-import AddImagesInChalets from "./pages/dashboard/Chalets/AddImageInChalets";
+import CreateReservation from "./Admin DashBoard/CreateReservation";
 // export const API_URL="http://localhost:5000";
 
 function App() {
@@ -119,6 +119,8 @@ function App() {
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
 <Route path="usersbychaletsmessages/:chalet_id/messagebetweenusers/:user_id" element={<Messages />} />
 <Route path="usersbychaletsmessages/:chalet_id" element={<UsersByChaletsMessages />} />
+<Route path="createreservation/:id" element={<CreateReservation />} />
+
 
       </Route>
       <Route path="/auth/*" element={<Auth />} />

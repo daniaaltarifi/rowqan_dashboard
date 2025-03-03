@@ -25,3 +25,125 @@
 .table-container::-webkit-scrollbar-thumb:hover{
     background-color: #555; 
 }
+.cont_card_chalets {
+    box-shadow: 12px 12px 4px 0px #6da6ba;
+    margin-bottom: 5vh;
+    min-height:480px;
+    overflow: hidden;
+    border-radius: 15px;
+  }
+  .cont_card_chalets:hover{
+    box-shadow: 4px 4px 4px 0px #f2c79d;
+    transition: all ease-in-out 350ms;
+  }
+  .title_chalets {
+    text-align: center;
+    font-family: Merriweather;
+    font-size: 21.25px;
+    font-weight: 700;
+    line-height: 28.26px;
+  }
+
+  .text_card_det {
+    font-weight: 600;
+    color: #1c3988;
+  }
+ 
+  .chalets_btn {
+    width: 217px;
+    height: 55px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #6da6ba 0%, #afb7ab 50%, #f2c79d 100%);
+    border: none;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 16px;
+  }
+  .chalets_btn:hover {
+    box-shadow: 8px 8px 4px 0px #6da6ba;
+    transition: all ease-in-out 450ms;
+  }
+
+  
+  /* BOOKING CHALETS PAGE */
+
+  .plus-minus-container {
+    display: flex;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  }
+  
+  .plus-minus-button {
+    background: linear-gradient(90deg, #6DA6BA 0%, #B0B7AC 50%, #F2C79D 100%);
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .value {
+    font-size: 20px;
+    margin: 0 10px;
+    width: 50px;
+    text-align: center;
+  }
+  
+  
+  /* Chalets.css */
+  
+  /* General styles for mobile layout */
+
+  .type_chalets{
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  /* Media Query for Mobile Devices */
+
+.img_chalet{
+    height: 286px;
+    margin-bottom: 15px;
+
+}  
+.booknow_button_events {
+    height: 44px;
+    border-radius: 10px;
+    border: none;
+    z-index: 0;
+    width: 30%;
+    margin-top: 8px;
+    background: linear-gradient(90deg, #f2c79d 24.5%, #afb7ab 50%, #6da6ba 82%);
+  }
+  .booknow_button_events:hover {
+    transition: all ease-in-out 450ms;
+    box-shadow: 6px 4px 4px 0px #f2c79d;
+  }
+  @media (max-width: 992px) {
+    .imagegallery {
+      width: 100%;
+      max-width: 500px;
+      height: 400px;
+      display: grid;
+      grid-template-columns: auto auto;
+      border-radius: 5px;
+      overflow: hidden;
+    
+    }
+    /* Hide the Bootstrap layout on mobile */
+    .desktop_chalets_img {
+      display: none;
+    }
+    .box_Brief_characteristics{
+      min-height: auto;
+    }
+    .booknow_button_events{
+      font-size: 15px;
+      width: 100%;
+    }
+  }
+  

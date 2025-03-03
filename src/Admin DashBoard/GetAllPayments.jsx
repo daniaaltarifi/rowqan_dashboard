@@ -5,11 +5,23 @@ import Swal from "sweetalert2";
 import { Card, CardHeader, CardBody, Typography, Button } from "@material-tailwind/react";
 import Cookies from "js-cookie";
 import '../Styles/Chalets.css'
+import { TrashIcon } from "@heroicons/react/24/outline";
+import DeleteModule from "@/Components/DeleteModule";
 
 function GetAllPayments() {
   const [payments, setPayments] = useState([]);
   const lang = Cookies.get('lang') || 'en';
-
+ const [showModal, setShowModal] = useState(false);
+  const [paymentIdToDelete, setpaymentIdToDelete] = useState(null); 
+  const handleShow = (id) => {
+    setpaymentIdToDelete(id);  // Set the ID to delete (chalet or details)
+    setShowModal(true);  // Show the modal
+  };
+  
+  const handleClose = () => {
+    setShowModal(false);
+    setpaymentIdToDelete(null); // Reset the ID when closing
+  };
   const fetchPayments = async () => {
     try {
       const response = await axios.get(`${API_URL}/payments/getAllPayments`);
@@ -63,7 +75,14 @@ function GetAllPayments() {
   useEffect(() => {
     fetchPayments();
   }, []);
-
+  const handleDelete = async () => {  
+    try {
+        await axios.delete(`${API_URL}/payments/deletePayment/${paymentIdToDelete}`);
+        setPayments(payments.filter((payment) => payment.id !== paymentIdToDelete)); // Remove from list       
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className="mt-12 mb-8 flex flex-col gap-12">
@@ -110,6 +129,11 @@ function GetAllPayments() {
                   </th>
                   <th className="border-b border-blue-gray-50 py-3 px-5 ">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
+                      Invoice
+                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-50 py-3 px-5 ">
+                    <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       Status
                     </Typography>
                   </th>
@@ -121,6 +145,11 @@ function GetAllPayments() {
                   <th className="border-b border-blue-gray-50 py-3 px-5 ">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       Reservation Info
+                    </Typography>
+                  </th>
+                  <th className="border-b border-blue-gray-50 py-3 px-5 ">
+                    <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
+                     Delete Reservation
                     </Typography>
                   </th>
                 </tr>
@@ -165,6 +194,9 @@ function GetAllPayments() {
               <Typography className="text-xs font-normal text-blue-gray-500">
                 {payment.Reservations_Chalet?.Total_Amount}
               </Typography>
+            </td>
+            <td className={className}>
+              {payment.image  ? <img src={payment.image} onClick={() => window.open(payment.image, "_blank")}height={"500px"}width={"100px"}/> : null  }
             </td>
             <td className={className}>
               <Typography className="text-xs font-semibold text-blue-gray-600">
@@ -213,7 +245,13 @@ function GetAllPayments() {
                 <Typography className="text-xs font-normal text-blue-gray-500">No reservation</Typography>
               )}
             </td>
-            
+            <td >
+                <Button 
+                 onClick={() => handleShow(payment.id)}
+                 className="mb-3 text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500">
+                 <TrashIcon className="h-5 w-4 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
+                 </Button>
+            </td>
           </tr>
         );
       })
@@ -227,12 +265,18 @@ function GetAllPayments() {
                   </tr>
 
                 )}
-          
+         
               </tbody>
             </table>
           </CardBody>
         </Card>
       </div>
+      <DeleteModule 
+        showModal={showModal} 
+        handleClose={handleClose} 
+        handleDelete={handleDelete} 
+       id={paymentIdToDelete} // Pass the chalet ID to DeleteModule
+      />
     </>
   );
 }

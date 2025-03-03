@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react'
 import '../../../Styles/Chalets.css'
 import Cookies from 'js-cookie';
@@ -12,6 +11,7 @@ import { API_URL } from '@/App';
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import AddImagesInChalets from './AddImageInChalets';
+import TimeModule from '@/Components/TimeModule';
 
 function AddChalets() {
       const lang = Cookies.get('lang') || 'en';
@@ -37,6 +37,7 @@ function AddChalets() {
        const [isLoading, setIsLoading] = useState(false);
        const [isContImagesOpen, setIsContImagesOpen] = useState(false);
        const [chalet_id, setChalet_id] = useState("");
+       const [times, setTimes] = useState([]);
 
       const [mainInfoChalets, setMainInfoChalets] = useState({
         title: "",
@@ -164,7 +165,6 @@ function AddChalets() {
         setIsLoading(false);
         return;
       }
-    
       // Prepare Chalet Data
       const typeData = formDataState;
       const formData = new FormData();
@@ -180,7 +180,6 @@ function AddChalets() {
       formData.append("features", checkedFeatures);
       formData.append("Additional_features", checkedadditioanlFeatures);
       formData.append("type", JSON.stringify(typeData));
-    
       // Append time slots dynamically
       rightTimesData.forEach((timeSlot, index) => {
         formData.append(`rightTimesData[${index}][type_of_time]`, timeSlot.type_of_time);
@@ -203,13 +202,13 @@ function AddChalets() {
           }
         );
             const chalet_id = chaletResponse.data.chalet.id;
+            const rightTimes = chaletResponse.data.rightTimeDetails;
             setChalet_id(chalet_id);
+            setTimes(rightTimes)
             setIsContImagesOpen(true)
             setIsLoading(false)
-        // Now, add images for the newly created chalet
-        // await handleAddImagesInChalets(chalet_id); // Pass chalet_id to add images
-          // navigate("/dashboard/chalets");
-    window.scrollTo(0, 3050);
+               // navigate("/dashboard/chalets");
+            window.scrollTo(0, 3050);
       } catch (error) {
         console.error(error);
         Swal.fire({
@@ -245,6 +244,10 @@ function AddChalets() {
       updatedData[index][key] = value;
       setRightTimesData(updatedData);
     };
+    const removeTimeSlot = (index) => {
+      setRightTimesData((prevData) => prevData.filter((_, i) => i !== index));
+    };
+    
   return (
     <>
    <form onSubmit={handleAddChalet}>
@@ -279,9 +282,7 @@ function AddChalets() {
     </div>
   ))}
 </div>
-
 <hr />
-
 <p className="font-bold my-3">{lang === 'ar' ? 'عدد الحمامات' : 'Number of bathrooms'}</p>
 <div className="flex flex-wrap">
   {bathroomOptions.map((bathroom, index) => (
@@ -351,29 +352,6 @@ function AddChalets() {
         ))}
       </ul>
      <hr />
-    {/* <p className="font-bold mb-3">{labels.interface}</p>
-      <div className="flex flex-wrap">
-        {interfaceOptions.map((inter, index) => (
-          <div key={index} onChange={(e) => handleChange(e, "interface")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
-            <input
-              type="radio"
-              id={`interface-radio-${index}`}
-              value={inter}
-              name="interface-radio"  
-              checked={formDataState[labels.interface] === inter}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              htmlFor={`interface-radio-${index}`}
-              className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
-            >
-              {inter}
-            </label>
-          </div>
-        ))}
-      </div>
-      <hr /> */}
-
       {/* Building Area */}
       <p className="font-bold mb-3">{labels.building_area}</p>
       <div>
@@ -391,25 +369,16 @@ function AddChalets() {
 
       {/* Visitors Family Option */}
       <p className="font-bold mb-3">{labels.family}</p>
-      <div className="flex flex-wrap">
-        {familyoptions.map((family, index) => (
-          <div key={index} onChange={(e) => handleChange(e, "family")} className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700 mx-3 my-2 w-full sm:w-auto">
-            <input
-              type="radio"
-              id={`family-radio-${index}`}
-              value={family}
-              name="family-radio"  
-              checked={formDataState[labels.family] === family}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              htmlFor={`family-radio-${index}`}
-              className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 px-2"
-            >
-              {family}
-            </label>
-          </div>
-        ))}
+          <div>
+        <input
+          type="number"
+          value={formDataState[labels.family]}
+          onChange={(e) => handleChange(e, "family")}
+          id="family"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Number Of Vistors"
+          required
+        />
       </div>
       <hr />
 
@@ -493,11 +462,9 @@ function AddChalets() {
       </Form.Select>
     </div>
     <div className="big_container_chalets">
-    <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'الوقت' : 'Time'}</Typography>
-  {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
-   
+    <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'الوقت' : 'Time'}</Typography>   
   {rightTimesData.map((timeSlot, index) => (
-        <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
           <div>
             <select
               className="form-select"
@@ -507,7 +474,8 @@ function AddChalets() {
               <option value="">{lang === "ar" ? "اختر نوع الوقت" : "Select Type of Time"}</option>
               <option value="Morning">{lang === "ar" ? "صباحي" : "Morning"}</option>
               <option value="Evening">{lang === "ar" ? "مسائي" : "Evening"}</option>
-              <option value="Full Day">{lang === "ar" ? "كل اليوم" : "Full Day"}</option>
+              <option value="FullDayMorning">{lang === "ar" ? "كل اليوم صباحي" : "Full Day Morning"}</option>
+              <option value="FullDayEvening">{lang === "ar" ? "كل اليوم مسائي " : "Full Day Evening"}</option>
             </select>
           </div>
 
@@ -520,7 +488,6 @@ function AddChalets() {
               onChange={(e) => updateTimeSlot(index, "from_time", e.target.value)}
             />
           </div>
-
           <div>
             <label>To Time</label>
             <input
@@ -532,7 +499,7 @@ function AddChalets() {
           </div>
 
           <div>
-           <input value={timeSlot.price} onChange={(e) => updateTimeSlot(index, "price", e.target.value)}type="number" id="Price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Price" required />
+           <input value={timeSlot.price} onChange={(e) => updateTimeSlot(index, "price", e.target.value)}type="number" id="Price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Price"required  />
           </div>
               <div className="flex items-center mb-4">
     <input onClick={()=>{setHaveOffer(!haveOffer)}} id="default-checkbox" type="checkbox" value="" className=" mx-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
@@ -543,7 +510,15 @@ function AddChalets() {
         <input type="number"  value={timeSlot.After_Offer} onChange={(e) => updateTimeSlot(index, "After_Offer", e.target.value)}id="after offer" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="After Offer" />
     </div>
     )}
-
+     {/* Remove Button */}
+     <button
+      type="button"
+      className="bg-red-500 text-white p-2 rounded "
+      onClick={() => removeTimeSlot(index)}
+      style={{width:"13vh"}}
+    >
+      {lang === "ar" ? "إزالة" : "Remove"}
+    </button>
           </div>
       ))}
 
@@ -554,7 +529,7 @@ function AddChalets() {
       >
         {lang === "ar" ? "إضافة وقت آخر" : "Add Another Time"}
       </button>
-   {/* </div> */}
+     
    </div>
    <div className="big_container_chalets">
     <Typography variant="h4" className="font-bold mb-4">{lang=== 'ar' ? 'التفاصيل' : 'Details'}</Typography>
@@ -611,12 +586,15 @@ function AddChalets() {
     lang === 'ar' ? 'حفظ' : 'Submit'
   )}
 </button>
-    {isContImagesOpen && (
-      <AddImagesInChalets chalet_id={chalet_id}/>
-    )}
-  
    </div>
    </form>
+   {isContImagesOpen && (
+      <>
+      <TimeModule chalet_id={chalet_id} times={times}/>
+      <AddImagesInChalets chalet_id={chalet_id}/>
+      </>
+
+    )}
     </>
 
   )

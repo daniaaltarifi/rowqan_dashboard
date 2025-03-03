@@ -13,7 +13,7 @@ function UpdateRightTime() {
         from_time:"",
         to_time:"",
         price:"",
-        After_Offer:""
+        After_Offer:"",
     });
     const navigate = useNavigate();
     const { chalet_id,time_id } = useParams();
@@ -40,7 +40,7 @@ function UpdateRightTime() {
         e.preventDefault();
         try {
             await axios.put(`${API_URL}/RightTimes/updaterighttime/${time_id}`, 
-                 { "type_of_time":updateRightTime.type_of_time,"from_time":updateRightTime.from_time,"to_time":updateRightTime.to_time,"price":updateRightTime.price,"After_Offer":updateRightTime.After_Offer, lang,chalet_id },  // Correctly format the payload
+                 { "type_of_time":updateRightTime.type_of_time,"from_time":updateRightTime.from_time,"to_time":updateRightTime.to_time,"price":updateRightTime.price,"After_Offer":updateRightTime.After_Offer, lang,chalet_id},  // Correctly format the payload
                 {
                     headers: {
                         "Content-Type": "application/json", // Correct Content-Type for JSON data
@@ -82,14 +82,6 @@ function UpdateRightTime() {
                     <div className="grid grid-cols-1 gap-6 ">
                         <div className="flex flex-col">
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "الوقت" :"type_of_time"}</Typography>
-                            {/* <Input
-                                size="lg"
-                                name='type_of_time'
-                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                                value={updateRightTime.type_of_time}
-                                onChange={handleChange}
-                                required
-                            />  */}
                              <Form.Select 
               className="form-select "style={{height: '40px'}}
               name='type_of_time'
@@ -98,8 +90,9 @@ function UpdateRightTime() {
               <option value="">{lang === "ar" ? "اختر نوع الوقت" : "Select Type of Time"}</option>
               <option value="Morning">{lang === "ar" ? "صباحي" : "Morning"}</option>
               <option value="Evening">{lang === "ar" ? "مسائي" : "Evening"}</option>
-              <option value="Full Day">{lang === "ar" ? "كل اليوم" : "Full Day"}</option>
-            </Form.Select>
+              <option value="FullDayMorning">{lang === "ar" ? "كل اليوم صباحي" : "Full Day Morning"}</option>
+              <option value="FullDayEvening">{lang === "ar" ? "كل اليوم مسائي " : "Full Day Evening"}</option>  
+                          </Form.Select>
                         </div>
                         <div className="flex flex-col">
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">{lang ==='ar'? "من الوقت" :"from_time"}</Typography>
@@ -149,6 +142,7 @@ function UpdateRightTime() {
                                 
                             /> 
                         </div>
+                       
                     </div>
                     <Button type="submit" className="mt-6" fullWidth>
                     {lang ==='ar'? "تعديل " :"Update "}                    </Button>

@@ -235,7 +235,7 @@ export function SignIn({ setIsAuthenticated }) {
               className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
             />
             <Button onClick={handleSubmit} className="mt-4" fullWidth style={{backgroundColor:"#6DA6BA"}}>
-              {lang === 'ar' ? 'تسجيل الدخول' : 'SGIN-IN'}
+              {lang === 'ar' ? 'تسجيل الدخول' : 'SIGN-IN'}
             </Button>
           </div>
         )}

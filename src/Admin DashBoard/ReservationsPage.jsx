@@ -10,11 +10,24 @@ import {
 } from "@material-tailwind/react";
 import { API_URL } from "../App";
 import '../Styles/Chalets.css'
+import { TrashIcon} from "@heroicons/react/24/outline";
+import DeleteModule from "@/Components/DeleteModule";
 
 function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [lang] = useState("en");
-
+  const [reservationIdToDelete, setreservationIdToDelete] = useState(null); // Store the ID of the slide to delete
+    const [showModal, setShowModal] = useState(false);
+  
+  const handleShow = (id) => {
+    setreservationIdToDelete(id);  // Set the ID to delete (chalet or details)
+    setShowModal(true);  // Show the modal
+  };
+  
+  const handleClose = () => {
+    setShowModal(false);
+    setreservationIdToDelete(null); // Reset the ID when closing
+  };
   const fetchReservations = async () => {
     try {
       const response = await axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`);
@@ -28,7 +41,14 @@ function ReservationsPage() {
   useEffect(() => {
     fetchReservations();
   }, []);
-
+  const handleDelete = async () => {  
+    try {
+        await axios.delete(`${API_URL}/ReservationsChalets/reservations/${reservationIdToDelete}`);
+        setReservations(reservations.filter((reservation) => reservation.id !== reservationIdToDelete)); // Remove from list       
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -81,6 +101,17 @@ function ReservationsPage() {
         <td className={className}>
           <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.reservation_type}</Typography>
         </td>
+        {reservation.user && reservation.user.user_type_id === 1 ? (
+         <td className={className}>
+         <Button 
+            onClick={() => handleShow(reservation.id)} // Pass 'chalet' type
+           className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500">
+           <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
+           </Button> 
+           </td>
+        ) : (
+          null
+        )}
        
       </tr>
     );
@@ -99,6 +130,12 @@ function ReservationsPage() {
           </table>
         </CardBody>
       </Card>
+      <DeleteModule 
+        showModal={showModal} 
+        handleClose={handleClose} 
+        handleDelete={handleDelete} 
+       id={reservationIdToDelete} // Pass the chalet ID to DeleteModule
+      />
     </div>
   );
 }

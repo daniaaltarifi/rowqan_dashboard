@@ -19,6 +19,7 @@ import MessagesChaletOwners from "./ChaletsOwners DashBoard/MessagesChaletOwners
 import ContactUsPage from "./Admin DashBoard/ContactUsPage";
 import ReservationsPage from "./Admin DashBoard/ReservationsPage";
 import GetAllPayments from "./Admin DashBoard/GetAllPayments";
+import ReserveChalet from "./Admin DashBoard/ReserveChalet";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -62,18 +63,36 @@ export const useRoutes = () => {
                 path: "/chalets",
                 element: <Chalets />,
               },  
+              {
+                icon: <StopCircleIcon  {...icon} />,
+                name: lang === "ar" ? "الحجوزات" : "Reservations",
+                path: "/reservations",
+                element: <ReservationsPage />,
+              },
+              {
+                icon: <StopCircleIcon  {...icon} />,
+                name: lang === "ar" ? "المدفوعات" : "Payments",
+                path: "/GetAllPayments",
+                element: <GetAllPayments />,
+              },
+              {
+                icon: <StopCircleIcon  {...icon} />,
+                name: lang === "ar" ? "احجز الان" : "Reserve Now",
+                path: "/reservechalet",
+                element: <ReserveChalet />,
+              },
               // {
               //   icon: <PhotoIcon {...icon} />,
               //   name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
               //   path: "/propertieschalets",
               //   element: <Properties />,
               // },
-              {
-                icon: <TagIcon {...icon} />,
-                name: lang === "ar" ? "مالكي الشاليهات" : "Chalets Owners",
-                path: "/ChaletsOwners",
-                element: <ChaletsOwnersPage />,
-              },
+              // {
+              //   icon: <TagIcon {...icon} />,
+              //   name: lang === "ar" ? "مالكي الشاليهات" : "Chalets Owners",
+              //   path: "/ChaletsOwners",
+              //   element: <ChaletsOwnersPage />,
+              // },
               {
                 icon: <EnvelopeIcon  {...icon} />,
                 name: lang === "ar" ? "الرسائل" : "Messages",
@@ -86,19 +105,19 @@ export const useRoutes = () => {
                 path: "/usersAdmin",
                 element: <Users />,
               },
-
-              {
-                icon: <ClockIcon {...icon} />,
-                name: lang === "ar" ? "التواصل" : "Status",
-                path: "/status",
-                element: <RightTimeChalets />,
-              },
               {
                 icon: <Cog6ToothIcon  {...icon} />,
                 name: lang === "ar" ? "الاعدادات" : "Setting",
                 path: "/setting",
                 element: <Abouts />,
               },
+              {
+                icon: <ClockIcon {...icon} />,
+                name: lang === "ar" ? "التواصل" : "Status",
+                path: "/status",
+                element: <RightTimeChalets />,
+              },
+              
               {
                 icon: <ArrowUpCircleIcon  {...icon} />,
                 name: lang === "ar" ? "اعلى الصفحة" : "Header",
@@ -124,18 +143,7 @@ export const useRoutes = () => {
                 path: "/contactUs",
                 element: <ContactUsPage />,
               },
-              {
-                icon: <StopCircleIcon  {...icon} />,
-                name: lang === "ar" ? "الحجوزات" : "Reservations",
-                path: "/reservations",
-                element: <ReservationsPage />,
-              },
-              {
-                icon: <StopCircleIcon  {...icon} />,
-                name: lang === "ar" ? "المدفوعات" : "Payments",
-                path: "/GetAllPayments",
-                element: <GetAllPayments />,
-              },
+              
             ]
           : []),
         ...(userRole === "4"
@@ -173,40 +181,89 @@ export const useRoutes = () => {
             ]
           : []),
         ...(userRole === "5"
-          ? [
-              {
-                icon: <HomeIcon {...icon} />,
-                name: lang === "ar" ? "الرئيسية" : "Home",
-                path: "/home",
-                element: <Home />,
-              },
-              // {
-              //   icon: <PhotoIcon {...icon} />,
-              //   name:lang ==='ar'? "خصائص الشاليهات" : "Properties Chalets",
-              //   path: "/propertieschalets",
-              //   element: <Properties />,
-              // },
-              {
-                icon: <PhotoIcon {...icon} />,
-                name:lang ==='ar'? "الشاليهات" : "Chalets",
-                path: "/chalets",
-                element: <Chalets />,
-              },  {
-                icon: <TagIcon {...icon} />,
-
-                name: lang === "ar"
-                 ? "صفحة المسؤول الرئيسية"
-                  : "Chalets Owners",
-                path: "/ChaletOwnersPage",
-                element: <ChaletsOwnersPage />,
-              },
-              {
-                icon: <UsersIcon {...icon} />,
-                name: lang === "ar" ? "صفحة المستخدمين" : "Users",
-                path: "/usersSuperAdmin",
-                element: <Users />,
-              },
-            ]
+          ?  [
+            {
+              icon: <HomeIcon {...icon} />,
+              name: lang === "ar" ? "الرئيسية" : "Home",
+              path: "/home",
+              element: <Home />,
+            },
+            {
+              icon: <PhotoIcon {...icon} />,
+              name:lang ==='ar'? "الشاليهات" : "Chalets",
+              path: "/chalets",
+              element: <Chalets />,
+            },  
+            {
+              icon: <StopCircleIcon  {...icon} />,
+              name: lang === "ar" ? "الحجوزات" : "Reservations",
+              path: "/reservations",
+              element: <ReservationsPage />,
+            },
+            {
+              icon: <StopCircleIcon  {...icon} />,
+              name: lang === "ar" ? "المدفوعات" : "Payments",
+              path: "/GetAllPayments",
+              element: <GetAllPayments />,
+            },
+            {
+              icon: <StopCircleIcon  {...icon} />,
+              name: lang === "ar" ? "احجز الان" : "Reserve Now",
+              path: "/reservechalet",
+              element: <ReserveChalet />,
+            },
+            {
+              icon: <EnvelopeIcon  {...icon} />,
+              name: lang === "ar" ? "الرسائل" : "Messages",
+              path: "/messages",
+              element: <MessagesChaletOwners />,
+            },
+            {
+              icon: <UsersIcon {...icon} />,
+              name: lang === "ar" ? "صفحة المستخدمين" : "Users",
+              path: "/usersAdmin",
+              element: <Users />,
+            },
+            {
+              icon: <Cog6ToothIcon  {...icon} />,
+              name: lang === "ar" ? "الاعدادات" : "Setting",
+              path: "/setting",
+              element: <Abouts />,
+            },
+            {
+              icon: <ClockIcon {...icon} />,
+              name: lang === "ar" ? "التواصل" : "Status",
+              path: "/status",
+              element: <RightTimeChalets />,
+            },
+            
+            {
+              icon: <ArrowUpCircleIcon  {...icon} />,
+              name: lang === "ar" ? "اعلى الصفحة" : "Header",
+              path: "/header",
+              element: <Header />,
+            },
+            {
+              icon: <ArrowDownCircleIcon {...icon} />,
+              name: lang === "ar" ? "أسفل الصفحة" : "Footer",
+              path: "/footer",
+              element: <FooterData />,
+            },
+           
+            {
+              icon: <ChatBubbleOvalLeftEllipsisIcon  {...icon} />,
+              name: lang === "ar" ? "التواصل" : "Contact",
+              path: "/contact",
+              element: <Contact />,
+            },
+            {
+              icon: <ChatBubbleOvalLeftEllipsisIcon  {...icon} />,
+              name: lang === "ar" ? "التواصل" : "Contact Us",
+              path: "/contactUs",
+              element: <ContactUsPage />,
+            },
+            
+          ]
           : []),
       ],
     },

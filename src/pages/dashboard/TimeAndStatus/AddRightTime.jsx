@@ -78,7 +78,8 @@ function AddRightTime() {
               <option value="">{lang === "ar" ? "اختر نوع الوقت" : "Select Type of Time"}</option>
               <option value="Morning">{lang === "ar" ? "صباحي" : "Morning"}</option>
               <option value="Evening">{lang === "ar" ? "مسائي" : "Evening"}</option>
-              <option value="Full Day">{lang === "ar" ? "كل اليوم" : "Full Day"}</option>
+              <option value="FullDayMorning">{lang === "ar" ? "كل اليوم صباحي" : "Full Day Morning"}</option>
+              <option value="FullDayEvening">{lang === "ar" ? "كل اليوم مسائي " : "Full Day Evening"}</option>
             </Form.Select>
               <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                 {lang === 'ar' ? "من الساعة" : "From Time"}
@@ -122,6 +123,7 @@ function AddRightTime() {
                 className="!border-t-blue-gray-200 focus:!border-t-gray-900"
                 onChange={(e) => setAfterOffer(e.target.value)}
               />
+             
             </div>
           </div>
 

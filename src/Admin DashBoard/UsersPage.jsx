@@ -15,6 +15,7 @@ import {
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
 import '../Styles/Chalets.css'
+import DeleteModule from "@/Components/DeleteModule.jsx";
 
 function Users() {
     const navigate = useNavigate();
@@ -42,11 +43,11 @@ function Users() {
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async () => {
         try {
           
-          await axios.delete(`${API_URL}/users/DeleteUser/${id}/${lang}`);
-        setusers(users.filter((chalet) => chalet.id !== userIdToDelete));
+          await axios.delete(`${API_URL}/users/DeleteUser/${userIdToDelete}/${lang}`);
+        setusers(users.filter((user) => user.id !== userIdToDelete));
         Swal.fire({
                  title: "Success!",
                  text: "user deleted successful.",
@@ -97,7 +98,7 @@ function Users() {
                                     {[`${lang === 'ar' ? "الاسم الكامل" : "Full Name "}`,
                                     `${lang === 'ar' ? "البريد الالكتروني" : "Email "}`,
                                     `${lang === 'ar' ? "الصلاحية" : "Role"}`,
-                                    `${lang === 'ar' ? "الرصيد" : "Balance"}`,
+                                    `${lang === 'ar' ? "المدينة" : "Country"}`,
                                     `${lang === 'ar' ? "تنفيذ" : "Action"}`].map((el) => (
                                         <th key={el} className="border-b border-blue-gray-50 py-3 px-5 ">
                                             <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
@@ -128,7 +129,7 @@ function Users() {
                                             </td>
                                             <td className={className}>
                                                 <Typography className="text-xs font-normal text-blue-gray-500">
-                                                    {user.phone_number}
+                                                {user.Users_Type?.type}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
@@ -139,7 +140,7 @@ function Users() {
                                             <td className={className}>
                                             <div className="flex space-x-4 rtl:space-x-reverse">
     <Button
-        onClick={() => handleDelete(user.id)}
+          onClick={() => handleShow(user.id)}
         className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
     >
         <TrashIcon className="h-5 w-5 mr-1" />
@@ -165,7 +166,12 @@ function Users() {
                 </Card>
             </div>
 
-
+            <DeleteModule 
+        showModal={showModal} 
+        handleClose={handleClose} 
+        handleDelete={handleDelete} 
+       id={userIdToDelete} // Pass the chalet ID to DeleteModule
+      />
         </>
     );
 }

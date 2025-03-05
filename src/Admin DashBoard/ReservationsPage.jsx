@@ -12,10 +12,11 @@ import { API_URL } from "../App";
 import '../Styles/Chalets.css'
 import { TrashIcon} from "@heroicons/react/24/outline";
 import DeleteModule from "@/Components/DeleteModule";
+import Cookies from "js-cookie";
 
 function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
-  const [lang] = useState("en");
+  const lang = Cookies.get('lang') || 'en';
   const [reservationIdToDelete, setreservationIdToDelete] = useState(null); // Store the ID of the slide to delete
     const [showModal, setShowModal] = useState(false);
   
@@ -43,7 +44,7 @@ function ReservationsPage() {
   }, []);
   const handleDelete = async () => {  
     try {
-        await axios.delete(`${API_URL}/ReservationsChalets/reservations/${reservationIdToDelete}`);
+        await axios.delete(`${API_URL}/ReservationsChalets/reservations/${reservationIdToDelete}/${lang}`);
         setReservations(reservations.filter((reservation) => reservation.id !== reservationIdToDelete)); // Remove from list       
     } catch (error) {
       console.error(error);

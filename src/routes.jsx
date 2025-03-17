@@ -111,39 +111,7 @@ export const useRoutes = () => {
                 path: "/setting",
                 element: <Abouts />,
               },
-              {
-                icon: <ClockIcon {...icon} />,
-                name: lang === "ar" ? "التواصل" : "Status",
-                path: "/status",
-                element: <RightTimeChalets />,
-              },
-              
-              {
-                icon: <ArrowUpCircleIcon  {...icon} />,
-                name: lang === "ar" ? "اعلى الصفحة" : "Header",
-                path: "/header",
-                element: <Header />,
-              },
-              {
-                icon: <ArrowDownCircleIcon {...icon} />,
-                name: lang === "ar" ? "أسفل الصفحة" : "Footer",
-                path: "/footer",
-                element: <FooterData />,
-              },
-             
-              {
-                icon: <ChatBubbleOvalLeftEllipsisIcon  {...icon} />,
-                name: lang === "ar" ? "التواصل" : "Contact",
-                path: "/contact",
-                element: <Contact />,
-              },
-              {
-                icon: <ChatBubbleOvalLeftEllipsisIcon  {...icon} />,
-                name: lang === "ar" ? "التواصل" : "Contact Us",
-                path: "/contactUs",
-                element: <ContactUsPage />,
-              },
-              
+            
             ]
           : []),
         ...(userRole === "4"

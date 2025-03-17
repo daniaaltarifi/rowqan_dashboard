@@ -30,21 +30,17 @@ function UpdateUser() {
     const handleUpdateUser = async (e) => {
         e.preventDefault();
 
+        // بناء الكائن المستخدم للتحديث
         const userData = {
             name,
             email,
             phone_number: phoneNumber,
             country,
-            password,
             lang,
             user_id:id,
             user_type_id: userRole, 
         };
-       // Only add chalet_ids if userRole is "1"
-        if (Number(userRole) === 1) {
-        userData.chalet_ids = selectedChalets;
-         }
-         console.log("userdata: " , userData)
+
         try {
             await axios.put(`${API_URL}/users/updateUser/${id}`, userData);  
             Swal.fire({

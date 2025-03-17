@@ -38,6 +38,47 @@ function ReservationsPage() {
     }
   };
 
+  const handleUpdateStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending"; // التبديل بين الحالة الحالية والحالة الجديدة
+
+    const result = await Swal.fire({
+      title: lang === "ar" ? "هل أنت متأكد من تحديث الحالة؟" : "Are you sure to update the status?",
+      text: lang === "ar" ? "ستتم تحديث الحالة لهذا الحجز." : "The status for this reservation will be updated.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: lang === "ar" ? "نعم، تحديث الحالة!" : "Yes, update the status!",
+      cancelButtonText: lang === "ar" ? "إلغاء" : "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      try {
+       
+        await axios.put(`${API_URL}/ReservationsChalets/updateReservations/${id}`, {
+          status: newStatus,
+        });
+
+        
+        setReservations(reservations.map((reservation) => 
+          reservation.id === id ? { ...reservation, status: newStatus } : reservation
+        ));
+
+        Swal.fire(
+          lang === "ar" ? "تم التحديث!" : "Updated!",
+          lang === "ar" ? "تم تحديث الحالة بنجاح." : "The status has been updated successfully.",
+          "success"
+        );
+      } catch (error) {
+        console.error("Error updating status:", error);
+        Swal.fire(
+          lang === "ar" ? "خطأ!" : "Error!",
+          lang === "ar" ? "حدث خطأ أثناء محاولة تحديث الحالة." : "An error occurred while trying to update the status.",
+          "error"
+        );
+      }
+    }
+  };
 
   useEffect(() => {
     fetchReservations();

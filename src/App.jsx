@@ -35,6 +35,7 @@ import AddRightTime from "./pages/dashboard/TimeAndStatus/AddRightTime";
 import UsersByChaletsMessages from "./ChaletsOwners DashBoard/UsersByChaletsMessages";
 import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
 import CreateReservation from "./Admin DashBoard/CreateReservation";
+import Payment from "./Admin DashBoard/Payment";
 // export const API_URL="http://localhost:5000";
 
 function App() {
@@ -89,10 +90,13 @@ function App() {
     <Routes>
       <Route path="/dashboard/*" element={
         isAuthenticated ? <Dashboard /> : <Navigate to="/auth/sign-in" replace />
+        
       }> 
         <Route path="updatesocial/:id" element={<UpdateSocial />} />
         <Route path="addheader" element={<AddHeader />} />
         <Route path="updateheader/:id" element={<UpdateHeader />} />
+        
+       
         {/* <Route path="dashboard/abouts" element={<Abouts />} /> */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />

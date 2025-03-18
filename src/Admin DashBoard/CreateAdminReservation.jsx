@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// import "../Css/Lands.css";
 import { Container } from "react-bootstrap";
 import info from "../Images/info.png";
 import dollar from "../Images/dollars.png";
@@ -10,23 +11,26 @@ import axios from "axios";
 import { API_URL } from "../App";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ModelAlert from "../Components/ModelAlert.jsx";
+// import { useUser } from "../Component/UserContext";
 import SelectTime from "./SelectTime.jsx";
 import CalendarChalets from "./CalendarChalets.jsx";
 import WeeklyMonthlyCalendar from "../Admin DashBoard/WeeklyMonthlyCalendar";
 import "../Styles/Chalets.css";
 import Cookies from "js-cookie";
-
-const ReserveChalets = () => {
+// import "../Css/Events.css";
+const CreateAdminReservation = () => {
+//   const { userId } = useUser();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const lang = Cookies.get('lang') || 'en';
   const { priceTime, timeId } = location.state || {};
-  const [numberOfFamilies, setNumberOfFamilies] = useState(null);
+  const [numberOfFamilies, setNumberOfFamilies] = useState(null); // State to store the number of families
   const [timeIdDaily, setTimeIdDaily] = useState(null);
   const [timePriceDaily, setTimePriceDaily] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Convert the stored value to a number, or use 0 if it's null or not a valid number
   const storedPrice = Number(localStorage.getItem("price")) || 0;
   const intial_Amount = Number(localStorage.getItem("intial_Amount")) || 0;
 
@@ -40,44 +44,46 @@ const ReserveChalets = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [typeOfReseravtion, setTypeOfReservation] = useState("Daily");
-  const [isReservationTypeChanged, setIsReservationTypeChanged] = useState(false);
+  const [isReservationTypeChanged, setIsReservationTypeChanged] =
+    useState(false); // New state
   const [lastFinalPrice, setLastFinalPrice] = useState("");
-  const receiverId = Cookies.get("receiverId");
+  const receiverId=Cookies.get("receiverId")
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setNumberOfFamilies(localStorage.getItem("Number of Visitors"));
   }, []);
 
+  // Helper functions
   const updateState = (stateSetter, currentValue, increment = true) => {
     stateSetter(increment ? currentValue + 1 : Math.max(0, currentValue - 1));
   };
-
   const handleTypeOfReservationChange = (e) => {
     const selectedType = e.target.value;
     setTypeOfReservation(selectedType);
+    // Reset related states and mark type as changed
     setNumberOfDaysValue(0);
     setAdditionalVisitorsValue(0);
     setTimePriceDaily(null);
-    setIsReservationTypeChanged(true);
+    setIsReservationTypeChanged(true); // Mark reservation type as changed
   };
 
   const calculatePrice = () => {
-    const additionalCost = number_of_daysValue * 20;
-    const visitorsCost = additional_visitorsValue * 10;
+    const additionalCost = number_of_daysValue * 20; // 20 JD per day
+    const visitorsCost = additional_visitorsValue * 10; // 10 JD per additional visitor
     const priceBerTime = timePriceDaily || priceTime;
-    
+    // If the reservation type was recently changed, reset to storedPrice
     if (isReservationTypeChanged) {
-      setIsReservationTypeChanged(false);
+      setIsReservationTypeChanged(false); // Reset the flag
       return storedPrice;
     }
-    
+    // Use priceBerTime if it exists, otherwise use storedPrice
     const basePrice = priceBerTime ?? storedPrice;
+
     const totalAmount = basePrice + additionalCost + visitorsCost;
     setLastFinalPrice(totalAmount);
     return totalAmount;
   };
-
   useEffect(() => {
     calculatePrice();
   }, [
@@ -88,21 +94,23 @@ const ReserveChalets = () => {
     storedPrice,
     isReservationTypeChanged,
   ]);
-
   const handleConfirmReservation = async () => {
     if (!selectedDate || !lang || !id) {
       setError("Please make sure you have selected a Date and Time.");
+      setIsLoading(false);
       return;
     }
+    setIsLoading(true);
 
-    // Check for weekly or monthly reservation types
-    if ((typeOfReseravtion === "Weekly" || typeOfReseravtion === "Monthly") && !endDate) {
-      setError("Please select an End Date for Weekly or Monthly reservations.");
-      return;
-    }
-
-    const formattedStartDate = new Date(selectedDate).toLocaleDateString("en-CA");
-    const formattedEndDate = endDate ? new Date(endDate).toLocaleDateString("en-CA") : null;
+   if ((typeOfReseravtion === "Weekly" || typeOfReseravtion === "Monthly") && !endDate) {
+    setError("Please select an End Date for Weekly or Monthly reservations.");
+    setIsLoading(false);
+    return;
+  }
+    const formattedStartDate = new Date(selectedDate).toLocaleDateString(
+      "en-CA"
+    );
+    const formattedEndDate = new Date(endDate).toLocaleDateString("en-CA");
 
     const reservationData = {
       start_date: formattedStartDate,
@@ -115,32 +123,31 @@ const ReserveChalets = () => {
       chalet_id: id,
       right_time_id: timeIdDaily || timeId,
       total_amount: lastFinalPrice,
-      Status: "Pending" 
+      Status:"Confirmed"
+      
     };
 
     try {
-      setIsLoading(true);
       const res = await axios.post(
         `${API_URL}/ReservationsChalets/createReservationChalet`,
         reservationData
       );
-      
-
-      console.log("Reservation created with ID:", res.data.id);
-      const reservation_id = res.data.reservation.id;
-      const total_amount = res.data.reservation.total_amount;
-      navigate(`/dashboard/payment/${res.data.reservation.id}`, {
-        state: {
-          totalAmount: lastFinalPrice,
-          reservationType: typeOfReseravtion,
-          chaletId: id
-        }
-      });
+      setModalTitle("Successful Reservation");
+      setModalMessage("Reservation created successfully");
+      setShowModal(true);
+      setTimeout(
+        () =>
+          navigate(
+            `/dashboard/reservechalet`
+          ),
+        2000
+      );
+    setIsLoading(false);
     } catch (error) {
       const errorMessage =
         error.response && error.response.data && error.response.data.error
           ? error.response.data.error
-          : "Failed to create reservation. Please try again later.";
+          : "Failed to confirm reservation. Please try again later.";
 
       setModalTitle("Error");
       setModalMessage(errorMessage);
@@ -148,10 +155,12 @@ const ReserveChalets = () => {
       setIsLoading(false);
     }
   };
-
   const toggleDropdown = () => {
-    setIsOpen(true);
-    setError("");
+    setIsOpen(() => {
+      const newIsOpen = true;
+      return newIsOpen;
+    });
+    setError(""); 
   };
 
   return (
@@ -194,6 +203,7 @@ const ReserveChalets = () => {
       <Container className="mt-5 flex flex-col justify-center items-center">
         <h6 className="py-2 flex">
           <img src={info} alt="info" height={"30px"} width={"30px"} />
+
           {lang === "ar"
             ? ` عدد الزائرين لهذا الشاليه ${numberOfFamilies} زوار `
             : ` The number of visitors to the chalet reaches ${numberOfFamilies} visitors`}
@@ -251,7 +261,6 @@ const ReserveChalets = () => {
         <button
           className="booknow_button_events w-100 my-5"
           onClick={handleConfirmReservation}
-          disabled={isLoading}
         >
           {isLoading ? (
             <div className="flex justify-center items-center space-x-2">
@@ -276,4 +285,4 @@ const ReserveChalets = () => {
   );
 };
 
-export default ReserveChalets;
+export default CreateAdminReservation;

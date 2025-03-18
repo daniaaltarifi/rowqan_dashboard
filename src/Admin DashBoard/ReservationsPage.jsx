@@ -17,29 +17,31 @@ import Cookies from "js-cookie";
 function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const lang = Cookies.get('lang') || 'en';
-  const [reservationIdToDelete, setreservationIdToDelete] = useState(null); // Store the ID of the slide to delete
-    const [showModal, setShowModal] = useState(false);
+  const [reservationIdToDelete, setreservationIdToDelete] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   
   const handleShow = (id) => {
-    setreservationIdToDelete(id);  // Set the ID to delete (chalet or details)
-    setShowModal(true);  // Show the modal
+    setreservationIdToDelete(id);  
+    setShowModal(true);  
   };
   
   const handleClose = () => {
     setShowModal(false);
-    setreservationIdToDelete(null); // Reset the ID when closing
+    setreservationIdToDelete(null);
   };
+
   const fetchReservations = async () => {
     try {
       const response = await axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`);
-      setReservations(response.data);
+      const sortedReservations = response.data.sort((a, b) => b.id - a.id);
+      setReservations(sortedReservations);
     } catch (error) {
       console.error("Error fetching reservations:", error);
     }
   };
 
   const handleUpdateStatus = async (id, currentStatus) => {
-    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending"; // التبديل بين الحالة الحالية والحالة الجديدة
+    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending"; 
 
     const result = await Swal.fire({
       title: lang === "ar" ? "هل أنت متأكد من تحديث الحالة؟" : "Are you sure to update the status?",
@@ -54,11 +56,9 @@ function ReservationsPage() {
 
     if (result.isConfirmed) {
       try {
-       
         await axios.put(`${API_URL}/ReservationsChalets/updateReservations/${id}`, {
           status: newStatus,
         });
-
         
         setReservations(reservations.map((reservation) => 
           reservation.id === id ? { ...reservation, status: newStatus } : reservation
@@ -83,14 +83,22 @@ function ReservationsPage() {
   useEffect(() => {
     fetchReservations();
   }, []);
+
   const handleDelete = async () => {  
     try {
         await axios.delete(`${API_URL}/ReservationsChalets/reservations/${reservationIdToDelete}/${lang}`);
-        setReservations(reservations.filter((reservation) => reservation.id !== reservationIdToDelete)); // Remove from list       
+        setReservations(reservations.filter((reservation) => reservation.id !== reservationIdToDelete)); 
     } catch (error) {
       console.error(error);
     }
   };
+
+ 
+  const tableHeaders = ["ID", `User`, "Chalet Title", "time", "starting_price", "Total Amount", "Start Date", "reservation_type"];
+  if (reservations.some(res => res.user && res.user.user_type_id === 1)) {
+    tableHeaders.push(lang === "ar" ? "حذف الحجز للمسؤولين" : "Delete Reservation For Admins");
+  }
+
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -103,7 +111,7 @@ function ReservationsPage() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["#",`User`,"Chalet Title","time", "starting_price", "Total Amount", "Start Date", "reservation_type"].map((el) => (
+                {tableHeaders.map((el) => (
                   <th key={el} className="border-b border-blue-gray-50 py-3 px-5">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       {el}
@@ -114,60 +122,63 @@ function ReservationsPage() {
             </thead>
             <tbody>
               {reservations.length > 0 ? (
-  reservations.map((reservation, index) => {
-    const className = `py-3 px-5 ${index === reservations.length - 1 ? "" : "border-b border-blue-gray-50"}`;
-    return (
-      <tr key={reservation.id}>
-         <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.id}</Typography>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.user ? `${reservation.user.name} ` : `No user`}</Typography>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.user ? `${reservation.user.email} ` : ``}</Typography>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.chalet.title}</Typography>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.time}</Typography>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.starting_price}</Typography>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.total_amount}</Typography>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{new Date(reservation.start_date).toLocaleDateString()}</Typography>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.reservation_type}</Typography>
-        </td>
-        {reservation.user && reservation.user.user_type_id === 1 ? (
-         <td className={className}>
-         <Button 
-            onClick={() => handleShow(reservation.id)} // Pass 'chalet' type
-           className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500">
-           <TrashIcon className="h-5 w-5 mr-1" /> {lang ==='ar'? "حذف" : "Delete "}
-           </Button> 
-           </td>
-        ) : (
-          null
-        )}
-       
-      </tr>
-    );
-  })
+                reservations.map((reservation, index) => {
+                  const className = `py-3 px-5 ${index === reservations.length - 1 ? "" : "border-b border-blue-gray-50"}`;
+                  return (
+                    <tr key={reservation.id}>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.id}</Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {reservation.user ? `${reservation.user.name} ` : `No user`}
+                        </Typography>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {reservation.user ? `${reservation.user.email} ` : ``}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.chalet.title}</Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.time}</Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.starting_price}</Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.total_amount}</Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {new Date(reservation.start_date).toLocaleDateString()}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">{reservation.reservation_type}</Typography>
+                      </td>
+                      {reservation.user && reservation.user.user_type_id === 1 ? (
+                        <td className={className}>
+                          <Button 
+                            onClick={() => handleShow(reservation.id)} 
+                            className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+                          >
+                            <TrashIcon className="h-5 w-5 mr-1" /> {lang === 'ar' ? "حذف" : "Delete"}
+                          </Button> 
+                        </td>
+                      ) : null}
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
                   <td colSpan="7" className="py-3 px-5 text-center">
                     <Typography variant="small" className="text-blue-gray-400">
-                      {lang === "ar"? "لا توجد حجوزات" : "No reservations found"}
+                      {lang === "ar" ? "لا توجد حجوزات" : "No reservations found"}
                     </Typography>
                   </td>
                 </tr>
               )}
-            
             </tbody>
           </table>
         </CardBody>
@@ -176,7 +187,7 @@ function ReservationsPage() {
         showModal={showModal} 
         handleClose={handleClose} 
         handleDelete={handleDelete} 
-       id={reservationIdToDelete} // Pass the chalet ID to DeleteModule
+        id={reservationIdToDelete} 
       />
     </div>
   );

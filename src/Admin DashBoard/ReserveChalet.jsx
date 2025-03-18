@@ -12,7 +12,7 @@ function ReserveChalet() {
     const [message, setMessage] = useState("");
     const receiverId = Cookies.get('receiverId');
     const userRole = Cookies.get('userRole');
-    const [selectedRole, setSelectedRole] = useState('user'); // Default to user
+    const [selectedRole, setSelectedRole] = useState('user');
 
     const handleRoleChange = (event) => {
         setSelectedRole(event.target.value);
@@ -43,7 +43,7 @@ function ReserveChalet() {
 
     return (
         <div className="page-wrapper">
-            {/* Role Selection Dropdown - Centered in page */}
+          
             <div className="dropdown-container">
                 <div className="role-selector">
                     <h3 className="selector-title">
@@ -65,7 +65,7 @@ function ReserveChalet() {
             </div>
 
             <Container className="my-4">
-                {/* Custom CSS for better styling and centering */}
+                
                 <style>
                     {`
                         .page-wrapper {
@@ -129,7 +129,7 @@ function ReserveChalet() {
                     `}
                 </style>
 
-                {/* Chalets Grid */}
+              
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                     {dataToDisplay.length > 0 ? (
                         dataToDisplay.map((chal) => {
@@ -145,7 +145,11 @@ function ReserveChalet() {
                             return (
                                 <div key={chal.id}>
                                     <Link
-                                        to={`/dashboard/createreservation/${chal.id}`}
+                                        to={
+                                            selectedRole === 'admin' 
+                                            ? `/dashboard/createadminreservation/${chal.id}` 
+                                            : `/dashboard/createreservation/${chal.id}`
+                                        }
                                         onClick={() => {
                                             try {
                                                 localStorage.setItem("intial_Amount", chal.intial_Amount);

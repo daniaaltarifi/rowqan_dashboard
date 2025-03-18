@@ -14,24 +14,31 @@ function GetAllPayments() {
  const [showModal, setShowModal] = useState(false);
   const [paymentIdToDelete, setpaymentIdToDelete] = useState(null); 
   const handleShow = (id) => {
-    setpaymentIdToDelete(id);  // Set the ID to delete (chalet or details)
-    setShowModal(true);  // Show the modal
+    setpaymentIdToDelete(id);  
+    setShowModal(true);  
   };
   
   const handleClose = () => {
     setShowModal(false);
-    setpaymentIdToDelete(null); // Reset the ID when closing
+    setpaymentIdToDelete(null);
   };
   const fetchPayments = async () => {
     try {
       const response = await axios.get(`${API_URL}/payments/getAllPayments`);
-      setPayments(response.data);
+      
+      const sortedPayments = response.data.sort((a, b) => {
+        if (a.createdAt && b.createdAt) {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        }
+        return b.id - a.id;
+      });
+      setPayments(sortedPayments);
     } catch (error) {
       console.error(error);
     }
   };
   const handleUpdateStatus = async (id, currentStatus) => {
-    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending"; // التبديل بين الحالة الحالية والحالة الجديدة
+    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending"; 
 
     const result = await Swal.fire({
       title: lang === "ar" ? "هل أنت متأكد من تحديث الحالة؟" : "Are you sure to update the status?",
@@ -96,6 +103,7 @@ function GetAllPayments() {
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
+                  
                   <th className="border-b border-blue-gray-50 py-3 px-5 ">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       User Name
@@ -149,7 +157,7 @@ function GetAllPayments() {
                   </th>
                   <th className="border-b border-blue-gray-50 py-3 px-5 ">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
-                     Delete Reservation
+                     Delete Reservation For End Users
                     </Typography>
                   </th>
                 </tr>

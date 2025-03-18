@@ -35,6 +35,8 @@ import AddRightTime from "@/pages/dashboard/TimeAndStatus/AddRightTime";
 import UsersByChaletsMessages from "@/ChaletsOwners DashBoard/UsersByChaletsMessages";
 import UpdateRightTime from "@/pages/dashboard/TimeAndStatus/UpdateRightTme";
 import CreateReservation from "../Admin DashBoard/CreateReservation";
+import Payment from "@/Admin DashBoard/Payment";
+import CreateAdminReservation from "@/Admin DashBoard/CreateAdminReservation";
 
 
 
@@ -108,8 +110,9 @@ export function Dashboard() {
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
 <Route path="usersbychaletsmessages/:chalet_id/messagebetweenusers/:user_id" element={<Messages />} />
 <Route path="usersbychaletsmessages/:chalet_id" element={<UsersByChaletsMessages />} />
-<Route path="createreservation/:chalet_id" element={<CreateReservation />} />
-
+<Route path="createreservation/:id" element={<CreateReservation />} />
+<Route path="payment/:reservation_id" element={<Payment />} />
+<Route path="CreateAdminReservation/:id" element={<CreateAdminReservation />} />
 
 
 

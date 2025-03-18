@@ -1,0 +1,256 @@
+.payment-page {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.payment-card {
+  background: white;
+  border-radius: 15px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Enhanced Form Styles */
+.form-group {
+  margin-bottom: 1.8rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  outline: none;
+  background-color: #fff;
+}
+
+.form-control::placeholder {
+  color: #95a5a6;
+}
+
+/* Phone Input Styling */
+.PhoneInput {
+  display: flex;
+  align-items: center;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.PhoneInput:focus-within {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  background-color: #fff;
+}
+
+.PhoneInputInput {
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  padding: 0.3rem;
+  flex: 1;
+  color: #2c3e50;
+}
+
+.PhoneInputInput:focus {
+  outline: none;
+}
+
+/* File Input Styling */
+.file-input-container {
+  position: relative;
+  margin-top: 1rem;
+}
+
+input[type="file"] {
+  padding: 0.6rem;
+  background: #f8f9fa;
+  border: 2px dashed #e9ecef;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+input[type="file"]:hover {
+  border-color: #3498db;
+  background: #f1f7fb;
+}
+
+/* Payment Options */
+.payment-options-container {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.payment-option {
+  flex: 1;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.8rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  background: #f8f9fa;
+}
+
+.payment-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.payment-option i {
+  font-size: 2.2rem;
+  color: #3498db;
+}
+
+.payment-option.selected {
+  border-color: #3498db;
+  background: #f1f7fb;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+/* Error Messages */
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-message::before {
+  content: "!";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.payment-submit-btn {
+  width: 100% !important;
+  padding: 12px 24px !important;
+  background-color: #2196F3 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  margin-top: 20px !important;
+  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.15) !important;
+  height: 48px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.payment-submit-btn:hover {
+  background-color: #2196F3 !important;
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.2) !important;
+}
+
+.payment-submit-btn:disabled {
+  background-color: #6c757d !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}
+
+.payment-submit-btn__content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-submit-btn__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-radius: 50%;
+  border-top: 2px solid transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.button-content{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-radius: 50%;
+  border-top: 2px solid transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* Cliq Instructions */
+.cliq-instructions {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid #e9ecef;
+}
+
+.cliq-instructions h5 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.cliq-instructions p {
+  color: #34495e;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}

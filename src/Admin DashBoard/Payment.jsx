@@ -14,7 +14,7 @@ function Payment() {
   const { state } = location;
   const navigate = useNavigate();
   const { reservation_id } = useParams();
-  const initial_amount = state?.totalAmount || "0";
+  const initial_amount = state?.initialAmount || "0";
   const total_amount = state?.totalAmount || "0"; 
   const reservation_type = state?.reservationType || "";
   const chalet_id = state?.chaletId || "";

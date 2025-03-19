@@ -1,14 +1,10 @@
 import { HomeIcon, TagIcon,StopCircleIcon,EnvelopeIcon  ,PhotoIcon,BellIcon,UsersIcon,ClockIcon,Cog6ToothIcon ,ArrowDownCircleIcon,ArrowUpCircleIcon ,ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
 import { Home } from "@/pages/dashboard";
-import HomeAdminPage from "./Admin DashBoard/HomeAdminPage";
-import HomeChaletOwners from "./ChaletsOwners DashBoard/HomeChaletOwners";
-import ChaletsPage from "./Admin DashBoard/ChaletsPage";
 import React, { useState, useEffect } from "react";
 import Chalets from "./pages/dashboard/Chalets/Chalets";
 import ChaletsOwners from "./ChaletsOwners DashBoard/ChaletsOwners";
 
-import ChaletsOwnersPage from "./Admin DashBoard/ChaletsOwnersPage";
 import Users from "./Admin DashBoard/UsersPage";
 import Abouts from "./pages/dashboard/About/Abouts";
 import FooterData from "./pages/dashboard/Footer/FooterData";
@@ -71,7 +67,7 @@ export const useRoutes = () => {
               },
               {
                 icon: <StopCircleIcon  {...icon} />,
-                name: lang === "ar" ? "المدفوعات" : "Payments",
+                name: lang === "ar" ? "المدفوعات" : "Payments Users",
                 path: "/GetAllPayments",
                 element: <GetAllPayments />,
               },

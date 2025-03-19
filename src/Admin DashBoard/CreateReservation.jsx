@@ -95,7 +95,7 @@ const ReserveChalets = () => {
       return;
     }
 
-    // Check for weekly or monthly reservation types
+    
     if ((typeOfReseravtion === "Weekly" || typeOfReseravtion === "Monthly") && !endDate) {
       setError("Please select an End Date for Weekly or Monthly reservations.");
       return;
@@ -131,6 +131,7 @@ const ReserveChalets = () => {
       const total_amount = res.data.reservation.total_amount;
       navigate(`/dashboard/payment/${res.data.reservation.id}`, {
         state: {
+          initialAmount: intial_Amount,
           totalAmount: lastFinalPrice,
           reservationType: typeOfReseravtion,
           chaletId: id

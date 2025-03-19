@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Card,
-  Input,
-  Button,
-  Typography,
+    Card,
+    Input,
+    Button,
+    Typography,
 } from "@material-tailwind/react";
+import { Eye, EyeOff } from 'lucide-react';
 import { API_URL } from "../../../App.jsx";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -14,58 +15,71 @@ import Cookies from 'js-cookie';
 function AddUser() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("+962");
+    const [phoneError, setPhoneError] = useState("");
     const [country, setCountry] = useState("");
-    const [password, setPassword] = useState(""); 
-    const [repeat_password, setRepeat_password] = useState(""); 
-    const [userRole, setUserRole] = useState(""); 
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+    const [repeat_password, setRepeat_password] = useState("");
+    const [userRole, setUserRole] = useState("");
     const [roles, setRoles] = useState([]);
     const lang = Cookies.get('lang') || 'en';
-    const [error, setError] = useState(""); 
-  const [Chalets, setChalets] = useState([]);
-  const [selectedChalets, setSelectedChalets] = useState([]); // Track selected chalets
+    const [passwordError, setPasswordError] = useState("");
+    const [Chalets, setChalets] = useState([]);
+    const [selectedChalets, setSelectedChalets] = useState([]);
 
     const navigate = useNavigate();
 
-    // const handleAddUser = async (e) => {
-    //     e.preventDefault();
+    
+    const handlePhoneNumberChange = (e) => {
+        let value = e.target.value;
+        
+        
+        if (!value.startsWith('+962')) {
+            value = '+962' + value.replace('+962', '');
+        }
+        
+        
+        const numberPart = value.slice(4);
+        if (!/^\d*$/.test(numberPart)) {
+            return;
+        }
 
-    //     const userData = {
-    //         name,
-    //         email,
-    //         phone_number: phoneNumber,
-    //         country,
-    //         password,
-    //         lang,
-    //         user_type_id: userRole, 
-    //     };
+        
+        if (value.length <= 13) {
+            setPhoneNumber(value);  
+            if (value.length === 13) {
+                const jordanianNumberRegex = /^\+962[7-9][0-9]{8}$/;
+                if (!jordanianNumberRegex.test(value)) {
+                    setPhoneError(lang === 'ar' ? "رقم هاتف أردني غير صالح" : "Invalid Jordanian phone number");
+                } else {
+                    setPhoneError("");
+                }
+            } else {
+                setPhoneError(lang === 'ar' ? "يجب أن يتكون رقم الهاتف من 9 أرقام بعد 962+" : "Phone number must be 9 digits after +962");
+            }
+        }
+    };
 
-    //     try {
-    //         await axios.post(`${API_URL}/users/createUser`, userData);
-    //         Swal.fire({
-    //             title: "Success!",
-    //             text: "User added successfully.",
-    //             icon: "success",
-    //             confirmButtonText: "OK",
-    //         });
-    //         navigate("/dashboard/usersAdmin");
-    //     } catch (error) {
-    //         console.error(error);
-    //         Swal.fire({
-    //             title: "Error!",
-    //             text: "Failed to add user. Please try again.",
-    //             icon: "error",
-    //             confirmButtonText: "OK",
-    //         });
-    //     }
-    // };
     const handleAddUser = async (e) => {
         e.preventDefault();
-        if (password !== repeat_password) {
-            setError('Password do not match')
+
+        if (phoneError) {
+            Swal.fire({
+                title: "Error!",
+                text: phoneError,
+                icon: "error",
+                confirmButtonText: "OK",
+            });
             return;
-          }
-      
+        }
+
+        if (password !== repeat_password) {
+            setPasswordError(lang === 'ar' ? 'كلمات المرور غير متطابقة' : 'The Password and Repeat Password does not match');
+            return;
+        }
+
         const userData = {
             name,
             email,
@@ -76,53 +90,67 @@ function AddUser() {
             user_type_id: Number(userRole),
             lang,
         };
-          // Only add chalet_ids if userRole is "1"
-          if (Number(userRole) === 1) {
+
+        if (Number(userRole) === 5) {
+            Swal.fire({
+                title: lang === 'ar' ? "فشل" : "Failure",
+                text: lang === 'ar' ? "ليس لدى المسؤول صلاحية إنشاء مسؤول متميز" : "The admin does not have the authority to create a super admin.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
+        if (Number(userRole) === 1) {
             userData.chalet_ids = selectedChalets;
-        }     
+        }
+
         try {
             await axios.post(`${API_URL}/users/createAdmin`, userData);
             Swal.fire({
-                title: "Success!",
-                text: "User added successfully.",
+                title: lang === 'ar' ? "نجاح!" : "Success!",
+                text: lang === 'ar' ? "تمت إضافة المستخدم بنجاح." : "User added successfully.",
                 icon: "success",
                 confirmButtonText: "OK",
             });
             navigate("/dashboard/usersAdmin");
         } catch (error) {
             console.error(error);
-            const errorMessage=error.response?.data?.message || "Failed to add user. Please try again"
+            const errorMessage = error.response?.data?.message || (lang === 'ar' ? "فشل في إضافة المستخدم. حاول مرة اخرى" : "Failed to add user. Please try again");
             Swal.fire({
-                title: "Error!",
+                title: lang === 'ar' ? "خطأ!" : "Error!",
                 text: errorMessage,
                 icon: "error",
                 confirmButtonText: "OK",
             });
         }
     };
+
     const fetchRoles = useCallback(async () => {
-      try {
-        const[responseUsersTypes,resChalets] = await Promise.all([
-            axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`),
-            axios.get(`${API_URL}/chalets/getchalets/${lang}`)
-        ])
-        if (Array.isArray(responseUsersTypes.data)) {
-          setRoles(responseUsersTypes.data); 
-        } else {
-          console.error("Error: Roles data is not in the expected format.");
+        try {
+            const [responseUsersTypes, resChalets] = await Promise.all([
+                axios.get(`${API_URL}/userstypes/getAllUsersTypes/${lang}`),
+                axios.get(`${API_URL}/chalets/getchalets/${lang}`)
+            ]);
+            
+            if (Array.isArray(responseUsersTypes.data)) {
+                setRoles(responseUsersTypes.data);
+            } else {
+                console.error("Error: Roles data is not in the expected format.");
+            }
+            
+            if (Array.isArray(resChalets.data)) {
+                setChalets(resChalets.data);
+            } else {
+                console.error("Error: Chalets data is not in the expected format.");
+            }
+        } catch (err) {
+            console.error("Error fetching roles:", err);
         }
-        if (Array.isArray(resChalets.data)) {
-            setChalets(resChalets.data); 
-        } else {
-            console.error("Error: Chalets data is not in the expected format.");
-        }
-      } catch (err) {
-        console.error("Error fetching roles:", err);
-      }
     }, [lang]);
 
     useEffect(() => {
-      fetchRoles();
+        fetchRoles();
     }, [fetchRoles]);
 
     return (
@@ -160,13 +188,19 @@ function AddUser() {
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                                 {lang === 'ar' ? "رقم الهاتف" : "Phone Number"}
                             </Typography>
-                            <Input
-                                required
-                                size="lg"
-                                type="tel"
-                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                            />
+                            <div className="relative">
+                                <Input
+                                    required
+                                    size="lg"
+                                    type="tel"
+                                    value={phoneNumber}
+                                    className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                    onChange={handlePhoneNumberChange}
+                                />
+                                {phoneError && (
+                                    <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+                                )}
+                            </div>
 
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                                 {lang === 'ar' ? "البلد" : "Country"}
@@ -181,78 +215,116 @@ function AddUser() {
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                                 {lang === 'ar' ? "كلمة المرور" : "Password"}
                             </Typography>
-                            <Input
-                                required
-                                size="lg"
-                                type="password"
-                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                         <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                            <div className="relative">
+                                <Input
+                                    required
+                                    size="lg"
+                                    type={showPassword ? "text" : "password"}
+                                    className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        if (repeat_password && e.target.value !== repeat_password) {
+                                            setPasswordError(lang === 'ar' ? 'كلمات المرور غير متطابقة' : 'The Password and Repeat Password does not match');
+                                        } else {
+                                            setPasswordError('');
+                                        }
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+
+                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                                 {lang === 'ar' ? "تأكيد كلمة المرور" : "repeat password"}
                             </Typography>
-                            <Input
-                                required
-                                size="lg"
-                                type="password"
-                                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                                onChange={(e) => setRepeat_password(e.target.value)}
-                            />
-                            {error && <p className="text-red-500">{error}</p>}
+                            <div className="relative">
+                                <Input
+                                    required
+                                    size="lg"
+                                    type={showRepeatPassword ? "text" : "password"}
+                                    className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                                    onChange={(e) => {
+                                        setRepeat_password(e.target.value);
+                                        if (password && e.target.value !== password) {
+                                            setPasswordError(lang === 'ar' ? 'كلمات المرور غير متطابقة' : 'The Password and Repeat Password does not match');
+                                        } else {
+                                            setPasswordError('');
+                                        }
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                                    onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                                >
+                                    {showRepeatPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
+                            {passwordError && (
+                                <p className="text-red-500 mt-2 text-sm">{passwordError}</p>
+                            )}
+
                             <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
                                 {lang === 'ar' ? "نوع المستخدم" : "User Type"}
                             </Typography>
                             <select
-    className="form-select block w-full p-3 mt-2 text-lg bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#D87C55] focus:border-[#D87C55] focus:outline-none"
-    name="user_role"
-    value={userRole}
-    onChange={(e) => setUserRole(e.target.value)} 
-    required
->
-    <option value="" className="text-gray-500">{lang === 'ar' ? "اختيار الدور" : "Select Role"}</option>
-    {roles.length > 0 ? (
-      roles.map((role) => (
-        <option key={role.id} value={role.id} className="text-black">
-          {role.type}
-        </option>
-      ))
-    ) : (
-      <option disabled>{lang === 'ar' ? "جارِ تحميل الأدوار..." : "Loading roles..."}</option>
-    )}
-</select>
-{userRole === "1" && (
-  <div className="mt-4">
-    <label className="block text-lg font-semibold">
-      {lang === 'ar' ? "اختر الشاليهات" : "Select Chalets"}
-    </label>
-    <div className="grid grid-cols-2 gap-3 mt-2">
-      {Chalets.map((chalet) => (
-        <label key={chalet.id} className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            value={chalet.id}
-            checked={selectedChalets.includes(chalet.id)}
-            onChange={(e) => {
-              const checked = e.target.checked;
-              setSelectedChalets((prev) =>
-                checked ? [...prev, chalet.id] : prev.filter((id) => id !== chalet.id)
-              );
-            }}
-            className="w-5 h-5 text-[#D87C55] border-gray-300 rounded focus:ring-[#D87C55]"
-          />
-          <span>{chalet.title}</span>
-        </label>
-      ))}
-    </div>
-  </div>
-)}
+                                className="form-select block w-full p-3 mt-2 text-lg bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#D87C55] focus:border-[#D87C55] focus:outline-none"
+                                name="user_role"
+                                value={userRole}
+                                onChange={(e) => setUserRole(e.target.value)}
+                                required
+                            >
+                                <option value="" className="text-gray-500">
+                                    {lang === 'ar' ? "اختيار الدور" : "Select Role"}
+                                </option>
+                                {roles.length > 0 ? (
+                                    roles.map((role) => (
+                                        <option key={role.id} value={role.id} className="text-black">
+                                            {role.type}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option disabled>{lang === 'ar' ? "جارِ تحميل الأدوار..." : "Loading roles..."}</option>
+                                )}
+                            </select>
 
+                            {userRole === "1" && (
+                                <div className="mt-4">
+                                    <label className="block text-lg font-semibold">
+                                        {lang === 'ar' ? "اختر الشاليهات" : "Select Chalets"}
+                                    </label>
+                                    <div className="grid grid-cols-2 gap-3 mt-2">
+                                        {Chalets.map((chalet) => (
+                                            <label key={chalet.id} className="flex items-center space-x-2">
+                                                <input
+                                                    type="checkbox"
+                                                    value={chalet.id}
+                                                    checked={selectedChalets.includes(chalet.id)}
+                                                    onChange={(e) => {
+                                                        const checked = e.target.checked;
+                                                        setSelectedChalets((prev) =>
+                                                            checked ? [...prev, chalet.id] : prev.filter((id) => id !== chalet.id)
+                                                        );
+                                                    }}
+                                                    className="w-5 h-5 text-[#D87C55] border-gray-300 rounded focus:ring-[#D87C55]"
+                                                />
+                                                <span>{chalet.title}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <Button
                         type="submit"
-                        className="mt-6 bg-[#6DA6BA] text-white  focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
+                        className="mt-6 bg-[#6DA6BA] text-white focus:outline-none focus:ring-2 focus:ring-[#D87C55] focus:ring-opacity-50"
                         fullWidth
                     >
                         {lang === 'ar' ? "إضافة" : "Add"}

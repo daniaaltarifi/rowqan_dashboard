@@ -217,7 +217,7 @@ function GetAllPayments() {
               onClick={() => handleUpdateStatus(payment.id, payment.status)}
               className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-yellow-500"
             >
-              {lang === "ar" ? "تحديث الحالة" : "Update Status"}
+              {lang === "ar" ? "تحديث الحالة" : "Accept Reservation"}
             </Button>
           </td>
 

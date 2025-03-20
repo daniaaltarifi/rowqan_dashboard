@@ -64,7 +64,7 @@ function ReservationsPage() {
 
   const handleDelete = async () => {  
     try {
-      await axios.delete(`http://localhost:5000/ReservationsChalets/reservations/${reservationIdToDelete}/${lang}`);
+      await axios.delete(`${API_URL}/ReservationsChalets/reservations/${reservationIdToDelete}/${lang}`);
       setReservations(reservations.filter((reservation) => reservation.id !== reservationIdToDelete)); 
       handleClose();
       Swal.fire({

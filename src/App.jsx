@@ -36,6 +36,7 @@ import UsersByChaletsMessages from "./ChaletsOwners DashBoard/UsersByChaletsMess
 import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
 import CreateReservation from "./Admin DashBoard/CreateReservation";
 import Payment from "./Admin DashBoard/Payment";
+import UpdateChoose from "./Admin DashBoard/UpdateChoose";
 // export const API_URL="http://localhost:5000";
 
 function App() {
@@ -100,10 +101,12 @@ function App() {
         {/* <Route path="dashboard/abouts" element={<Abouts />} /> */}
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />
+
 <Route path="addimginchalets/:chalet_id" element={<AddImagesChalets />} />
 <Route path="adduser" element={<AddUser />} />
 
 <Route path="updateUser/:id" element={<UpdateUser />} />
+<Route path="updateChoose/:id" element={<UpdateChoose />} />
 <Route path="addimgchalets" element={<AddImagesChalets />} />
 <Route path="abouts" element={<Abouts />} />
 <Route path="updateabouts/:id" element={<UpdateAbout />} />
@@ -120,9 +123,11 @@ function App() {
 <Route path="addrighttimechalet/:chalet_id" element={<AddRightTime />} />
 <Route path="updaterighttimechalet/:chalet_id/:time_id" element={<UpdateRightTime />} />
 <Route path="addstatuschalet" element={<AddStatusChalet />} />
+
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
 <Route path="usersbychaletsmessages/:chalet_id/messagebetweenusers/:user_id" element={<Messages />} />
 <Route path="usersbychaletsmessages/:chalet_id" element={<UsersByChaletsMessages />} />
+
 <Route path="createreservation/:id" element={<CreateReservation />} />
 
 

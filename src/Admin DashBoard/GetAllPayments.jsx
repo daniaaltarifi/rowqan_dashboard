@@ -54,7 +54,7 @@ function GetAllPayments() {
     if (result.isConfirmed) {
       try {
        
-        await axios.put(`${API_URL}/payments/updatePaymentStatus/${id}`, {
+        await axios.put(`http://localhost:5000/payments/updatePaymentStatus/${id}`, {
           status: newStatus,
         });
 

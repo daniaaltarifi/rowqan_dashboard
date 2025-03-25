@@ -16,6 +16,7 @@ import ContactUsPage from "./Admin DashBoard/ContactUsPage";
 import ReservationsPage from "./Admin DashBoard/ReservationsPage";
 import GetAllPayments from "./Admin DashBoard/GetAllPayments";
 import ReserveChalet from "./Admin DashBoard/ReserveChalet";
+import RowqanChoose from "./Admin DashBoard/RowqanChoose";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -106,6 +107,18 @@ export const useRoutes = () => {
                 name: lang === "ar" ? "الاعدادات" : "Setting",
                 path: "/setting",
                 element: <Abouts />,
+              },
+              {
+                icon: <ArrowUpCircleIcon  {...icon} />,
+                name: lang === "ar" ? "اعلى الصفحة" : "Header",
+                path: "/header",
+                element: <Header />,
+              },
+              {
+                icon: <ArrowUpCircleIcon  {...icon} />,
+                name: lang === "ar" ? "اعلى الصفحة" : "Let Rowqan Choose",
+                path: "/RowqanChoose",
+                element: <RowqanChoose />,
               },
             
             ]

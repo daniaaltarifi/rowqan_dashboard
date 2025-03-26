@@ -5,10 +5,13 @@ import Swal from "sweetalert2";
 import { Card, CardHeader, CardBody, Typography, Button } from "@material-tailwind/react";
 import Cookies from "js-cookie";
 import '../Styles/Chalets.css'
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon,PencilIcon } from "@heroicons/react/24/outline";
 import DeleteModule from "@/Components/DeleteModule";
+import { useNavigate } from 'react-router-dom';
+
 
 function GetAllPayments() {
+  const navigate = useNavigate();
   const [payments, setPayments] = useState([]);
   const lang = Cookies.get('lang') || 'en';
  const [showModal, setShowModal] = useState(false);
@@ -16,6 +19,14 @@ function GetAllPayments() {
   const handleShow = (id) => {
     setpaymentIdToDelete(id);  
     setShowModal(true);  
+  };
+
+
+  
+  const handleEdit = (payment) => {
+    navigate(`/dashboard/updatePayment/${payment.id}`, { 
+      state: { paymentData: payment } 
+    });
   };
   
   const handleClose = () => {
@@ -38,11 +49,19 @@ function GetAllPayments() {
     }
   };
   const handleUpdateStatus = async (id, currentStatus) => {
-    const newStatus = currentStatus === "Pending" ? "Confirmed" : "Pending"; 
-
+ 
+    let newStatus = "Confirmed"; 
+    
+  
+    if (currentStatus === "Confirmed") {
+      newStatus = "Pending";
+    }
+  
     const result = await Swal.fire({
       title: lang === "ar" ? "هل أنت متأكد من تحديث الحالة؟" : "Are you sure to update the status?",
-      text: lang === "ar" ? "ستتم تحديث الحالة لهذا الحجز." : "The status for this reservation will be updated.",
+      text: lang === "ar" 
+        ? `ستتم تحديث الحالة لهذا الحجز من "${currentStatus}" إلى "${newStatus}".` 
+        : `The status for this reservation will be updated from "${currentStatus}" to "${newStatus}".`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -50,22 +69,23 @@ function GetAllPayments() {
       confirmButtonText: lang === "ar" ? "نعم، تحديث الحالة!" : "Yes, update the status!",
       cancelButtonText: lang === "ar" ? "إلغاء" : "Cancel",
     });
-
+  
     if (result.isConfirmed) {
       try {
-       
         await axios.put(`http://localhost:5000/payments/updatePaymentStatus/${id}`, {
           status: newStatus,
         });
-
+        
         
         setPayments(payments.map((pay) => 
           pay.id === id ? { ...pay, status: newStatus } : pay
         ));
-
+  
         Swal.fire(
           lang === "ar" ? "تم التحديث!" : "Updated!",
-          lang === "ar" ? "تم تحديث الحالة بنجاح." : "The status has been updated successfully.",
+          lang === "ar" 
+            ? `تم تحديث الحالة بنجاح من "${currentStatus}" إلى "${newStatus}".` 
+            : `The status has been updated successfully from "${currentStatus}" to "${newStatus}".`,
           "success"
         );
       } catch (error) {
@@ -211,19 +231,20 @@ function GetAllPayments() {
                 {payment.status}
               </Typography>
             </td>
-            {payment.status === 'Pending' ? (
-            <td className={className}>
-            <Button
-              onClick={() => handleUpdateStatus(payment.id, payment.status)}
-              className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-yellow-500"
-            >
-              {lang === "ar" ? "تحديث الحالة" : "Accept Reservation"}
-            </Button>
-          </td>
-
-            ) : (
-              <td></td>
-            )}
+            {payment.status === 'Pending' || payment.status === 'Cancelled' || payment.status === 'Confirmed' ? (
+  <td className={className}>
+    <Button
+      onClick={() => handleUpdateStatus(payment.id, payment.status)}
+      className={`text-white-600 ${payment.status === 'Confirmed' ? 'bg-[#6DA6BA]' : 'bg-[#F2C79D]'} flex items-center transition duration-300 ease-in hover:shadow-lg ${payment.status === 'Confirmed' ? 'hover:shadow-blue-500' : 'hover:shadow-yellow-500'}`}
+    >
+      {lang === "ar" 
+        ? (payment.status === 'Confirmed' ? "إلغاء التأكيد" : "تأكيد الحجز") 
+        : (payment.status === 'Confirmed' ? "Cancel Confirmation" : "Accept Reservation")}
+    </Button>
+  </td>
+) : (
+  <td></td>
+)}
             <td className={className}>
               {payment.Reservations_Chalet ? (
                 <div>
@@ -254,6 +275,13 @@ function GetAllPayments() {
               )}
             </td>
             <td >
+            <Button 
+                              onClick={() => handleEdit(payment)}
+                              className="mb-3 text-white-600 bg-[#6DA6BA] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+                            >
+                              <PencilIcon className="h-5 w-4 mr-1" /> 
+                              {lang === 'ar' ? "تعديل" : "Edit"}
+                            </Button>
                 <Button 
                  onClick={() => handleShow(payment.id)}
                  className="mb-3 text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500">

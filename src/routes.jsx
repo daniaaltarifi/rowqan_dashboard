@@ -190,6 +190,12 @@ export const useRoutes = () => {
               element: <ReserveChalet />,
             },
             {
+              icon: <ArrowUpCircleIcon  {...icon} />,
+              name: lang === "ar" ? "اعلى الصفحة" : "Let Rowqan Choose",
+              path: "/RowqanChoose",
+              element: <RowqanChoose />,
+            },
+            {
               icon: <EnvelopeIcon  {...icon} />,
               name: lang === "ar" ? "الرسائل" : "Messages",
               path: "/messages",

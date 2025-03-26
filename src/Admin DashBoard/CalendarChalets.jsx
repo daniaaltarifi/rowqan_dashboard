@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import ModelAlert from "./ModelAlert";
 import axios from "axios";
 import PropTypes from "prop-types";
 import clock from "../Images/clock.png";
@@ -15,63 +14,21 @@ function CalendarChalets({
   const { id } = useParams();
   const lang = Cookies.get('lang') || 'en';
   const [currentDate, setCurrentDate] = useState(new Date());
-  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState("");
   const [reservedDates, setReservedDates] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalMessage, setModalMessage] = useState("");
-  // State for the selected date from either calendar
   const [selectedDateAndTime, setSelectedDateAndTime] = useState({});
   const [rightTimes, setRightTimes] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
-  // Function to handle date selection for morning and evening calendars
-  // const handleSelectDate = (day, time_id, priceForDaily) => {
-  //   const newDate = new Date(
-  //     currentDate.getFullYear(),
-  //     currentDate.getMonth(),
-  //     day
-  //   );
-  //   const selectedFormattedDate = `${newDate.getFullYear()}-${(
-  //     newDate.getMonth() + 1
-  //   )
-  //     .toString()
-  //     .padStart(2, "0")}-${newDate.getDate().toString().padStart(2, "0")}`;
 
-  //   // Find the time object by ID
-  //   const timeObject = rightTimes.find((time) => time.id === time_id);
-  //   // Check if the selected date is in DatesForRightTimes
-  //   const dateInRightTimes = timeObject?.DatesForRightTimes.find(
-  //     (dateObj) => dateObj.date === selectedFormattedDate
-  //   );
-  //   // If the date exists in DatesForRightTimes, use the price from there
-  //   const finalPrice = dateInRightTimes
-  //     ? dateInRightTimes.price
-  //     : priceForDaily;
+ 
 
-  //   // Check if the date is reserved
-  //   const isReserved = reservedDates[time_id]?.some(
-  //     (reservedDate) => reservedDate.date === selectedFormattedDate
-  //   );
 
-  //   if (isReserved) {
-  //     setModalTitle("This Date is Reserved");
-  //     setModalMessage(
-  //       "This date is already reserved. Please choose another date."
-  //     );
-  //     handleShowModal();
-  //     return;
-  //   }
-  //   // Set the selected date, time, and updated price
-  //   setSelectedDateAndTime({
-  //     [time_id]: newDate,
-  //   });
-  //   setSelectedDate(newDate);
-  //   setTimeIdDaily(time_id);
-  //   setTimePriceDaily(finalPrice); // Set the final price after considering weekend surcharge
-  // };
   const handleSelectDate = (day, time_id, priceForDaily) => {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     
@@ -79,23 +36,54 @@ function CalendarChalets({
       .toString()
       .padStart(2, "0")}-${newDate.getDate().toString().padStart(2, "0")}`;
   
-    // Find the time object by ID
+   
     const timeObject = rightTimes.find((time) => time.id === time_id);  
-    // Check if the selected date is reserved
-    const isReserved = reservedDates.some(
+    
+    
+    const reservedDateInfo = reservedDates.find(
       (reservedDate) =>
         reservedDate.date === selectedFormattedDate &&
         (reservedDate.time === timeObject?.type_of_time || reservedDate.time === "FullDay")
     );
   
-    if (isReserved) {
-      setModalTitle("This Date is Reserved");
-      setModalMessage("This date is already reserved. Please choose another date.");
+    if (reservedDateInfo && reservedDateInfo.status === 'Confirmed') {
+      setModalTitle(lang === "ar" ? "التاريخ غير متاح" : "Date Not Available");
+      setModalMessage(
+        lang === "ar" 
+          ? "هذا التاريخ محجوز بالفعل ولا يمكن اختياره"
+          : "This date is already confirmed and cannot be selected."
+      );
       handleShowModal();
       return;
     }
+
+    if (reservedDateInfo && reservedDateInfo.status === 'Pending') {
+      setModalTitle(
+        lang === "ar" 
+          ? "حجز قيد الانتظار" 
+          : "Pending Reservation"
+      );
+      setModalMessage(
+        lang === "ar"
+          ? "يوجد حجز معلق لهذا التاريخ. يمكنك المتابعة بالحجز، ولكن يجب عليك الإسراع في إتمام عملية الدفع لضمان الحصول على الحجز قبل الآخرين."
+          : "There is a pending reservation for this date. You can proceed with booking, but you need to complete the payment process quickly to secure the reservation before others."
+      );
+      handleShowModal();
+      
+      const dateInRightTimes = timeObject?.DatesForRightTimes.find(
+        (dateObj) => dateObj.date === selectedFormattedDate
+      );
+    
+      const finalPrice = dateInRightTimes ? dateInRightTimes.price : priceForDaily;
+    
+      setSelectedDateAndTime({ [time_id]: newDate });
+      setSelectedDate(newDate);
+      setTimeIdDaily(time_id);
+      setTimePriceDaily(finalPrice);
+      return;
+    }
   
-    // Proceed with the rest of your logic
+    // Proceed with normal date selection
     const dateInRightTimes = timeObject?.DatesForRightTimes.find(
       (dateObj) => dateObj.date === selectedFormattedDate
     );
@@ -106,40 +94,7 @@ function CalendarChalets({
     setSelectedDate(newDate);
     setTimeIdDaily(time_id);
     setTimePriceDaily(finalPrice);
-  };
-  
-  
-  //   const fetchReservedDates = useCallback(
-  //     async (timeOfDay, timeId) => {
-  //       console.log("day",timeOfDay)
-  //       try {
-  //         const res = await axios.get(
-  //           `${API_URL}/ReservationsChalets/getReservationsByRightTimeName/${id}/${timeOfDay}/${lang}`
-  //         );
-  //         const reservedDates = res.data.reservedDays.map((reservation) => {
-  //           const utcDate = new Date(reservation);
-  //           const formattedDate = formatDate(utcDate); // Use your date formatting logic
-  //           return { date: formattedDate };
-  //         });
-  // console.log("first",reservedDates)
-  //         // Update the reservedDates state per timeId
-  //         setReservedDates((prev) => ({
-  //           ...prev,
-  //           [timeId]: reservedDates, // Use timeId as the key
-  //         }));
-  //       } catch (error) {
-  //         console.error(`Error fetching reserved dates for ${timeOfDay}:`, error);
-  //       }
-  //     },
-  //     [lang, id]
-  //   );
-  //   useEffect(() => {
-  //     if (rightTimes && rightTimes.length > 0) {
-  //       rightTimes.forEach((time) => {
-  //         fetchReservedDates(time.type_of_time, time.id);
-  //       });
-  //     }
-  //   }, [rightTimes, lang, id, fetchReservedDates]);
+};
 
   const handlePrevMonth = () => {
     const prevMonth = new Date(currentDate);
@@ -157,7 +112,7 @@ function CalendarChalets({
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startDay = firstDay.getDay(); // day of week of the 1st of the month
+    const startDay = firstDay.getDay();
     return { daysInMonth, startDay };
   };
 
@@ -167,10 +122,16 @@ function CalendarChalets({
   );
 
   CalendarChalets.propTypes = {
-    setSelectedDate: PropTypes.func.isRequired, // Ensure selectedDate is a Date object
+    setSelectedDate: PropTypes.func.isRequired,
     setTimeIdDaily: PropTypes.func.isRequired,
     setTimePriceDaily: PropTypes.func.isRequired,
   };
+
+
+
+  
+
+
   const getTimesBychaletsId = useCallback(async () => {
     try {
       setLoading(true);
@@ -191,13 +152,15 @@ function CalendarChalets({
   useEffect(() => {
     getTimesBychaletsId();
   }, [getTimesBychaletsId, id, lang]);
+
   useEffect(() => {
-    fetch(`${API_URL}/ReservationsChalets/reservationsDatesByChaletId/${id}/en`)
+    fetch(`http://localhost:5000/ReservationsChalets/reservationsDatesByChaletId/${id}/en`)
       .then((response) => response.json())
       .then((data) => {
         const formattedReservations = data.reservations.map((res) => ({
-          date: res.start_date, // Keep the date
-          time: res.Time, // Store the time slot
+          date: res.start_date,
+          time: res.Time,
+          status: res.status
         }));
         setReservedDates(formattedReservations);
       })
@@ -206,14 +169,47 @@ function CalendarChalets({
 
   return (
     <>
+      <style>{`
+        .calendar-day.confirmed {
+          color: red !important;
+          text-decoration: line-through;
+          opacity: 0.5;
+          cursor: not-allowed;
+          position: relative;
+          pointer-events: none;
+        }
+        .calendar-day.confirmed::after {
+          content: 'Confirmed';
+          position: absolute;
+          bottom: -20px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: red;
+          font-size: 0.7em;
+        }
+        .calendar-day.pending {
+          color: #FFC107 !important; /* Amber color for pending */
+          text-decoration: line-through;
+          position: relative;
+        }
+        .calendar-day.pending::after {
+          content: 'Pending';
+          position: absolute;
+          bottom: -20px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: #FFC107;
+          font-size: 0.7em;
+        }
+      `}</style>
       <div className="date-picker-container">
         {loading ? (
           <p>Loading...</p>
         ) : rightTimes.length > 0 ? (
           rightTimes.map((time) => (
             <div className="calendar" key={time.id}>
-                          <h4 className="text-center " style={{ color: "#fff",fontSize:"20px",display:"flex",justifyContent:"center" }}>
-                          <img src={clock} alt="clock" height={"30px"} width={"35px"} />{" "}
+              <h4 className="text-center" style={{ color: "#fff", fontSize: "20px", display: "flex", justifyContent: "center" }}>
+                <img src={clock} alt="clock" height={"30px"} width={"35px"} />{" "}
                 {time.type_of_time} Dates
               </h4>
               <h5 className="text-center" style={{ color: "#fff" }}>
@@ -248,34 +244,6 @@ function CalendarChalets({
                   .map((_, index) => (
                     <span key={index} className="empty-day"></span>
                   ))}
-                {/* {Array.from(
-                  { length: daysInMonth },
-                  (_, index) => index + 1
-                ).map((day) => {
-                  const currentDay = new Date(
-                    currentDate.getFullYear(),
-                    currentDate.getMonth(),
-                    day
-                  );
-                  const currentFormattedDate = `${currentDay.getFullYear()}-${(
-                    currentDay.getMonth() + 1
-                  )
-                    .toString()
-                    .padStart(2, "0")}-${currentDay
-                    .getDate()
-                    .toString()
-                    .padStart(2, "0")}`;
-                  const isReserved = reservedDates[time.id]?.some(
-                    (reservedDate) => reservedDate.date === currentFormattedDate
-                  );
-                 
-              
-                  const isSelected =
-                    selectedDateAndTime[time.id]?.getDate() === day &&
-                    selectedDateAndTime[time.id]?.getMonth() ===
-                      currentDate.getMonth() &&
-                    selectedDateAndTime[time.id]?.getFullYear() ===
-                      currentDate.getFullYear(); */}
                 {Array.from(
                   { length: daysInMonth },
                   (_, index) => index + 1
@@ -295,7 +263,7 @@ function CalendarChalets({
                     .padStart(2, "0")}`;
 
                   // Check if this date AND time slot is reserved
-                  const isReserved = reservedDates.some(
+                  const reservedDateInfo = reservedDates.find(
                     (reserved) =>
                       reserved.date === currentFormattedDate &&
                       reserved.time === time.type_of_time
@@ -308,19 +276,29 @@ function CalendarChalets({
                     selectedDateAndTime[time.id]?.getFullYear() ===
                       currentDate.getFullYear();
 
+                  let reservationClass = '';
+                  let isDisabled = false;
+                  if (reservedDateInfo) {
+                    if (reservedDateInfo.status === 'Confirmed') {
+                      reservationClass = 'confirmed';
+                      isDisabled = true;
+                    } else if (reservedDateInfo.status === 'Pending') {
+                      reservationClass = 'pending';
+                    }
+                  }
+
                   return (
                     <span
                       key={day}
                       className={`calendar-day ${
                         isSelected ? "selected" : ""
-                      } ${isReserved ? "reserved" : ""}`}
-                      onClick={() =>
+                      } ${reservationClass}`}
+                      onClick={!isDisabled ? () =>
                         handleSelectDate(
                           day,
                           time.id,
                           time.After_Offer > 0 ? time.After_Offer : time.price
-                        )
-                      }
+                        ) : undefined}
                     >
                       {day}
                     </span>
@@ -330,16 +308,10 @@ function CalendarChalets({
             </div>
           ))
         ) : (
-          <p> No Times Available...</p>
+          <p>No Times Available...</p>
         )}
       </div>
 
-      {/* <ModelAlert
-        show={showModal}
-        handleClose={handleCloseModal}
-        title={modalTitle}
-        message={modalMessage}
-      /> */}
       {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
     </>
   );

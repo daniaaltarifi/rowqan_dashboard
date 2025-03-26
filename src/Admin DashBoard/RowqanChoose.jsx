@@ -72,12 +72,24 @@ function RowqanChoose() {
         <>
             <div className="mt-12 mb-8 flex flex-col gap-12">
                 <Card>
+               
                     <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }} className="mb-8 p-6">
+                        
                         <Typography variant="h6" color="white">
+                            
                             {lang === 'ar' ? "جدول طلبات الاختيار" : "Rowqan Choose Requests"}
                         </Typography>
                     </CardHeader>
                     <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
+                    <Link to="/dashboard/AddChooseRowqan">
+                            <Button
+                                className="flex items-center bg-[#F2C79D] transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"
+                                style={{ marginLeft: '80px' }}
+                            >
+                                <PlusIcon className="h-5 w-5 mr-1" />
+                                {lang === 'ar' ? " اضافة طلب الى روقان " : "Add Request For Rowqan Choose"}
+                            </Button>
+                        </Link>
                         <table className="w-full min-w-[640px] table-auto">
                             <thead>
                                 <tr>
@@ -159,13 +171,13 @@ function RowqanChoose() {
                                                         {lang === 'ar' ? "حذف" : "Delete"}
                                                     </Button>
 
-                                                    <Button
+                                                    {/* <Button
                                                         onClick={() => navigate(`/dashboard/updateChoose/${item.id}`)}
                                                         className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
                                                     >
                                                         <PencilIcon className="h-5 w-5 mr-1" />
                                                         {lang === 'ar' ? "تعديل" : "Update"}
-                                                    </Button>
+                                                    </Button> */}
                                                 </div>
                                             </td>
                                         </tr>

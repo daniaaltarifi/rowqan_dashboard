@@ -36,7 +36,7 @@ import UsersByChaletsMessages from "./ChaletsOwners DashBoard/UsersByChaletsMess
 import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
 import CreateReservation from "./Admin DashBoard/CreateReservation";
 import Payment from "./Admin DashBoard/Payment";
-import UpdateChoose from "./Admin DashBoard/UpdateChoose";
+import UpdateChoose from "./pages/dashboard/UpdateChoose";
 // export const API_URL="http://localhost:5000";
 
 function App() {

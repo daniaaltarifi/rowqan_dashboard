@@ -37,6 +37,9 @@ import UpdateRightTime from "@/pages/dashboard/TimeAndStatus/UpdateRightTme";
 import CreateReservation from "../Admin DashBoard/CreateReservation";
 import Payment from "@/Admin DashBoard/Payment";
 import CreateAdminReservation from "@/Admin DashBoard/CreateAdminReservation";
+import UpdateChoose from "@/pages/dashboard/UpdateChoose";
+import AddChooseRowqan from "@/pages/dashboard/AddChooseRowqan";
+import UpdatePayment from "@/pages/dashboard/UpdatePayment";
 
 
 
@@ -87,9 +90,13 @@ export function Dashboard() {
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />
 
+<Route path="updatePayment/:id" element={<UpdatePayment />} />
+
 <Route path="adduser" element={<AddUser />} />
+<Route path="AddChooseRowqan" element={<AddChooseRowqan />} />
 
 <Route path="updateUser/:id" element={<UpdateUser/>} />
+<Route path="updateChoose/:id" element={<UpdateChoose/>} />
 <Route path="addimginchalets/:chalet_id" element={<AddImagesChalets />} />
 <Route path="addimgchalets" element={<AddImagesChalets />} />
 <Route path="abouts" element={<Abouts />} />

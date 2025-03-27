@@ -84,13 +84,13 @@ function Users() {
                     </CardHeader>
                  <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
                         <Link to="/dashboard/adduser">
-                            <Button
+                            {/* <Button
                                 className="flex items-center bg-[#F2C79D] transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"
                                 style={{ marginLeft: '80px' }}
                             >
                                 <PlusIcon className="h-5 w-5 mr-1" />
                                 {lang === 'ar' ? " اضافة مستخدم" : "Add User"}
-                            </Button>
+                            </Button> */}
                         </Link>
                         <table className="w-full min-w-[640px] table-auto">
                             <thead>
@@ -170,7 +170,7 @@ function Users() {
         showModal={showModal} 
         handleClose={handleClose} 
         handleDelete={handleDelete} 
-       id={userIdToDelete} // Pass the chalet ID to DeleteModule
+       id={userIdToDelete}
       />
         </>
     );

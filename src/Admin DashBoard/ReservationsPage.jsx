@@ -7,9 +7,13 @@ import {
   CardHeader,
   CardBody,
   Typography,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  IconButton,
 } from "@material-tailwind/react";
 import { API_URL } from "../App";
-import { TrashIcon} from "@heroicons/react/24/outline";
+import { TrashIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import DeleteModule from "@/Components/DeleteModule";
 import Cookies from "js-cookie";
 
@@ -18,6 +22,8 @@ function ReservationsPage() {
   const lang = Cookies.get('lang') || 'en';
   const [reservationIdToDelete, setreservationIdToDelete] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
   
   // Custom styles objects
   const styles = {
@@ -35,6 +41,20 @@ function ReservationsPage() {
       padding: '2px 8px',
       fontSize: '10px',
       borderRadius: '0 0 0 8px',
+    },
+    detailsButton: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+      padding: '6px 12px',
+      borderRadius: '6px',
+      backgroundColor: '#6DA6BA',
+      color: 'white',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      fontSize: '12px',
+      fontWeight: 'bold',
     }
   };
 
@@ -46,6 +66,16 @@ function ReservationsPage() {
   const handleClose = () => {
     setShowModal(false);
     setreservationIdToDelete(null);
+  };
+
+  const handleShowDetails = (reservation) => {
+    setSelectedReservation(reservation);
+    setShowDetailsModal(true);
+  };
+
+  const handleCloseDetails = () => {
+    setShowDetailsModal(false);
+    setSelectedReservation(null);
   };
 
   const fetchReservations = async () => {
@@ -82,16 +112,25 @@ function ReservationsPage() {
     }
   };
 
-  const tableHeaders = [
+  // Simplified table headers for the main view
+  const mainTableHeaders = [
+    "ID", 
+    `User`, 
+    "Chalet Title",
+    lang === "ar" ? "التفاصيل" : "Details",
+    lang === "ar" ? "حذف" : "Delete"
+  ];
+
+  // Complete headers for the details modal
+  const detailsTableHeaders = [
     "ID", 
     `User`, 
     "Chalet Title", 
-    "time", 
-    "starting_price", 
+    "Time", 
+    "Starting Price", 
     "Total Amount", 
     "Start Date", 
-    "reservation_type",
-    lang === "ar" ? "حذف الحجز للمسؤولين" : "Delete"
+    "Reservation Type"
   ];
 
   return (
@@ -106,7 +145,7 @@ function ReservationsPage() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {tableHeaders.map((el) => (
+                {mainTableHeaders.map((el) => (
                   <th key={el} className="border-b border-blue-gray-50 py-3 px-5 bg-gray-50">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       {el}
@@ -129,7 +168,7 @@ function ReservationsPage() {
                     >
                       {isDeleteEnabled && (
                         <div style={styles.adminLabel}>
-                          Delete Admin Reserve
+                          {lang === "ar" ? "حجز المسؤول" : "Admin Reserve"}
                         </div>
                       )}
                       <td className={className}>
@@ -151,35 +190,17 @@ function ReservationsPage() {
                         </Typography>
                       </td>
                       <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
-                          {reservation.time}
-                        </Typography>
+                        <button 
+                          style={styles.detailsButton}
+                          onClick={() => handleShowDetails(reservation)}
+                          className="hover:bg-blue-500"
+                        >
+                          <EyeIcon className="h-4 w-4" /> 
+                          {lang === 'ar' ? "عرض التفاصيل" : "See Details"}
+                        </button>
                       </td>
                       <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
-                          {reservation.starting_price}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
-                          {reservation.total_amount}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
-                          {new Date(reservation.start_date).toLocaleDateString()}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
-                          {reservation.reservation_type}
-                        </Typography>
-                      </td>
-                      {isDeleteEnabled && (
-                        <td className={className} style={{ display: 'flex', alignItems: 'center' }}>
-                          <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'} mr-[200px]`}>
-                            {lang === "ar" ? "حذف الحجز للمسؤولين" : "Delete"}
-                          </Typography>
+                        {isDeleteEnabled && (
                           <button 
                             onClick={() => handleShow(reservation.id)} 
                             className="flex items-center gap-2 px-4 py-2 rounded-md 
@@ -190,14 +211,14 @@ function ReservationsPage() {
                             <TrashIcon className="h-5 w-5" /> 
                             {lang === 'ar' ? "حذف" : "Delete"}
                           </button>
-                        </td>
-                      )}
+                        )}
+                      </td>
                     </tr>
                   );
                 })
               ) : (
                 <tr>
-                  <td colSpan={tableHeaders.length} className="py-8 px-5 text-center text-gray-500 italic">
+                  <td colSpan={mainTableHeaders.length} className="py-8 px-5 text-center text-gray-500 italic">
                     <Typography variant="small" className="text-blue-gray-400">
                       {lang === "ar" ? "لا توجد حجوزات" : "No reservations found"}
                     </Typography>
@@ -209,12 +230,100 @@ function ReservationsPage() {
         </CardBody>
       </Card>
       
+      {/* Delete Confirmation Modal */}
       <DeleteModule 
         showModal={showModal} 
         handleClose={handleClose} 
         handleDelete={handleDelete} 
         id={reservationIdToDelete} 
       />
+
+      {/* Details Modal */}
+      <Dialog
+        open={showDetailsModal}
+        handler={handleCloseDetails}
+        size="lg"
+        className="bg-white rounded-lg shadow-xl"
+      >
+        <DialogHeader className="flex justify-between items-center bg-blue-gray-50 rounded-t-lg">
+          <Typography variant="h6">
+            {lang === "ar" ? "تفاصيل الحجز" : "Reservation Details"}
+          </Typography>
+          <IconButton 
+            variant="text" 
+            color="blue-gray" 
+            onClick={handleCloseDetails}
+            className="w-8 h-8 p-0 rounded-full"
+          >
+            <XMarkIcon className="h-6 w-6" />
+          </IconButton>
+        </DialogHeader>
+        <DialogBody className="p-4">
+          {selectedReservation && (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px] table-auto border-collapse">
+                <thead>
+                  <tr className="bg-blue-gray-50">
+                    {detailsTableHeaders.map((header) => (
+                      <th key={header} className="border-b border-blue-gray-100 p-4 text-left">
+                        <Typography variant="small" className="text-xs font-bold uppercase text-blue-gray-500">
+                          {header}
+                        </Typography>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-blue-gray-50">
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {selectedReservation.id}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {selectedReservation.user ? selectedReservation.user.name : "No user"}
+                        <br />
+                        {selectedReservation.user && selectedReservation.user.email}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {selectedReservation.chalet.title}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {selectedReservation.time}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {selectedReservation.starting_price}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {selectedReservation.total_amount}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {new Date(selectedReservation.start_date).toLocaleDateString()}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray" className="font-semibold">
+                        {selectedReservation.reservation_type}
+                      </Typography>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+        </DialogBody>
+      </Dialog>
     </div>
   );
 }

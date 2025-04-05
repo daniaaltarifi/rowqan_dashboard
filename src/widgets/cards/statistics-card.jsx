@@ -33,10 +33,10 @@ export function StatisticsCard() {
 const fetchData = async () => {
   try {
     const [usersResponse, chaletsResponse,blogsResponse] = await Promise.all([
-      axios.get(`${API_URL}/users/getAllUsers/${lang}`),
-      axios.get(`${API_URL}/chalets/getallchalets/${lang}`),
+      axios.get(`${API_URL}/users/getAllUsers`),
+      axios.get(`${API_URL}/chalets/getallchalets`),
       // axios.get(`${API_URL}/ReservationsChalets/getAllReservationChalet/${lang}`),
-      axios.get(`${API_URL}/Blogs/getAllBlogs/${lang}`),
+      axios.get(`${API_URL}/Blogs/getAllBlogs`),
       // axios.get(`${API_URL}/payments/getPayments`),
     ]);
 

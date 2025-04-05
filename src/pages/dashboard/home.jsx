@@ -27,7 +27,7 @@ export function Home() {
  
     const fetchData = async () => {
       try {
-        const userResponse = await axios.get(`${API_URL}/users/getAllUsers/${lang}`);
+        const userResponse = await axios.get(`${API_URL}/users/getAllUsers?lang=${lang}`);
         const users = userResponse.data;
         const userCounts = {};
         users.forEach(user => {
@@ -63,7 +63,7 @@ export function Home() {
         };
 
         // Fetch feedback data
-        const feedbackResponse = await axios.get(`${API_URL}/chalets/getallchalets/${lang}`); // Adjust to your feedback API endpoint
+        const feedbackResponse = await axios.get(`${API_URL}/chalets/getallchalets}`); // Adjust to your feedback API endpoint
         const feedbacks = feedbackResponse.data;
         // Process feedback data to count ratings
         const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };

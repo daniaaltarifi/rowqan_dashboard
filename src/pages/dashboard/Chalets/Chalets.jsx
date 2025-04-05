@@ -35,7 +35,7 @@ const handleShow = (id) => {
   const fetchChalets = async () => {
     try {
       const chaletsRes = await
-        axios.get(`${API_URL}/chalets/getallchalets/${lang}`)
+        axios.get(`${API_URL}/chalets/getallchalets?lang=${lang}`)
       
       setChalets(chaletsRes.data);
       

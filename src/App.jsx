@@ -26,7 +26,7 @@ import AddContact from "./pages/dashboard/Contact/AddContact";
 import UpdateContact from "./pages/dashboard/Contact/UpdateContact";
 import AddStatusChalet from "./pages/dashboard/TimeAndStatus/AddStatusChalet";
 import UpdateStatusChalet from "./pages/dashboard/TimeAndStatus/UpdateStatusChalet";
-export const API_URL="https://rowqanbackend.rowqan.com";
+// export const API_URL="https://rowqanbackend.rowqan.com";
 import axios from 'axios'
 import Messages from "./ChaletsOwners DashBoard/Messages";
 import UpdateUser from "./pages/dashboard/Users/UpdateUser";
@@ -37,7 +37,7 @@ import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
 import CreateReservation from "./Admin DashBoard/CreateReservation";
 import Payment from "./Admin DashBoard/Payment";
 import UpdateChoose from "./pages/dashboard/UpdateChoose";
-// export const API_URL="http://localhost:5000";
+export const API_URL="http://localhost:5000";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('authtoken'));

@@ -23,7 +23,7 @@ function ReserveChalet() {
             let chaletRes;
             
             if (selectedRole === 'user') {
-                chaletRes = await axios.get(`${API_URL}/chalets/getallchalets/${lang}`);
+                chaletRes = await axios.get(`${API_URL}/chalets/getallchalets`);
             } else {
                 chaletRes = await axios.get(`${API_URL}/adminChalets/getChaletsByAdminId/${receiverId}`);
             }
@@ -40,6 +40,27 @@ function ReserveChalet() {
         window.scrollTo(0, 0);
         fetchData();
     }, [lang, selectedRole]);
+
+    // Función para analizar de forma segura los datos de tipo
+    const parseType = (typeData) => {
+        try {
+            // Si typeData ya es un objeto, devolverlo directamente
+            if (typeof typeData === 'object' && typeData !== null) {
+                return typeData;
+            }
+            
+            // Si es string, intentar parsear
+            if (typeof typeData === 'string') {
+                return JSON.parse(typeData.replace(/\\/g, "").replace(/^"|"$/g, ""));
+            }
+            
+            // Si no es ni objeto ni string, devolver un objeto vacío para evitar errores
+            return {};
+        } catch (error) {
+            console.error("Error parsing type data:", error, typeData);
+            return {}; // Devolver objeto vacío en caso de error
+        }
+    };
 
     return (
         <div className="page-wrapper">
@@ -133,11 +154,10 @@ function ReserveChalet() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                     {dataToDisplay.length > 0 ? (
                         dataToDisplay.map((chal) => {
-                            const typeChalets = JSON.parse(
-                                chal.type.replace(/\\/g, "").replace(/^"|"$/g, "")
-                            );
+                            // Usar la función parseType para manejar diferentes formatos de datos
+                            const typeChalets = parseType(chal.type);
 
-                            const eveningTime = chal.RightTimeModels.find(
+                            const eveningTime = chal.RightTimeModels && chal.RightTimeModels.find(
                                 (time) => time.type_of_time === "Evening"
                             );
                             const eveningPrice = eveningTime ? eveningTime.price : 0;
@@ -181,7 +201,7 @@ function ReserveChalet() {
 
                                                 <div className="mt-4 flex flex-col">
                                                     <div className="flex justify-evenly flex-wrap mb-3">
-                                                        {Object.entries(typeChalets)
+                                                        {typeChalets && Object.entries(typeChalets)
                                                             .filter(([key]) => key === "Number of Visitors" || key === "عدد الغرف")
                                                             .map(([key, value], index) => (
                                                                 <Card.Text key={index} className="type_chalets">

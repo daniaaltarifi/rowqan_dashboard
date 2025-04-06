@@ -17,6 +17,7 @@ import ReservationsPage from "./Admin DashBoard/ReservationsPage";
 import GetAllPayments from "./Admin DashBoard/GetAllPayments";
 import ReserveChalet from "./Admin DashBoard/ReserveChalet";
 import RowqanChoose from "./Admin DashBoard/RowqanChoose";
+import MessagesUsers from "./ChaletsOwners DashBoard/MessagesUsers";
 
 const lang = Cookies.get("lang") || "en"; 
 
@@ -92,7 +93,7 @@ export const useRoutes = () => {
               // },
               {
                 icon: <EnvelopeIcon  {...icon} />,
-                name: lang === "ar" ? "الرسائل" : "Messages",
+                name: lang === "ar" ? "الرسائل" : "Messages Chalets",
                 path: "/messages",
                 element: <MessagesChaletOwners />,
               },
@@ -151,7 +152,7 @@ export const useRoutes = () => {
                 icon: <ChatBubbleOvalLeftEllipsisIcon {...icon} />,
                 name: lang === "ar"
                   ? "رسائل الشاليهات"
-                  : "Messages",
+                  : "Messages Chalets",
                 path: "/messages",
                 element: <MessagesChaletOwners />,
               },
@@ -197,9 +198,15 @@ export const useRoutes = () => {
             },
             {
               icon: <EnvelopeIcon  {...icon} />,
-              name: lang === "ar" ? "الرسائل" : "Messages",
+              name: lang === "ar" ? "الرسائل" : "Messages Chalets",
               path: "/messages",
               element: <MessagesChaletOwners />,
+            },
+            {
+              icon: <EnvelopeIcon  {...icon} />,
+              name: lang === "ar" ? "الرسائل" : "Messages Users",
+              path: "/messagesUsers",
+              element: <MessagesUsers />,
             },
             {
               icon: <UsersIcon {...icon} />,
@@ -209,7 +216,7 @@ export const useRoutes = () => {
             },
             {
               icon: <Cog6ToothIcon  {...icon} />,
-              name: lang === "ar" ? "الاعدادات" : "Setting",
+              name: lang === "ar" ? "المحتوى" : "Contents",
               path: "/setting",
               element: <Abouts />,
             },

@@ -45,7 +45,7 @@ const handleShow = (id, type) => {
   const fetchContact = async () => {
     try {
       const ContactRes = await
-        axios.get(`${API_URL}/Contacts/getAllContacts/${lang}`);
+        axios.get(`${API_URL}/Contacts/getAllContacts`);
       setContact(ContactRes.data);
       
     } catch (error) {

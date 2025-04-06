@@ -55,12 +55,12 @@ function ReservationCalendar() {
   //   }
   // }, [rightTimes, lang, chalet_id, fetchReservedDates]);
   useEffect(() => {
-    fetch(`${API_URL}/ReservationsChalets/reservationsDatesByChaletId/${chalet_id}/en`)
+    fetch(`${API_URL}/ReservationsChalets/reservationsDatesByChaletId/${chalet_id}`)
       .then((response) => response.json())
       .then((data) => {
         const formattedReservations = data.reservations.map((res) => ({
-          date: res.start_date, // Keep the date
-          time: res.Time, // Store the time slot
+          date: res.start_date,
+          time: res.Time, 
         }));
         setReservedDates(formattedReservations);
       })
@@ -82,7 +82,7 @@ function ReservationCalendar() {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startDay = firstDay.getDay(); // day of week of the 1st of the month
+    const startDay = firstDay.getDay(); 
     return { daysInMonth, startDay };
   };
 
@@ -93,7 +93,7 @@ function ReservationCalendar() {
   const getTimesBychaletsId = useCallback(async () => {
     try {
       const res = await axios.get(
-        `${API_URL}/RightTimes/getallrighttimesbyChaletId/${chalet_id}/${lang}`
+        `${API_URL}/RightTimes/getallrighttimesbyChaletId/${chalet_id}`
       );
       setRightTimes(res.data);
     } catch (error) {

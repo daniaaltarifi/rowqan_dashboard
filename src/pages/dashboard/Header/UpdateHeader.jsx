@@ -23,7 +23,7 @@ function UpdateHeader() {
     useEffect(() => {
         const fetchheader = async () => {
             try {
-                const response = await axios.get(`${API_URL}/header/getHeaderById/${id}/${lang}`);
+                const response = await axios.get(`${API_URL}/header/getHeaderById/${id}`);
                 setheader( 
                     {header_name: response.data.header_name,
                     url: response.data.url

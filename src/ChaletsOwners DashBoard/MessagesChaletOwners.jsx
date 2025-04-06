@@ -3,7 +3,6 @@ import '../Styles/ChatBot.css'
 import axios from 'axios'
 import { API_URL } from '@/App'
 import Cookies from 'js-cookie';
-import profile from "../Images/user.png";
 import { Link } from 'react-router-dom';
 
 function MessagesChaletOwners() {
@@ -31,7 +30,7 @@ function MessagesChaletOwners() {
     const query = event.target.value;
     setSearchQuery(query);
 
-    // Filter the courses based on the search query
+
     const filteredResults = recentMessages.filter((message) =>
       message.Sender?.name.toLowerCase().includes(query.toLowerCase())
     );
@@ -47,14 +46,13 @@ function MessagesChaletOwners() {
         <div className="recent-chats">
           {dataToDisplay.map((message)=>(
             <Link 
-            // to={`/dashboard/messagebetweenusers/${message.senderId}`}
             to={`/dashboard/usersbychaletsmessages/${message.Chalet?.id}`}
             >
             <div className="recent-chat" >
                 <img src={message.Chalet?.image} alt="Profile"/>
                 <div className="chat-info">
                     <h5>{message.Chalet?.title}</h5>
-                    <p>{message.Chalet?.city}</p>
+                    <p>{message.Chalet?.city}</p> 
                 </div>
             </div>
             </Link>

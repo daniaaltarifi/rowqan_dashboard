@@ -25,7 +25,7 @@ function ReservationsPage() {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
   
-  // Custom styles objects
+  
   const styles = {
     deletableRow: {
       background: 'linear-gradient(135deg, #AFB7AB 0%, #6DA6BA 50%, #F2C79D 100%)',
@@ -49,6 +49,20 @@ function ReservationsPage() {
       padding: '6px 12px',
       borderRadius: '6px',
       backgroundColor: '#6DA6BA',
+      color: 'white',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      fontSize: '12px',
+      fontWeight: 'bold',
+    },
+    deleteButton: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+      padding: '6px 12px',
+      borderRadius: '6px',
+      backgroundColor: '#e53e3e',
       color: 'white',
       border: 'none',
       cursor: 'pointer',
@@ -112,7 +126,7 @@ function ReservationsPage() {
     }
   };
 
-  // Simplified table headers for the main view
+ 
   const mainTableHeaders = [
     "ID", 
     `User`, 
@@ -121,7 +135,7 @@ function ReservationsPage() {
     lang === "ar" ? "حذف" : "Delete"
   ];
 
-  // Complete headers for the details modal
+  
   const detailsTableHeaders = [
     "ID", 
     `User`, 
@@ -157,35 +171,35 @@ function ReservationsPage() {
             <tbody>
               {reservations.length > 0 ? (
                 reservations.map((reservation, index) => {
-                  const isDeleteEnabled = reservation.user && reservation.user.user_type_id === 1;
+                  const isAdmin = reservation.user && reservation.user.user_type_id === 1;
                   const className = `py-3 px-5 ${index === reservations.length - 1 ? "" : "border-b border-blue-gray-50"}`;
                   
                   return (
                     <tr 
                       key={reservation.id} 
-                      style={isDeleteEnabled ? styles.deletableRow : {}}
+                      style={isAdmin ? styles.deletableRow : {}}
                       className="transition-all hover:bg-gray-50 relative"
                     >
-                      {isDeleteEnabled && (
+                      {isAdmin && (
                         <div style={styles.adminLabel}>
                           {lang === "ar" ? "حجز المسؤول" : "Admin Reserve"}
                         </div>
                       )}
                       <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
+                        <Typography className={`text-xs font-semibold ${isAdmin ? 'text-white' : 'text-blue-gray-600'}`}>
                           {reservation.id}
                         </Typography>
                       </td>
                       <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
+                        <Typography className={`text-xs font-semibold ${isAdmin ? 'text-white' : 'text-blue-gray-600'}`}>
                           {reservation.user ? `${reservation.user.name} ` : `No user`}
                         </Typography>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
+                        <Typography className={`text-xs font-semibold ${isAdmin ? 'text-white' : 'text-blue-gray-600'}`}>
                           {reservation.user ? `${reservation.user.email} ` : ``}
                         </Typography>
                       </td>
                       <td className={className}>
-                        <Typography className={`text-xs font-semibold ${isDeleteEnabled ? 'text-white' : 'text-blue-gray-600'}`}>
+                        <Typography className={`text-xs font-semibold ${isAdmin ? 'text-white' : 'text-blue-gray-600'}`}>
                           {reservation.chalet.title}
                         </Typography>
                       </td>
@@ -200,18 +214,14 @@ function ReservationsPage() {
                         </button>
                       </td>
                       <td className={className}>
-                        {isDeleteEnabled && (
-                          <button 
-                            onClick={() => handleShow(reservation.id)} 
-                            className="flex items-center gap-2 px-4 py-2 rounded-md 
-                                     bg-white/20 backdrop-blur-sm border border-white/30
-                                     text-white transition-all duration-300 cursor-pointer
-                                     hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-500"
-                          >
-                            <TrashIcon className="h-5 w-5" /> 
-                            {lang === 'ar' ? "حذف" : "Delete"}
-                          </button>
-                        )}
+                        <button 
+                          onClick={() => handleShow(reservation.id)} 
+                          style={styles.deleteButton}
+                          className="hover:bg-red-600"
+                        >
+                          <TrashIcon className="h-4 w-4" /> 
+                          {lang === 'ar' ? "حذف" : "Delete"}
+                        </button>
                       </td>
                     </tr>
                   );
@@ -230,7 +240,7 @@ function ReservationsPage() {
         </CardBody>
       </Card>
       
-      {/* Delete Confirmation Modal */}
+      
       <DeleteModule 
         showModal={showModal} 
         handleClose={handleClose} 
@@ -238,7 +248,7 @@ function ReservationsPage() {
         id={reservationIdToDelete} 
       />
 
-      {/* Details Modal */}
+      
       <Dialog
         open={showDetailsModal}
         handler={handleCloseDetails}

@@ -26,9 +26,6 @@ function CalendarChalets({
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
- 
-
-
   const handleSelectDate = (day, time_id, priceForDaily) => {
     const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     
@@ -36,9 +33,7 @@ function CalendarChalets({
       .toString()
       .padStart(2, "0")}-${newDate.getDate().toString().padStart(2, "0")}`;
   
-   
     const timeObject = rightTimes.find((time) => time.id === time_id);  
-    
     
     const reservedDateInfo = reservedDates.find(
       (reservedDate) =>
@@ -60,30 +55,19 @@ function CalendarChalets({
     if (reservedDateInfo && reservedDateInfo.status === 'Pending') {
       setModalTitle(
         lang === "ar" 
-          ? "حجز قيد الانتظار" 
-          : "Pending Reservation"
+          ? "تاريخ قيد الانتظار" 
+          : "Pending Date"
       );
       setModalMessage(
         lang === "ar"
-          ? "يوجد حجز معلق لهذا التاريخ. يمكنك المتابعة بالحجز، ولكن يجب عليك الإسراع في إتمام عملية الدفع لضمان الحصول على الحجز قبل الآخرين."
-          : "There is a pending reservation for this date. You can proceed with booking, but you need to complete the payment process quickly to secure the reservation before others."
+          ? "هذا التاريخ محجوز من قبل في انتظار موافقة الادمن"
+          : "This date is already reserved and waiting for admin approval."
       );
       handleShowModal();
-      
-      const dateInRightTimes = timeObject?.DatesForRightTimes.find(
-        (dateObj) => dateObj.date === selectedFormattedDate
-      );
-    
-      const finalPrice = dateInRightTimes ? dateInRightTimes.price : priceForDaily;
-    
-      setSelectedDateAndTime({ [time_id]: newDate });
-      setSelectedDate(newDate);
-      setTimeIdDaily(time_id);
-      setTimePriceDaily(finalPrice);
       return;
     }
   
-    // Proceed with normal date selection
+    
     const dateInRightTimes = timeObject?.DatesForRightTimes.find(
       (dateObj) => dateObj.date === selectedFormattedDate
     );
@@ -127,16 +111,11 @@ function CalendarChalets({
     setTimePriceDaily: PropTypes.func.isRequired,
   };
 
-
-
-  
-
-
   const getTimesBychaletsId = useCallback(async () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${API_URL}/RightTimes/getallrighttimesbyChaletId/${id}/${lang}`
+        `${API_URL}/RightTimes/getallrighttimesbyChaletId/${id}`
       );
       setRightTimes(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
@@ -154,7 +133,7 @@ function CalendarChalets({
   }, [getTimesBychaletsId, id, lang]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/ReservationsChalets/reservationsDatesByChaletId/${id}/en`)
+    fetch(`${API_URL}/ReservationsChalets/reservationsDatesByChaletId/${id}`)
       .then((response) => response.json())
       .then((data) => {
         const formattedReservations = data.reservations.map((res) => ({
@@ -188,9 +167,11 @@ function CalendarChalets({
           font-size: 0.7em;
         }
         .calendar-day.pending {
-          color: #FFC107 !important; /* Amber color for pending */
-          text-decoration: line-through;
+          color: #FFC107 !important; /* Yellow color for pending */
           position: relative;
+          cursor: pointer;
+          background-color: rgba(255, 193, 7, 0.2); /* Light yellow background */
+          border-radius: 50%;
         }
         .calendar-day.pending::after {
           content: 'Pending';
@@ -200,6 +181,54 @@ function CalendarChalets({
           transform: translateX(-50%);
           color: #FFC107;
           font-size: 0.7em;
+          font-weight: bold;
+        }
+        
+        /* Modal styling */
+        .modal {
+          display: ${showModal ? 'block' : 'none'};
+          position: fixed;
+          z-index: 1000;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+          background-color: white;
+          margin: 15% auto;
+          padding: 20px;
+          border-radius: 8px;
+          max-width: 500px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 15px;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 10px;
+        }
+        .close-button {
+          font-size: 24px;
+          font-weight: bold;
+          cursor: pointer;
+          background: none;
+          border: none;
+        }
+        .modal-footer {
+          margin-top: 20px;
+          text-align: right;
+        }
+        .modal-button {
+          padding: 8px 16px;
+          background-color: #6DA6BA;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
         }
       `}</style>
       <div className="date-picker-container">
@@ -262,11 +291,11 @@ function CalendarChalets({
                     .toString()
                     .padStart(2, "0")}`;
 
-                  // Check if this date AND time slot is reserved
+                  
                   const reservedDateInfo = reservedDates.find(
                     (reserved) =>
                       reserved.date === currentFormattedDate &&
-                      reserved.time === time.type_of_time
+                      (reserved.time === time.type_of_time || reserved.time === "FullDay")
                   );
 
                   const isSelected =
@@ -293,12 +322,12 @@ function CalendarChalets({
                       className={`calendar-day ${
                         isSelected ? "selected" : ""
                       } ${reservationClass}`}
-                      onClick={!isDisabled ? () =>
+                      onClick={() =>
                         handleSelectDate(
                           day,
                           time.id,
                           time.After_Offer > 0 ? time.After_Offer : time.price
-                        ) : undefined}
+                        )}
                     >
                       {day}
                     </span>
@@ -310,6 +339,23 @@ function CalendarChalets({
         ) : (
           <p>No Times Available...</p>
         )}
+      </div>
+
+      <div className="modal">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h3>{modalTitle}</h3>
+            <button className="close-button" onClick={handleCloseModal}>&times;</button>
+          </div>
+          <div className="modal-body">
+            <p>{modalMessage}</p>
+          </div>
+          <div className="modal-footer">
+            <button className="modal-button" onClick={handleCloseModal}>
+              {lang === "ar" ? "حسناً" : "OK"}
+            </button>
+          </div>
+        </div>
       </div>
 
       {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}

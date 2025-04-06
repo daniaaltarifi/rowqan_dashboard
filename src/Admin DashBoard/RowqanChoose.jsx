@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
-import { API_URL } from "../App.jsx";
 import { Link, useNavigate } from "react-router-dom";
 
-import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PlusIcon, EyeIcon } from "@heroicons/react/24/outline";
 import {
     Card,
     CardHeader,
     CardBody,
     Typography,
-    Button
+    Button,
+    Dialog,
+    DialogHeader,
+    DialogBody,
+    DialogFooter
 } from "@material-tailwind/react";
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
@@ -22,6 +25,8 @@ function RowqanChoose() {
     const [chooseData, setChooseData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [chooseIdToDelete, setChooseIdToDelete] = useState(null);
+    const [detailsModal, setDetailsModal] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
     const lang = Cookies.get('lang') || 'en';
 
     const handleShow = (id) => {
@@ -32,6 +37,16 @@ function RowqanChoose() {
     const handleClose = () => {
         setShowModal(false);      
         setChooseIdToDelete(null);  
+    };
+
+    const handleShowDetails = (item) => {
+        setSelectedItem(item);
+        setDetailsModal(true);
+    };
+
+    const handleCloseDetails = () => {
+        setDetailsModal(false);
+        setSelectedItem(null);
     };
 
     const fetchChooseData = async () => {
@@ -72,16 +87,13 @@ function RowqanChoose() {
         <>
             <div className="mt-12 mb-8 flex flex-col gap-12">
                 <Card>
-               
                     <CardHeader variant="gradient" style={{ backgroundColor: '#6DA6BA' }} className="mb-8 p-6">
-                        
                         <Typography variant="h6" color="white">
-                            
                             {lang === 'ar' ? "جدول طلبات الاختيار" : "Rowqan Choose Requests"}
                         </Typography>
                     </CardHeader>
                     <CardBody className="table-container overflow-x-scroll px-0 pt-0 pb-2">
-                    <Link to="/dashboard/AddChooseRowqan">
+                        <Link to="/dashboard/AddChooseRowqan">
                             <Button
                                 className="flex items-center bg-[#F2C79D] transition duration-300 ease-in hover:shadow-lg hover:shadow-green-500"
                                 style={{ marginLeft: '80px' }}
@@ -96,12 +108,7 @@ function RowqanChoose() {
                                     {[
                                         `${lang === 'ar' ? "الاسم الكامل" : "Full Name"}`,
                                         `${lang === 'ar' ? "رقم الهاتف" : "Phone Number"}`,
-                                        `${lang === 'ar' ? "نوع الحجز" : "Reservation Type"}`,
-                                        `${lang === 'ar' ? "تاريخ البدء" : "Start Date"}`,
-                                        `${lang === 'ar' ? "المدة" : "Duration"}`,
-                                        `${lang === 'ar' ? "عدد الزوار" : "Visitors"}`,
-                                        `${lang === 'ar' ? "المرافق" : "Facilities"}`,
-                                        `${lang === 'ar' ? "الميزانية" : "Budget"}`,
+                                        `${lang === 'ar' ? "التفاصيل" : "Details"}`,
                                         `${lang === 'ar' ? "تنفيذ" : "Action"}`
                                     ].map((el) => (
                                         <th key={el} className="border-b border-blue-gray-50 py-3 px-5 ">
@@ -132,53 +139,22 @@ function RowqanChoose() {
                                                 </Typography>
                                             </td>
                                             <td className={className}>
-                                                <Typography className="text-xs font-normal text-blue-gray-500">
-                                                    {item.reservation_type}
-                                                </Typography>
+                                                <Button
+                                                    onClick={() => handleShowDetails(item)}
+                                                    className="text-white-600 bg-[#6DA6BA] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
+                                                >
+                                                    <EyeIcon className="h-5 w-5 mr-1" />
+                                                    {lang === 'ar' ? "اظهار التفاصيل" : "See Details"}
+                                                </Button>
                                             </td>
                                             <td className={className}>
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {new Date(item.startDate).toLocaleDateString()}
-                                                </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {item.Duration}
-                                                </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {item.number_of_visitors}
-                                                </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {item.Facilities.join(", ")}
-                                                </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                <Typography className="text-xs font-semibold text-blue-gray-600">
-                                                    {item.Budget} JOD
-                                                </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                <div className="flex space-x-4 rtl:space-x-reverse">
-                                                    <Button
-                                                        onClick={() => handleShow(item.id)}
-                                                        className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
-                                                    >
-                                                        <TrashIcon className="h-5 w-5 mr-1" />
-                                                        {lang === 'ar' ? "حذف" : "Delete"}
-                                                    </Button>
-
-                                                    {/* <Button
-                                                        onClick={() => navigate(`/dashboard/updateChoose/${item.id}`)}
-                                                        className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-blue-500"
-                                                    >
-                                                        <PencilIcon className="h-5 w-5 mr-1" />
-                                                        {lang === 'ar' ? "تعديل" : "Update"}
-                                                    </Button> */}
-                                                </div>
+                                                <Button
+                                                    onClick={() => handleShow(item.id)}
+                                                    className="text-white-600 bg-[#F2C79D] flex items-center transition duration-300 ease-in hover:shadow-lg hover:shadow-red-500"
+                                                >
+                                                    <TrashIcon className="h-5 w-5 mr-1" />
+                                                    {lang === 'ar' ? "حذف" : "Delete"}
+                                                </Button>
                                             </td>
                                         </tr>
                                     );
@@ -189,12 +165,82 @@ function RowqanChoose() {
                 </Card>
             </div>
 
+            
             <DeleteModule 
                 showModal={showModal} 
                 handleClose={handleClose} 
                 handleDelete={handleDelete} 
                 id={chooseIdToDelete}
             />
+
+            
+            <Dialog open={detailsModal} handler={handleCloseDetails} size="lg">
+                <DialogHeader>
+                    {lang === 'ar' ? "تفاصيل الطلب" : "Request Details"}
+                </DialogHeader>
+                <DialogBody divider className="overflow-y-auto">
+                    {selectedItem && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "الاسم الكامل" : "Full Name"}
+                                </Typography>
+                                <Typography variant="paragraph">{selectedItem.Full_Name}</Typography>
+                            </div>
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "رقم الهاتف" : "Phone Number"}
+                                </Typography>
+                                <Typography variant="paragraph">{selectedItem.Phone_Number}</Typography>
+                            </div>
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "نوع الحجز" : "Reservation Type"}
+                                </Typography>
+                                <Typography variant="paragraph">{selectedItem.reservation_type}</Typography>
+                            </div>
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "تاريخ البدء" : "Start Date"}
+                                </Typography>
+                                <Typography variant="paragraph">{new Date(selectedItem.startDate).toLocaleDateString()}</Typography>
+                            </div>
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "المدة" : "Duration"}
+                                </Typography>
+                                <Typography variant="paragraph">{selectedItem.Duration}</Typography>
+                            </div>
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "عدد الزوار" : "Visitors"}
+                                </Typography>
+                                <Typography variant="paragraph">{selectedItem.number_of_visitors}</Typography>
+                            </div>
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "المرافق" : "Facilities"}
+                                </Typography>
+                                <Typography variant="paragraph">{selectedItem.Facilities.join(", ")}</Typography>
+                            </div>
+                            <div>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    {lang === 'ar' ? "الميزانية" : "Budget"}
+                                </Typography>
+                                <Typography variant="paragraph">{selectedItem.Budget} JOD</Typography>
+                            </div>
+                        </div>
+                    )}
+                </DialogBody>
+                <DialogFooter>
+                    <Button 
+                        onClick={handleCloseDetails} 
+                        className="bg-[#6DA6BA]"
+                    >
+                        {lang === 'ar' ? "إغلاق" : "Close"}
+                    </Button>
+                </DialogFooter>
+            </Dialog>
         </>
     );
 }

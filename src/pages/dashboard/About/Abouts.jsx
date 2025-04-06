@@ -39,9 +39,9 @@ function Abouts() {
     const fetchAbout = async () => {
         try {
             const [aboutRes,heroRes,blogsRes] = await Promise.all([
-                axios.get(`${API_URL}/aboutUs/getabout/${lang}`),
-                axios.get(`${API_URL}/heroes/getAllHeroes/${lang}`),
-                axios.get(`${API_URL}/Blogs/getAllBlogs/${lang}`),
+                axios.get(`${API_URL}/aboutUs/getabout`),
+                axios.get(`${API_URL}/heroes/getAllHeroes`),
+                axios.get(`${API_URL}/Blogs/getAllBlogs`),
             ]) 
             setAbout(aboutRes.data);
             setHero(heroRes.data)

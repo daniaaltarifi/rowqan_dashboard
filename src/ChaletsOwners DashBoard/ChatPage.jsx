@@ -1,295 +1,215 @@
-import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import socketIOClient from "socket.io-client";
+import logo from "../Images/logo.png";
+import send from "../Images/paper-plane.png";
+import axios from "axios";
 import { API_URL } from '@/App';
 import Cookies from 'js-cookie';
-import profile from '../Images/user.png';
-import '../Styles/ChatPage.css'; // We'll create this CSS file
-
-// Import icons (assuming you're using Heroicons or similar)
-import { 
-  ArrowLeft, 
-  MoreVertical, 
-  Paperclip, 
-  Mic, 
-  Smile,
-  Send
-} from 'react-feather'; // Or any other icon library you prefer
+import '../Styles/ChatBot.css';
 
 function ChatPage() {
-  const { userId } = useParams(); // Partner/recipient user ID from URL
-  const navigate = useNavigate();
-  const messagesEndRef = useRef(null); // Reference for auto-scrolling
-  const fileInputRef = useRef(null); // Reference for file input
-  
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [partner, setPartner] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
-  
-  // Get current user details from cookies
+  const { userId } = useParams();
+  console.log(`Th User Id Is:${userId}`)
+  const location = useLocation();
   const lang = Cookies.get('lang') || 'en';
-  const currentUserId = Cookies.get('userId');
-  
-  // Fetch partner info and chat history on component mount
+  const chalet_title = location.state?.chalet_title || null;
+  const receiverId = Cookies.get('receiverId');
+  const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [newMessage, setNewMessage] = useState("");
+
   useEffect(() => {
-    fetchPartnerInfo();
+    const fetchMessages = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/messages/betweenMessage/${userId}/4`);
+    
+        if (res.data && Array.isArray(res.data)) {
+          const newMessages = res.data.map((messageObj) => {
+            return {
+              text: messageObj.message,
+              type: messageObj.status === "sent" ? "received" : "sent",
+            };
+          });
+          setMessages(newMessages);
+        } else {
+          console.error("Unexpected data format", res.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+    
     fetchMessages();
-    
-    // Set up polling for new messages
-    const interval = setInterval(() => {
-      fetchMessages(false); // Pass false to avoid showing loading state
-    }, 10000); // Every 10 seconds
-    
-    return () => clearInterval(interval);
-  }, [userId]);
   
-  // Auto-scroll to bottom when messages change
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+
+    const socketInstance = socketIOClient(API_URL);
+    setSocket(socketInstance);
   
-  const fetchPartnerInfo = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/users/${userId}`);
-      setPartner(response.data);
-    } catch (error) {
-      console.error('Error fetching partner info:', error);
-    }
-  };
-  
-  const fetchMessages = async (showLoading = true) => {
-    if (showLoading) setLoading(true);
     
-    try {
-      // Fetch messages between current user and partner
-      const response = await axios.get(`${API_URL}/messages/conversation/${currentUserId}/${userId}`);
+    socketInstance.on("receive_message", (messageData) => {
       
-      if (response.data && Array.isArray(response.data)) {
-        setMessages(response.data);
-        
-        // Mark messages as read if needed
-        markMessagesAsRead();
+      if (messageData.senderId !== userId) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            text: messageData.message,
+            type: "received",
+          },
+        ]);
       }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    } finally {
-      if (showLoading) setLoading(false);
-    }
-  };
-  
-  const markMessagesAsRead = async () => {
-    try {
-      await axios.post(`${API_URL}/messages/markAsRead`, {
-        receiverId: currentUserId,
-        senderId: userId
-      });
-    } catch (error) {
-      console.error('Error marking messages as read:', error);
-    }
-  };
-  
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    
-    if (!newMessage.trim()) return;
-    setSending(true);
-    
-    try {
-      // Prepare message data
-      const messageData = {
-        message: newMessage.trim(),
-        senderId: currentUserId,
-        receiverId: userId
-      };
-      
-      // Send the message
-      await axios.post(`${API_URL}/messages/SendMessage`, messageData);
-      
-      // Clear input field
-      setNewMessage('');
-      
-      // Refresh messages
-      fetchMessages(false);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      alert(lang === 'ar' ? 'فشل في إرسال الرسالة' : 'Failed to send message');
-    } finally {
-      setSending(false);
-    }
-  };
-  
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-  
-  const handleAttachFile = () => {
-    fileInputRef.current.click();
-  };
-  
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-  
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const today = new Date();
-    
-    // Reset time part for comparison
-    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    
-    // Calculate difference in days
-    const diffTime = todayDate - messageDate;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) {
-      return lang === 'ar' ? 'اليوم' : 'Today';
-    } else if (diffDays === 1) {
-      return lang === 'ar' ? 'الأمس' : 'Yesterday';
-    } else if (diffDays < 7) {
-      return date.toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US', { weekday: 'long' });
-    } else {
-      return date.toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US', { 
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric' 
-      });
-    }
-  };
-  
-  // Group messages by date
-  const groupMessagesByDate = () => {
-    const groups = {};
-    
-    messages.forEach(message => {
-      const date = new Date(message.created_at);
-      const dateString = date.toDateString();
-      
-      if (!groups[dateString]) {
-        groups[dateString] = [];
-      }
-      
-      groups[dateString].push(message);
     });
+  
     
-    return Object.entries(groups).map(([date, messages]) => ({
-      date,
-      messages
-    }));
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, [userId, receiverId]);
+  
+  
+  const sendMessage = async () => {
+    const message = newMessage.trim();
+  
+    if (message && socket) {
+      
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: message, type: "sent" },
+      ]);
+  
+      try {
+        const res = await axios.post(`${API_URL}/messages/SendMessage`, {
+          senderId: userId,
+          message,
+          status: "received",
+          lang,
+          receiverId: receiverId
+        });
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+      
+      
+      setNewMessage("");
+    }
   };
   
-  const handleGoBack = () => {
-    navigate(-1); // Go back to previous page
-  };
   
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
+  
+  useEffect(() => {
+    const chatBody = document.getElementById("chatBody");
+    if (chatBody) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className="chat-page" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {/* Chat Header */}
-      <div className="chat-header">
-        <div className="header-left">
-          <button className="back-button" onClick={handleGoBack}>
-            <ArrowLeft size={20} />
-          </button>
-          <div className="partner-avatar">
-            <img 
-              src={partner?.image || profile} 
-              alt={partner?.name || (lang === 'ar' ? 'مستخدم' : 'User')} 
-            />
-          </div>
-          <div className="partner-info">
-            <h4>{partner?.name || (lang === 'ar' ? 'مستخدم' : 'User')}</h4>
-            <span className="status">
-              {lang === 'ar' ? 'متصل الآن' : 'Online'}
-            </span>
-          </div>
-        </div>
-        <div className="header-actions">
-          <button className="action-button">
-            <MoreVertical size={20} />
-          </button>
-        </div>
-      </div>
-      
-      {/* Chat Messages */}
-      <div className="chat-messages">
-        {loading ? (
-          <div className="loading-messages">
-            <div className="loader"></div>
-            <p>{lang === 'ar' ? 'جاري تحميل الرسائل...' : 'Loading messages...'}</p>
-          </div>
-        ) : messages.length === 0 ? (
-          <div className="no-messages">
-            <p>{lang === 'ar' ? 'لا توجد رسائل. ابدأ محادثة جديدة!' : 'No messages. Start a new conversation!'}</p>
-          </div>
-        ) : (
-          groupMessagesByDate().map((group, groupIndex) => (
-            <div key={groupIndex} className="message-group">
-              <div className="date-divider">
-                <span>{formatDate(group.date)}</span>
-              </div>
-              
-              {group.messages.map((message, index) => {
-                const isSentByMe = message.senderId.toString() === currentUserId.toString();
-                return (
-                  <div 
-                    key={message.id || index} 
-                    className={`message ${isSentByMe ? 'sent' : 'received'}`}
-                  >
-                    <div className="message-content">
-                      <p>{message.message}</p>
-                      <span className="message-time">
-                        {formatTime(message.created_at)}
-                        {isSentByMe && (
-                          <span className="check">
-                            ✓✓
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+    <div className="chat-container">
+      <div className="chat-window">
+       
+        <div className="chat-header" style={{ backgroundColor: '#5d99ae', color: 'white', padding: '10px 15px', borderRadius: '10px 10px 0 0' }}>
+          <div className="chat-header-content">
+            <img src={logo} alt="Profile" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
+            <div className="header-info">
+              <h4 style={{ margin: '0', fontSize: '16px' }}>Chalets Owner</h4>
+              {chalet_title && <p style={{ margin: '0', fontSize: '12px' }}>{chalet_title}</p>}
             </div>
-          ))
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-      
-      {/* Chat Input */}
-      <div className="chat-input">
-        <div className="input-actions">
-          <button className="action-button">
-            <Smile size={24} />
-          </button>
-          <button className="action-button" onClick={handleAttachFile}>
-            <Paperclip size={24} />
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              style={{ display: 'none' }} 
-              onChange={(e) => console.log(e.target.files)}
-            />
-          </button>
+          </div>
         </div>
-        <form onSubmit={handleSendMessage} className="message-form">
+
+       
+        <div 
+          className="chat-body" 
+          id="chatBody"
+          style={{ 
+            backgroundColor: '#f0f0f0', 
+            padding: '15px', 
+            height: '400px', 
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px'
+          }}
+        >
+          {messages.map((message, index) => (
+            <div 
+              className={`message-container ${message.type}`} 
+              key={index}
+              style={{ 
+                display: 'flex', 
+                justifyContent: message.type === 'sent' ? 'flex-end' : 'flex-start',
+                marginBottom: '8px'
+              }}
+            >
+              <div 
+                className={`message-bubble ${message.type}`}
+                style={{ 
+                  backgroundColor: message.type === 'sent' ? '#e7d7bd' : '#ffffff',
+                  color: 'black',
+                  padding: '8px 12px',
+                  borderRadius: '18px',
+                  maxWidth: '70%',
+                  wordBreak: 'break-word',
+                }}
+              >
+                <div className="message-text">{message.text}</div>
+                
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div 
+          className="chat-input-container"
+          style={{
+            display: 'flex',
+            padding: '10px',
+            backgroundColor: '#f0f0f0',
+            borderTop: '1px solid #ddd',
+            borderRadius: '0 0 10px 10px'
+          }}
+        >
           <input
             type="text"
-            placeholder={lang === 'ar' ? 'اكتب رسالة...' : 'Type a message...'}
+            placeholder="Type a message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            disabled={sending}
+            onKeyDown={handleKeyPress}
+            style={{
+              flex: '1',
+              padding: '10px',
+              border: '1px solid #ddd',
+              borderRadius: '20px',
+              outline: 'none',
+              fontSize: '14px'
+            }}
           />
           <button 
-            type="submit" 
-            className="send-button"
-            disabled={!newMessage.trim() || sending}
+            onClick={sendMessage}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#5d99ae',
+              color: 'white',
+              border: 'none',
+              marginLeft: '10px',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
           >
-            {newMessage.trim() ? <Send size={24} /> : <Mic size={24} />}
+            <img src={send} alt="send" width="20px" height="20px" />
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

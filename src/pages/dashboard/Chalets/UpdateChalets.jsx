@@ -71,7 +71,7 @@ const UpdateChalets = () => {
             const data = response.data;
             let typeData = {};
             try {
-              // First, check if type is a string that looks like escaped JSON
+              
               if (typeof data.type === "string") {
                 // Parse the escaped JSON string
                 typeData = JSON.parse(data.type);

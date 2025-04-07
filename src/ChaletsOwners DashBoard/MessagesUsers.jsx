@@ -2,28 +2,29 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
-import '../Styles/MessagesUsers.css'; // Make sure to create this CSS file
+import '../Styles/MessagesUsers.css'; 
 
+import { API_URL } from '@/App';
 function MessagesUsers() {
   const [conversations, setConversations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredConversations, setFilteredConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [screenSize, setScreenSize] = useState(window.innerWidth);
-  const userId = Cookies.get('userId') || '4'; // Default to 4 for testing
+  const userId = Cookies.get('userId') || '4'; 
   const listRef = useRef(null);
 
   useEffect(() => {
     fetchConversations();
     
-    // Handle screen resizing
+    
     const handleResize = () => {
       setScreenSize(window.innerWidth);
     };
     
     window.addEventListener('resize', handleResize);
     
-    // التحديث التلقائي تم إيقافه
+    
     
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -44,9 +45,9 @@ function MessagesUsers() {
   const fetchConversations = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/messages/getMessagesByReciever/${userId}`);
+      const response = await axios.get(`${API_URL}/messages/getMessagesByReciever/${userId}`);
       
-      // Process the received messages
+     
       const processedData = processConversations(response.data);
       setConversations(processedData);
       setFilteredConversations(processedData);
@@ -58,13 +59,13 @@ function MessagesUsers() {
   };
 
   const processConversations = (messages) => {
-    // Group messages by sender
+    
     const conversationsMap = {};
     
     messages.forEach(message => {
       const senderId = message.senderId;
       
-      // Skip if there's no sender info (shouldn't happen based on your data)
+      
       if (!message.Sender) return;
       
       if (!conversationsMap[senderId]) {
@@ -81,26 +82,26 @@ function MessagesUsers() {
         };
       }
       
-      // Add message to conversation
+      
       conversationsMap[senderId].messages.push(message);
       
-      // Update last activity time
+      
       const messageTime = new Date(message.createdAt).getTime();
       if (messageTime > conversationsMap[senderId].lastActivity.getTime()) {
         conversationsMap[senderId].lastActivity = new Date(messageTime);
       }
       
-      // Count unread messages
+      
       if (!message.isRead) {
         conversationsMap[senderId].unreadCount++;
       }
     });
     
-    // Convert map to array and sort by last activity (newest first)
+    
     return Object.values(conversationsMap)
       .sort((a, b) => b.lastActivity - a.lastActivity)
       .map(conv => {
-        // Get the latest message
+        
         const sortedMessages = [...conv.messages].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -120,7 +121,7 @@ function MessagesUsers() {
     if (isToday) {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } else {
-      // Show date for messages not from today
+      
       return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
     }
   };
@@ -155,10 +156,10 @@ function MessagesUsers() {
         ) : filteredConversations.length > 0 ? (
           filteredConversations.map((conversation) => (
             <Link 
-              to={`/messages/${conversation.user.id}`} 
-              className="conversation-item" 
-              key={conversation.user.id}
-            >
+            to={`ChatPage/${conversation.user.id}`} 
+            className="conversation-item" 
+            key={conversation.user.id}
+          >
               <div className="user-avatar">
                 {/* <img 
                   src={conversation.user.image} 

@@ -61,10 +61,10 @@ function FooterData() {
       try {
         // Conditional logic to handle different delete operations
         if (itemType === 'footer') {
-          await axios.delete(`${API_URL}/footer/deleteFooter/${FooterIdToDelete}/${lang}`);
+          await axios.delete(`${API_URL}/footer/deleteFooter/${FooterIdToDelete}`);
           setFooter(Footer.filter((foot) => foot.id !== FooterIdToDelete)); // Remove from list
         } else if (itemType === 'social') {
-          await axios.delete(`${API_URL}/footericons/deleteFooterIcon/${FooterIdToDelete}/${lang}`);
+          await axios.delete(`${API_URL}/footericons/deleteFooterIcon/${FooterIdToDelete}`);
           setSocial(socail.filter((footericons) => footericons.id !== FooterIdToDelete)); // Remove from list
         }
       } catch (error) {

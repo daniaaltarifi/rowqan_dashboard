@@ -40,6 +40,7 @@ import CreateAdminReservation from "@/Admin DashBoard/CreateAdminReservation";
 import UpdateChoose from "@/pages/dashboard/UpdateChoose";
 import AddChooseRowqan from "@/pages/dashboard/AddChooseRowqan";
 import UpdatePayment from "@/pages/dashboard/UpdatePayment";
+import ChatPage from "@/ChaletsOwners DashBoard/ChatPage";
 
 
 
@@ -117,6 +118,7 @@ export function Dashboard() {
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
 <Route path="usersbychaletsmessages/:chalet_id/messagebetweenusers/:user_id" element={<Messages />} />
 <Route path="usersbychaletsmessages/:chalet_id" element={<UsersByChaletsMessages />} />
+<Route path="messagesUsers/ChatPage/:userId" element={<ChatPage />} />
 <Route path="createreservation/:id" element={<CreateReservation />} />
 <Route path="payment/:reservation_id" element={<Payment />} />
 <Route path="CreateAdminReservation/:id" element={<CreateAdminReservation />} />

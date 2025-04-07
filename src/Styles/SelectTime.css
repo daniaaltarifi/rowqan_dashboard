@@ -36,14 +36,14 @@
   font-weight: bold;
 }
 
-/* When clicked, expand the dropdown_select_time and position it at the bottom */
+
 .dropdown_select_time ul {
-  width: 100%; /* Full width */
-  position: fixed; /* Fixed to the bottom of the page */
-  left: 0; /* Align to the left of the screen */
-  bottom: 0; /* Position at the bottom */
-  z-index: 3; /* Ensure it's above other content */
-  max-height: 215px; /* Adjust height */
+  width: 100%;
+  position: fixed; 
+  left: 0;
+  bottom: 0;
+  z-index: 3; 
+  max-height: 215px; 
   border-bottom: 1px solid #dddad6;
 }
 

@@ -1,22 +1,23 @@
-import '../Styles/ChatBot.css'
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import socketIOClient from "socket.io-client"; // Import socket.io-client
+import socketIOClient from "socket.io-client";
 import logo from "../Images/logo.png";
 import send from "../Images/paper-plane.png";
 import axios from "axios";
 import { API_URL } from '@/App';
 import Cookies from 'js-cookie';
-function Messages() {
-  const {user_id,chalet_id}=useParams()
-  const location = useLocation();
-    const lang = Cookies.get('lang') || 'en';
-  const chalet_title = location.state?.chalet_title || null;
- const receiverId = Cookies.get('receiverId');
-  const [messages, setMessages] = useState([
-  ]);
+import '../Styles/ChatBot.css';
 
+function Messages() {
+  const { user_id, chalet_id } = useParams();
+  const location = useLocation();
+  const lang = Cookies.get('lang') || 'en';
+  const chalet_title = location.state?.chalet_title || null;
+  const receiverId = Cookies.get('receiverId');
+  const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [newMessage, setNewMessage] = useState("");
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -24,16 +25,9 @@ function Messages() {
     
         if (res.data && Array.isArray(res.data)) {
           const newMessages = res.data.map((messageObj) => {
-            // Format the timestamp for each message
-            const formattedTime = new Intl.DateTimeFormat("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }).format(new Date(messageObj.updatedAt));
-    
             return {
               text: messageObj.message,
               type: messageObj.status === "sent" ? "received" : "sent",
-              timestamp: formattedTime,  // Add the formatted time here
             };
           });
           setMessages(newMessages);
@@ -47,71 +41,60 @@ function Messages() {
     
     fetchMessages();
   
-    // Initialize Socket.IO client
+
     const socketInstance = socketIOClient(API_URL);
     setSocket(socketInstance);
   
-    // Listen for incoming messages from the server
+    
     socketInstance.on("receive_message", (messageData) => {
-      // Only add received messages to state
+      
       if (messageData.senderId !== user_id) {
         setMessages((prevMessages) => [
           ...prevMessages,
           {
             text: messageData.message,
             type: "received",
-            timestamp: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
           },
         ]);
       }
     });
   
-    // Cleanup socket connection on component unmount
+    
     return () => {
       socketInstance.disconnect();
     };
-  }, [user_id]);
+  }, [user_id, receiverId, chalet_id]);
   
-  // Function to send a user message and notify the server
+  
   const sendMessage = async () => {
-    const messageInput = document.getElementById("messageInput");
-    const message = messageInput.value.trim();
+    const message = newMessage.trim();
   
     if (message && socket) {
-      const timestamp = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-  
-      // Add user message to the chat (sent message)
+      
       setMessages((prevMessages) => [
         ...prevMessages,
-        { text: message, type: "sent", timestamp },
+        { text: message, type: "sent" },
       ]);
   
       try {
         const res = await axios.post(`${API_URL}/messages/SendMessage`, {
           senderId: user_id,
           message,
-          status:"received",
+          status: "received",
           lang,
-          chaletId:chalet_id,
+          chaletId: chalet_id,
           receiverId: receiverId
         });
       } catch (error) {
         console.error("Error sending message:", error);
       }
       
-  
-      // Clear the input field after sending
-      messageInput.value = "";
+      
+      setNewMessage("");
     }
   };
   
-
+  
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -119,40 +102,117 @@ function Messages() {
     }
   };
 
+  
+  useEffect(() => {
+    const chatBody = document.getElementById("chatBody");
+    if (chatBody) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div>
- 
+    <div className="chat-container">
       <div className="chat-window">
-        <div className="chat-header">
-          <img src={logo} alt="Profile" />
-          <div className="header-info">
-            <h4>Chalets Owner</h4>
-            <p>{chalet_title}</p>
+       
+        <div className="chat-header" style={{ backgroundColor: '#5d99ae', color: 'white', padding: '10px 15px', borderRadius: '10px 10px 0 0' }}>
+          <div className="chat-header-content">
+            <img src={logo} alt="Profile" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
+            <div className="header-info">
+              <h4 style={{ margin: '0', fontSize: '16px' }}>Chalets Owner</h4>
+              {chalet_title && <p style={{ margin: '0', fontSize: '12px' }}>{chalet_title}</p>}
+            </div>
           </div>
         </div>
 
-        <div className="chat-body" id="chatBody">
+       
+        <div 
+          className="chat-body" 
+          id="chatBody"
+          style={{ 
+            backgroundColor: '#f0f0f0', 
+            padding: '15px', 
+            height: '400px', 
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px'
+          }}
+        >
           {messages.map((message, index) => (
-            <div className={`message ${message.type}`} key={index}>
-              <div className="bubble">{message.text}</div>
-              <div className="timestamp">{message.timestamp}</div>
+            <div 
+              className={`message-container ${message.type}`} 
+              key={index}
+              style={{ 
+                display: 'flex', 
+                justifyContent: message.type === 'sent' ? 'flex-end' : 'flex-start',
+                marginBottom: '8px'
+              }}
+            >
+              <div 
+                className={`message-bubble ${message.type}`}
+                style={{ 
+                  backgroundColor: message.type === 'sent' ? '#e7d7bd' : '#ffffff',
+                  color: 'black',
+                  padding: '8px 12px',
+                  borderRadius: '18px',
+                  maxWidth: '70%',
+                  wordBreak: 'break-word',
+                }}
+              >
+                <div className="message-text">{message.text}</div>
+                
+              </div>
             </div>
           ))}
         </div>
 
-        <div className="chat-input">
+        <div 
+          className="chat-input-container"
+          style={{
+            display: 'flex',
+            padding: '10px',
+            backgroundColor: '#f0f0f0',
+            borderTop: '1px solid #ddd',
+            borderRadius: '0 0 10px 10px'
+          }}
+        >
           <input
             type="text"
             placeholder="Type a message..."
-            id="messageInput"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyPress}
+            style={{
+              flex: '1',
+              padding: '10px',
+              border: '1px solid #ddd',
+              borderRadius: '20px',
+              outline: 'none',
+              fontSize: '14px'
+            }}
           />
-          <button onClick={sendMessage}>
-            <img src={send} alt="send" width={"20px"} height={"20px"} />
+          <button 
+            onClick={sendMessage}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#5d99ae',
+              color: 'white',
+              border: 'none',
+              marginLeft: '10px',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <img src={send} alt="send" width="20px" height="20px" />
           </button>
         </div>
       </div>
-    </div>  )
+    </div>
+  );
 }
 
-export default Messages
+export default Messages;

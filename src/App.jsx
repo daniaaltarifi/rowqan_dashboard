@@ -37,7 +37,8 @@ import UpdateRightTime from "./pages/dashboard/TimeAndStatus/UpdateRightTme";
 import CreateReservation from "./Admin DashBoard/CreateReservation";
 import Payment from "./Admin DashBoard/Payment";
 import UpdateChoose from "./pages/dashboard/UpdateChoose";
-// export const API_URL="http://localhost:5000";
+import ChatPage from "./ChaletsOwners DashBoard/ChatPage";
+//  export const API_URL="http://localhost:5000";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!Cookies.get('authtoken'));
@@ -98,7 +99,7 @@ function App() {
         <Route path="updateheader/:id" element={<UpdateHeader />} />
         
        
-        {/* <Route path="dashboard/abouts" element={<Abouts />} /> */}
+       
 <Route path="addchalet" element={<AddChalets />} />
 <Route path="updatechalet/:chalet_id" element={<UpdateChalets />} />
 
@@ -127,6 +128,8 @@ function App() {
 <Route path="updatestatuschalet/:id" element={<UpdateStatusChalet />} />
 <Route path="usersbychaletsmessages/:chalet_id/messagebetweenusers/:user_id" element={<Messages />} />
 <Route path="usersbychaletsmessages/:chalet_id" element={<UsersByChaletsMessages />} />
+
+<Route path="messagesUsers/ChatPage/:userId" element={<ChatPage />} />
 
 <Route path="createreservation/:id" element={<CreateReservation />} />
 
